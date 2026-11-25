@@ -47,6 +47,7 @@ Tras ingresar, registre el **fondo inicial** con los steppers y presione **Abrir
 - **Estados vacíos accionables:** búsquedas sin resultados muestran mensaje y botón «Limpiar» en clientes, productos y CxC.
 - **Paleta:** marfil, carbón cálido y cobre; sin azul ni verde. Superficies claras, contraste alto y un solo acento para reducir la fatiga visual.
 - **Entrada independiente:** el login no muestra el shell. Al abrir turno entra al POS; el botón «Cerrar turno» de la barra superior lleva al arqueo y, al confirmar, regresa al login.
+- **Rendimiento:** catálogo inicial de 8 productos con carga progresiva, búsquedas con *debounce* e ignoración de acentos, dashboard con caché de gráficos y tablas estáticas, sin renders ocultos y sin `backdrop-filter` en móvil.
 
 ## Backend y datos
 
