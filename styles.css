@@ -33,7 +33,8 @@
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;color-scheme:light}
+button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 body{
   margin:0;background:var(--canvas);color:var(--ink);
   font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
@@ -741,6 +742,18 @@ body.auth-mode .content{padding:0;max-width:none}
 body.auth-mode .login-shell{min-height:100vh;border-radius:0;box-shadow:none}
 body.auth-mode .login-panel{min-height:100vh}
 body.auth-mode .toast-root{left:20px}
+
+/* Evita estados hover pegajosos en pantallas táctiles */
+@media (hover:none){
+  .product-card:hover{transform:none;box-shadow:var(--sh-1)}
+  .btn:hover:not(:disabled),.icon-btn:hover,.mini-btn:hover,.client-row:hover,.pay-chip:hover,.chip:hover{transform:none}
+}
+
+/* Refuerza bordes y texto cuando el usuario pide más contraste */
+@media (prefers-contrast:more){
+  :root{--muted:#5A4A3E;--line-strong:#8A7B6E}
+  .panel,.btn,.input-wrap,.search-field,.data-table td{border-color:var(--line-strong)}
+}
 
 /* ======================= IMPRESIÓN ======================= */
 @media print{

@@ -58,10 +58,11 @@ por cobrar y correlativos fijos) y expone:
 | GET | `/api/state` | Estado canónico desde SQLite |
 | PUT | `/api/state` | Reemplaza datos maestros en una transacción atómica y validada |
 | POST | `/api/reset` | Restaura la semilla original |
-| GET | `/api/health` | Estado del servidor |
+| GET | `/api/health` o `/health` | Estado del servidor (compatible con Render) |
 
-Validación del servidor: ids únicos, importes no negativos, ISV en {0, 15, 18}. Una escritura inválida
-responde `400` y **no modifica la base**. Cada cambio de catálogo, CRM o cartera se sincroniza a
+Validación del servidor: ids únicos, importes no negativos, ISV en {0, 15, 18}, cuerpo JSON máximo 2 MB.
+Una escritura inválida responde `400` y **no modifica la base**. Se envían cabeceras CSP, `nosniff`,
+anti-clickjacking y `Permissions-Policy`. Cada cambio de catálogo, CRM o cartera se sincroniza a
 SQLite (diferido ~60 ms) y la interfaz aplica el estado canónico devuelto. El escaneo y los códigos
 de producto son deterministas, no aleatorios.
 

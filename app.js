@@ -119,14 +119,21 @@ function loadData() {
 const API_ON = /^https?:$/.test(location.protocol);
 let useApi = false, syncTimer = null;
 async function api(path, method='GET', body=null) {
-  const opts = { method, headers:{ 'Content-Type':'application/json' } };
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 5000);
+  const opts = { method, headers:{ 'Content-Type':'application/json' }, signal:controller.signal };
   if (body !== null) opts.body = JSON.stringify(body);
-  const res = await fetch(path, opts);
-  if (!res.ok) {
-    let msg = ''; try { msg = (await res.json()).error; } catch (_) {}
-    throw new Error(msg || ('HTTP ' + res.status));
-  }
-  return res.json();
+  try {
+    const res = await fetch(path, opts);
+    if (!res.ok) {
+      let msg = ''; try { msg = (await res.json()).error; } catch (_) {}
+      throw new Error(msg || ('HTTP ' + res.status));
+    }
+    return await res.json();
+  } catch (err) {
+    if (err.name === 'AbortError') throw new Error('tiempo de espera agotado');
+    throw err;
+  } finally { clearTimeout(timer); }
 }
 function snapshot() { return { products, clients, cxc, ticketNo:state.ticketNo, receiptNo:state.receiptNo }; }
 function applyRemote(d) {
@@ -232,7 +239,11 @@ function navTo(name) {
     $('#openingError').textContent = '';
   }
   $$('.screen').forEach(s => s.classList.toggle('active', s.dataset.screen === name));
-  $$('[data-go]').forEach(b => b.classList.toggle('active', b.dataset.go === name));
+  $$('[data-go]').forEach(b => {
+    const active = b.dataset.go === name;
+    b.classList.toggle('active', active);
+    if (active) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+  });
   $('#crumbModule').textContent = titles[name][0];
   $('#crumbTitle').textContent = titles[name][1];
   $('#sidebar').classList.remove('open');
@@ -732,7 +743,7 @@ function renderProductTable() {
     <td>${p.cat}</td><td class="mono">${money(p.price)}</td><td class="mono">${money(p.dist)}</td><td class="mono">${money(p.mayor)}</td>
     <td class="mono ${p.stock < 15 ? 'stock-low' : ''}">${p.stock}</td>
     <td>${p.promo ? `<span class="badge promo">${p.promo}</span>` : '<span class="badge">Sin promoción</span>'}</td>
-    <td><div class="row-actions"><button class="mini-btn" data-edit="${p.id}" title="Editar"><svg class="ico"><use href="#i-tag"/></svg></button><button class="mini-btn" data-toggle="${p.id}" title="${p.stock === 0 ? 'Activar' : 'Desactivar'}"><svg class="ico"><use href="#i-${p.stock === 0 ? 'check' : 'x'}"/></svg></button></div></td>
+    <td><div class="row-actions"><button class="mini-btn" data-edit="${p.id}" title="Editar" aria-label="Editar ${p.name}"><svg class="ico"><use href="#i-tag"/></svg></button><button class="mini-btn" data-toggle="${p.id}" title="${p.stock === 0 ? 'Activar' : 'Desactivar'}" aria-label="${p.stock === 0 ? 'Activar' : 'Desactivar'} ${p.name}"><svg class="ico"><use href="#i-${p.stock === 0 ? 'check' : 'x'}"/></svg></button></div></td>
   </tr>`).join('') || `<tr class="empty-state-row"><td colspan="8">${emptyState('Sin productos', 'Ajuste la búsqueda, la categoría o el filtro de promociones.', 'products', 'Limpiar filtros')}</td></tr>`;
 }
 $('#productTableSearch').addEventListener('input', renderProductTable);
@@ -816,7 +827,7 @@ function renderCxc() {
     <td><b>${k.client}</b></td><td class="mono">${k.doc}</td><td>${k.issue}</td><td>${k.due}</td>
     <td class="mono"><b>${money(k.balance)}</b></td><td class="mono ${k.days>0?'stock-low':''}">${k.days}</td>
     <td><span class="badge ${k.status==='Vencido'?'bad':'ok'}">${k.status}</span></td>
-    <td><div class="row-actions"><button class="mini-btn" data-payrow="${k.client}" title="Registrar abono"><svg class="ico"><use href="#i-plus"/></svg></button><button class="mini-btn" data-stmt="${k.client}" title="Estado de cuenta"><svg class="ico"><use href="#i-receipt"/></svg></button></div></td>
+    <td><div class="row-actions"><button class="mini-btn" data-payrow="${k.client}" title="Registrar abono" aria-label="Registrar abono de ${k.client}"><svg class="ico"><use href="#i-plus"/></svg></button><button class="mini-btn" data-stmt="${k.client}" title="Estado de cuenta" aria-label="Estado de cuenta de ${k.client}"><svg class="ico"><use href="#i-receipt"/></svg></button></div></td>
   </tr>`).join('') || `<tr class="empty-state-row"><td colspan="8">${emptyState('Sin cuentas', 'No hay registros para el filtro o la búsqueda actuales.', 'cxc', 'Limpiar filtros')}</td></tr>`;
   $('#navMoraDot').style.display = overdue > 0 ? '' : 'none';
 }
@@ -1138,16 +1149,23 @@ $$('#cxcTabs .tab').forEach(t => t.setAttribute('aria-pressed', String(t.dataset
 $$('#rangeChips button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.range === state.range)));
 
 async function boot() {
-  if (API_ON) {
-    try {
-      const d = await api('/api/state');
-      if (d && Array.isArray(d.products) && d.products.length) { applyRemote(d); useApi = true; }
-    } catch (err) { toast('API no disponible (' + err.message + ') · modo local', 'warn'); }
+  const app = $('#app'), submit = $('#loginSubmit');
+  app.setAttribute('aria-busy','true'); submit.disabled = true;
+  try {
+    if (API_ON) {
+      try {
+        const d = await api('/api/state');
+        if (d && Array.isArray(d.products) && d.products.length) { applyRemote(d); useApi = true; }
+      } catch (err) { toast('API no disponible (' + err.message + ') · modo local', 'warn'); }
+    }
+    if (!useApi) loadData();
+    updateApiChip();
+    $$('.art-stat b[data-count]').forEach(el => countUp(el, parseInt(el.dataset.count, 10)));
+    renderAll();
+  } finally {
+    app.removeAttribute('aria-busy');
+    submit.disabled = false;
   }
-  if (!useApi) loadData();
-  updateApiChip();
-  $$('.art-stat b[data-count]').forEach(el => countUp(el, parseInt(el.dataset.count, 10)));
-  renderAll();
 }
 boot();
 })();
