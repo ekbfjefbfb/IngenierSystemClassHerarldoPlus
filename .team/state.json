@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-25T22:45:38.578851105Z",
+  "updated_at": "2026-11-25T22:45:52.331858334Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -84,7 +84,7 @@
       "id": "JET-WP7RDV",
       "title": "Pulido final de producción y accesibilidad",
       "context": "Última pasada técnica y visual sobre el prototipo ya estable. Revisar y corregir meta theme-color y favicon, añadir aria-current, aria-live en importes, timeout y aborto de API, bloqueo del login durante arranque, cabeceras CSP/Permissions-Policy, límite de cuerpo JSON, comportamiento hover en pantallas táctiles y contraste preferido. Verificar las 4 suites, /health, ciclo login-abrir-cerrar-login y git diff; actualizar README y subir a main.",
-      "status": "in_progress",
+      "status": "done",
       "priority": "normal",
       "assignee_id": "ekbfjefbfb",
       "assignee_name": "ekbfjefbfb",
@@ -99,8 +99,13 @@
         "prototipo/styles.css"
       ],
       "created_at": "2026-11-25T22:38:50.060926917Z",
-      "updated_at": "2026-11-25T22:45:38.578654909Z",
+      "updated_at": "2026-11-25T22:45:52.331844535Z",
       "started_at": "2026-11-25T22:39:02.071687228Z",
+      "completed_at": "2026-11-25T22:45:52.331844535Z",
+      "completed_by_id": "ekbfjefbfb",
+      "completed_by_name": "ekbfjefbfb",
+      "completed_branch": "main",
+      "commit": "53bc88b",
       "agent": "opencode",
       "archived": false,
       "notes": [
@@ -110,11 +115,27 @@
           "author_name": "ekbfjefbfb",
           "body": "Pulido final aplicado y validado: favicon, meta theme-color y descripción, aria-current/aria-live/aria-label, login bloqueado durante arranque, API con AbortController y timeout de 5 s, CSP/Permissions-Policy/nosniff/anti-clickjacking, límite JSON 2 MB, hover táctil y prefers-contrast. 4 suites con 0 errores; /health 200; favicon 200; ciclo mouse login-abrir-cerrar-login OK. Commit y push 53bc88b.",
           "created_at": "2026-11-25T22:45:38.578654909Z"
+        },
+        {
+          "id": "28462e1d-e97a-4aa8-8fb1-46ef3be843e3",
+          "author_id": "ekbfjefbfb",
+          "author_name": "ekbfjefbfb",
+          "body": "Completado y validado. Pulido de producción: favicon y metadatos, ARIA, arranque seguro, timeout/aborto API, CSP y Permissions-Policy, límite de cuerpo, hover táctil y contraste preferido. Pruebas: 4 suites Chromium 0 errores, /health 200, favicon 200, ciclo mouse login-abrir-cerrar-login OK. Push en main commit 53bc88b. Riesgo conocido: SQLite efímero en Render sin disco persistente y sesión de caja volátil.",
+          "created_at": "2026-11-25T22:45:52.331844535Z"
         }
       ]
     }
   },
   "events": [
+    {
+      "id": "cb540686-68f1-4145-99e5-20640b48da51",
+      "at": "2026-11-25T22:45:52.331844535Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_completed",
+      "task_id": "JET-WP7RDV",
+      "message": "completó «Pulido final de producción y accesibilidad», rama main, commit 53bc88b"
+    },
     {
       "id": "7d1e89ee-89cd-465f-9009-7ebe69ea78b5",
       "at": "2026-11-25T22:45:38.578654909Z",
