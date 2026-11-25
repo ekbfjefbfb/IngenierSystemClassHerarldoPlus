@@ -21,7 +21,7 @@ Probado en Chromium 120 (escritorio 1440×900 y móvil 390×844). Sin errores de
 
 ## Credenciales de la demo
 
-Usuario: `cajero01` · Contraseña: `demo1234` (acepta cualquier usuario de 3+ y contraseña de 4+ caracteres).
+Usuario: cualquier valor de 3+ caracteres. Contraseña: cualquier valor de 4+ caracteres. La autenticación es simulada; no hay credenciales secretas en el código.
 Tras ingresar, registre el **fondo inicial** con los steppers y presione **Abrir turno**.
 
 ## 8 pantallas y qué simula cada control
@@ -48,6 +48,7 @@ Tras ingresar, registre el **fondo inicial** con los steppers y presione **Abrir
 - **Paleta:** marfil, carbón cálido y cobre; sin azul ni verde. Superficies claras, contraste alto y un solo acento para reducir la fatiga visual.
 - **Entrada independiente:** el login no muestra el shell. Al abrir turno entra al POS; el botón «Cerrar turno» de la barra superior lleva al arqueo y, al confirmar, regresa al login.
 - **Rendimiento:** catálogo inicial de 8 productos con carga progresiva, búsquedas con *debounce* e ignoración de acentos, dashboard con caché de gráficos y tablas estáticas, sin renders ocultos y sin `backdrop-filter` en móvil.
+- **Ayuda integrada:** guía rápida y atajos desde la barra superior. Auditoría detallada en `UIUX_AUDIT.md`.
 
 ## Backend y datos
 

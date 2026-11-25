@@ -217,7 +217,7 @@ function confirmDialog(title, text, onYes, yesLabel='Confirmar', danger=false) {
 }
 function processing(text, done) {
   modal({ title:'Procesando…', body:`<div class="processing"><div class="dots"><i></i><i></i><i></i></div><span>${text}</span></div>`, dismissible:false });
-  setTimeout(() => { closeModal(); done(); }, 720);
+  setTimeout(() => { closeModal(); done(); }, 360);
 }
 function emptyState(title, hint, action='', label='') {
   return `<div class="empty-state"><svg class="ico"><use href="#i-search"/></svg><b>${title}</b><span>${hint}</span>${action ? `<button type="button" class="btn btn-soft" data-empty="${action}">${label}</button>` : ''}</div>`;
@@ -313,7 +313,7 @@ $('#loginForm').addEventListener('submit', e => {
   const u = $('#loginUser').value.trim(), p = $('#loginPass').value;
   $('#userError').textContent = u.length < 3 ? 'Ingrese un usuario válido (3+ caracteres).' : '';
   $('#passError').textContent = p.length < 4 ? 'La contraseña debe tener al menos 4 caracteres.' : '';
-  if (u.length < 3 || p.length < 4) return;
+  if (u.length < 3 || p.length < 4) { $(u.length < 3 ? '#loginUser' : '#loginPass').focus(); return; }
   $('#loginCard').hidden = true;
   $('#openingCard').hidden = false;
   $('#openingDate').textContent = today();
@@ -465,7 +465,7 @@ $('#scanBtn').addEventListener('click', () => {
   const line = $('#scanLine'); line.classList.add('show');
   state.scanned = ((state.scanned || 0) + 1) % products.length;
   const pick = products[state.scanned];
-  setTimeout(() => { line.classList.remove('show'); addToCart(pick.id); toast('Lector: ' + pick.code + ' → ' + pick.name); }, 820);
+  setTimeout(() => { line.classList.remove('show'); addToCart(pick.id); toast('Lector: ' + pick.code + ' → ' + pick.name); }, 360);
 });
 const payLabels = { efectivo:'Efectivo', ach:'Transferencia ACH', tarjeta:'Tarjeta', credito:'Crédito autorizado' };
 const payOptions = Object.entries(payLabels).map(([k,v]) => `<option value="${k}">${v}</option>`).join('');
@@ -769,8 +769,9 @@ $('#productTableBody').addEventListener('click', e => {
   if (edit) openProductEditor(products.find(p => p.id === edit.dataset.edit));
   if (toggle) {
     const p = products.find(x => x.id === toggle.dataset.toggle);
-    p.stock = p.stock === 0 ? 10 : 0; persist(); renderProductTable(); renderProductStats(); renderProducts();
-    toast(p.name + (p.stock === 0 ? ' desactivado' : ' activado'));
+    const apply = () => { p.stock = p.stock === 0 ? 10 : 0; persist(); renderProductTable(); renderProductStats(); renderProducts(); toast(p.name + (p.stock === 0 ? ' desactivado' : ' activado')); };
+    if (p.stock === 0) apply();
+    else confirmDialog('Desactivar producto', 'El producto ' + p.name + ' dejará de estar disponible para la venta.', apply, 'Desactivar', true);
   }
 });
 function openProductEditor(p) {
@@ -1023,7 +1024,7 @@ function renderDashboard() {
   ];
   $('#kpiGrid').innerHTML = cards.map((c,i) => `<div class="kpi-card ${c.warn?'warn':''}">
     <small>${c.label}</small><div><b data-kpi="${i}">${c.pre}0${c.suf||''}</b><span class="delta ${c.down?'down':''}">${c.delta}</span></div>
-    <svg class="kpi-spark" viewBox="0 0 64 26"><path d="M0 22 L10 18 L20 20 L30 12 L40 15 L50 7 L64 3" fill="none" stroke="${c.warn?'#A85E2C':'#9C4F22'}" stroke-width="2"/></svg>
+    <svg class="kpi-spark" viewBox="0 0 64 26"><path d="M0 22 L10 18 L20 20 L30 12 L40 15 L50 7 L64 3" fill="none" stroke="${c.warn?'#98531F':'#9C4F22'}" stroke-width="2"/></svg>
   </div>`).join('');
   cards.forEach((c,i) => {
     const el = $(`[data-kpi="${i}"]`);
@@ -1053,10 +1054,10 @@ function renderDashboard() {
   const porVencerPct = +(porVencer() / totalCxc * 100).toFixed(1);
   const alCorrientePct = Math.max(0, +(100 - vencidoPct - porVencerPct).toFixed(1));
   $('#donutCenterPct').textContent = vencidoPct.toFixed(1) + '%';
-  $('#morosityDonut').style.background = `conic-gradient(#9C4F22 0 ${alCorrientePct}%, #A85E2C ${alCorrientePct}% ${alCorrientePct + porVencerPct}%, #B4473F ${alCorrientePct + porVencerPct}% 100%)`;
+  $('#morosityDonut').style.background = `conic-gradient(#9C4F22 0 ${alCorrientePct}%, #98531F ${alCorrientePct}% ${alCorrientePct + porVencerPct}%, #A83C35 ${alCorrientePct + porVencerPct}% 100%)`;
   $('#donutLegend').innerHTML=`<div class="dl-row"><i style="background:#9C4F22"></i> Al corriente <b>${alCorrientePct.toFixed(1)}%</b></div>
-    <div class="dl-row"><i style="background:#A85E2C"></i> Por vencer <b>${porVencerPct.toFixed(1)}%</b></div>
-    <div class="dl-row"><i style="background:#B4473F"></i> Vencido <b>${vencidoPct.toFixed(1)}%</b></div>`;
+    <div class="dl-row"><i style="background:#98531F"></i> Por vencer <b>${porVencerPct.toFixed(1)}%</b></div>
+    <div class="dl-row"><i style="background:#A83C35"></i> Vencido <b>${vencidoPct.toFixed(1)}%</b></div>`;
 
   if ($('#heatmap').dataset.ready !== '1') {
     const heat=[[1,2,4],[2,3,4],[1,3,3],[2,4,3]];
@@ -1092,6 +1093,22 @@ $('#moreBtn').addEventListener('click', () => modal({
   title:'Más módulos', sub:'Acceso rápido',
   body:`<div class="modal-list">${[['factura','Facturación SAR','i-receipt'],['productos','Productos y precios','i-box'],['cierre','Cierre de caja','i-cash'],['dashboard','Panel comercial','i-chart']].map(([go,label,icon])=>`<button class="client-row" data-more="${go}"><span class="avatar"><svg class="ico"><use href="#${icon}"/></svg></span><span class="cr-body"><strong>${label}</strong></span><svg class="ico"><use href="#i-chev"/></svg></button>`).join('')}</div>`,
   onMount(root) { $$('[data-more]',root).forEach(b=>b.addEventListener('click',()=>{closeModal();navTo(b.dataset.more);})); }
+}));
+$('#helpBtn').addEventListener('click', () => modal({
+  title:'Guía rápida', sub:'COAGRO POS · flujo de mostrador',
+  body:`<div class="receipt-mini">
+    <div class="r-row"><span>1</span><b>Ingresar y registrar el fondo inicial</b></div>
+    <div class="r-row"><span>2</span><b>Abrir turno y vender desde el POS</b></div>
+    <div class="r-row"><span>3</span><b>Cerrar turno y completar el conteo ciego</b></div>
+    <div class="r-row"><span>4</span><b>Confirmar el cuadre para volver al login</b></div>
+  </div>
+  <div class="receipt-mini" style="margin-top:10px">
+    <div class="r-row"><span>Buscar producto</span><b><kbd>/</kbd></b></div>
+    <div class="r-row"><span>Agregar primer resultado</span><b><kbd>Enter</kbd></b></div>
+    <div class="r-row"><span>Cerrar diálogo</span><b><kbd>Esc</kbd></b></div>
+    <div class="r-row"><span>Persistencia</span><b>SQLite · API</b></div>
+  </div>`,
+  foot:'<button class="btn btn-primary" data-close>Entendido</button>'
 }));
 $('#notifyBtn').addEventListener('click', () => modal({
   title:'Alertas del sistema', sub:'3 notificaciones pendientes',
@@ -1176,7 +1193,9 @@ $$('#rangeChips button').forEach(b => b.setAttribute('aria-pressed', String(b.da
 
 async function boot() {
   const app = $('#app'), submit = $('#loginSubmit');
+  const originalSubmit = submit.innerHTML;
   app.setAttribute('aria-busy','true'); submit.disabled = true;
+  if (API_ON) submit.innerHTML = '<span>Conectando…</span>';
   try {
     if (API_ON) {
       try {
@@ -1190,6 +1209,7 @@ async function boot() {
     renderAll();
   } finally {
     app.removeAttribute('aria-busy');
+    submit.innerHTML = originalSubmit;
     submit.disabled = false;
   }
 }

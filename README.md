@@ -10,6 +10,7 @@ para **Comercializadora Agropecuaria y Ferretera de Catacamas (COAGRO)**.
   - `index.html`, `styles.css`, `app.js` — front-end responsive, sin dependencias.
   - `server.py` — backend Python (stdlib) con SQLite y API REST local.
   - `README.md` — instrucciones, endpoints y decisiones de UI/UX.
+  - `UIUX_AUDIT.md` — auditoría HCI por pantalla, agentes aplicados y evidencia.
 - Documentos base del caso de estudio y consigna (PDF/DOCX).
 
 ## Ejecutar
