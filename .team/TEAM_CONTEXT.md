@@ -1,7 +1,7 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T23:20:31.529994843+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T23:47:47.873289984+00:00`
 
 **Resumen:** 0 abiertas, 1 en curso, 0 bloqueadas, 3 completadas, 1 personas
 
@@ -25,6 +25,7 @@
   - Contexto: Leer los 18 perfiles de /home/alberto/Jet/agents y aplicar sus criterios adaptados a web: detalle, responsive, empatía, minimalismo, movimiento, limpieza, arquitectura, seguridad, evidencia y calidad. Auditar las 8 pantallas y secciones compartidas; documentar hallazgos y correcciones en un informe breve sin relleno. Verificar WCAG 2.2, Nielsen, Fitts/Hick/Miller/Prägnanz/Doherty, ausencia de overflow en 360/390/768…
   - Prioridad: Alta
   - Archivos sensibles: prototipo/README.md, prototipo/UIUX_AUDIT.md, prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
+  - Último avance: ekbfjefbfb — Auditoría HCI aplicada. Corregidos overflow de factura y barra superior en 360/390, objetivos pequeños, credencial demo, foco de error, confirmación de desactivación, ayuda integrada, contraste AA y feedback <400 ms. Añadido UIUX_AUDIT.md con las 8 pantallas, 18 agentes y eviden…
 
 ## Bloqueos de archivos y ramas
 
@@ -73,6 +74,7 @@ _Sin mensajes del equipo._
 - `2026-11-25T23:18:54.253239789+00:00`  **COMPLETADA**  ekbfjefbfb  JET-LPSNR9  completó «Aligerar rendimiento y densidad visual de la interfaz», rama main, commit ea33582
 - `2026-11-25T23:20:16.660266946+00:00`  **TAREA CREADA**  ekbfjefbfb  JET-8D88LZ  creó «Auditoría HCI por pantalla y aplicación de los 18 agentes» para ekbfjefbfb
 - `2026-11-25T23:20:31.529984123+00:00`  **TAREA TOMADA**  ekbfjefbfb  JET-8D88LZ  tomó «Auditoría HCI por pantalla y aplicación de los 18 agentes» y comenzó a trabajar
+- `2026-11-25T23:47:47.873120314+00:00`  **AVANCE**  ekbfjefbfb  JET-8D88LZ  avanzó «Auditoría HCI por pantalla y aplicación de los 18 agentes»: Auditoría HCI aplicada. Corregidos overflow de factura y barra superior en 360/390, objetivos pequeños, credencial demo, foco de error, confirmación de desactivación, ayud…
 
 ## Equipo
 
