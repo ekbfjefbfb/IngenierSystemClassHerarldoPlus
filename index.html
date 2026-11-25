@@ -43,6 +43,7 @@
   <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8zM19 17l.7 2.3L22 20l-2.3.7L19 23l-.7-2.3L16 20l2.3-.7z"/></symbol>
   <symbol id="i-logout" viewBox="0 0 24 24"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5M15 8l4 4-4 4M19 12H9"/></symbol>
   <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.5 2.5 0 1 1 4.2 1.8c-1 .8-1.8 1.2-1.8 2.7M12 17h.01"/></symbol>
   <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.2"/></symbol>
   <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></symbol>
 </svg>
@@ -91,9 +92,10 @@
       <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menú"><svg class="ico"><use href="#i-menu"/></svg></button>
       <div class="crumb"><span id="crumbModule">Operación</span><svg class="ico"><use href="#i-chev"/></svg><strong id="crumbTitle">Inicio de sesión</strong></div>
       <div class="top-actions">
-        <span class="api-chip" id="apiChip">Comprobando…</span>
-        <button class="btn btn-soft top-shift-close" id="topCloseShift" hidden><svg class="ico"><use href="#i-lock"/></svg> Cerrar turno</button>
+        <span class="api-chip" id="apiChip" aria-live="polite">Comprobando…</span>
+        <button class="btn btn-soft top-shift-close" id="topCloseShift" hidden aria-label="Cerrar turno"><svg class="ico"><use href="#i-lock"/></svg><span>Cerrar turno</span></button>
         <span class="branch-chip"><span class="branch-dot"></span> Catacamas · Matriz</span>
+        <button class="icon-btn" id="helpBtn" aria-label="Ayuda rápida"><svg class="ico"><use href="#i-help"/></svg></button>
         <button class="icon-btn notify" id="notifyBtn" aria-label="Notificaciones"><svg class="ico"><use href="#i-bell"/></svg><span class="badge" id="notifyBadge">3</span></button>
         <span class="clock" id="liveClock">--:--</span>
         <span class="avatar avatar-top">AC</span>
@@ -137,7 +139,7 @@
                 </label>
                 <label class="field">
                   <span>Contraseña</span>
-                  <div class="input-wrap"><svg class="ico"><use href="#i-lock"/></svg><input id="loginPass" type="password" value="demo1234" autocomplete="current-password" placeholder="••••••••"><button type="button" class="in-btn" id="togglePass" aria-label="Mostrar contraseña"><svg class="ico"><use href="#i-eye"/></svg></button></div>
+                  <div class="input-wrap"><svg class="ico"><use href="#i-lock"/></svg><input id="loginPass" type="password" autocomplete="current-password" placeholder="Mínimo 4 caracteres"><button type="button" class="in-btn" id="togglePass" aria-label="Mostrar contraseña"><svg class="ico"><use href="#i-eye"/></svg></button></div>
                   <small class="field-error" id="passError"></small>
                 </label>
                 <div class="form-row">
@@ -266,10 +268,12 @@
               <div><small>ADQUIRENTE</small><strong id="invClient">María Fernanda López</strong><span id="invClientDoc">RTN 0801-1990-12345</span><span id="invClientAddr">Catacamas, Olancho</span></div>
               <div><small>CONDICIÓN DE PAGO</small><strong id="invPay">Efectivo · Contado</strong><span id="invExento">Cliente no exonerado</span></div>
             </div>
-            <table class="inv-table">
-              <thead><tr><th>CANT.</th><th>DESCRIPCIÓN</th><th>GRAVADO 15%</th><th>GRAVADO 18%</th><th>EXENTO</th><th>ISV</th><th>TOTAL</th></tr></thead>
-              <tbody id="invLines"></tbody>
-            </table>
+            <div class="table-scroll inv-table-scroll">
+              <table class="inv-table">
+                <thead><tr><th>CANT.</th><th>DESCRIPCIÓN</th><th>GRAVADO 15%</th><th>GRAVADO 18%</th><th>EXENTO</th><th>ISV</th><th>TOTAL</th></tr></thead>
+                <tbody id="invLines"></tbody>
+              </table>
+            </div>
             <div class="inv-bottom">
               <div class="inv-notes"><strong>Notas fiscales</strong><p>Comprobante autorizado por el Servicio de Administración de Rentas. Conserve este documento para efectos de deducción y garantía.</p><div class="qr-block"><div class="qr" id="invQr"></div><div><small>VERIFICACIÓN TRIBUTARIA</small><span class="mono" id="invHash">SAR-9F3B2A7C</span></div></div></div>
               <div class="inv-totals">
