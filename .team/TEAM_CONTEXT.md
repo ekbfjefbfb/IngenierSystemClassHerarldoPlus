@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T22:45:52.331858334+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T23:03:43.828762429+00:00`
 
-**Resumen:** 0 abiertas, 0 en curso, 0 bloqueadas, 2 completadas, 1 personas
+**Resumen:** 0 abiertas, 1 en curso, 0 bloqueadas, 2 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -19,11 +19,20 @@
 
 ## Tareas activas
 
-_No hay tareas activas._
+### ekbfjefbfb
+
+- **JET-LPSNR9**  Aligerar rendimiento y densidad visual de la interfaz — `En curso`  rama `main`
+  - Contexto: El usuario percibe la UI como cargada y pesada. Medir el costo actual de navegación, búsqueda y dashboard; reducir renders innecesarios, debounce de búsqueda, trabajo oculto, animaciones y efectos costosos, densidad del catálogo y sombras/blur. Mantener funciones, paleta marfil/carbón/cobre, login independiente y ciclo abrir/cerrar. Verificar 4 suites, comparar métricas antes/después, revisar móvil y git diff; actua…
+  - Prioridad: Alta
+  - Archivos sensibles: prototipo/README.md, prototipo/app.js, prototipo/index.html, prototipo/styles.css
 
 ## Bloqueos de archivos y ramas
 
-_Sin bloqueos activos._
+- **BLOQUEO** `prototipo/README.md` → JET-LPSNR9 (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/app.js` → JET-LPSNR9 (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/index.html` → JET-LPSNR9 (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/styles.css` → JET-LPSNR9 (responsable ekbfjefbfb, En curso)
+- **RAMA** `main` → JET-LPSNR9 (responsable ekbfjefbfb)
 
 ## Completadas recientemente
 
@@ -54,6 +63,8 @@ _Sin mensajes del equipo._
 - `2026-11-25T22:39:02.071687228+00:00`  **TAREA TOMADA**  ekbfjefbfb  JET-WP7RDV  tomó «Pulido final de producción y accesibilidad» y comenzó a trabajar
 - `2026-11-25T22:45:38.578654909+00:00`  **AVANCE**  ekbfjefbfb  JET-WP7RDV  avanzó «Pulido final de producción y accesibilidad»: Pulido final aplicado y validado: favicon, meta theme-color y descripción, aria-current/aria-live/aria-label, login bloqueado durante arranque, API con AbortController y timeout de 5 s, …
 - `2026-11-25T22:45:52.331844535+00:00`  **COMPLETADA**  ekbfjefbfb  JET-WP7RDV  completó «Pulido final de producción y accesibilidad», rama main, commit 53bc88b
+- `2026-11-25T23:03:22.901699644+00:00`  **TAREA CREADA**  ekbfjefbfb  JET-LPSNR9  creó «Aligerar rendimiento y densidad visual de la interfaz» para ekbfjefbfb
+- `2026-11-25T23:03:43.828755925+00:00`  **TAREA TOMADA**  ekbfjefbfb  JET-LPSNR9  tomó «Aligerar rendimiento y densidad visual de la interfaz» y comenzó a trabajar
 
 ## Equipo
 
