@@ -9,6 +9,7 @@ const $  = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const money = n => 'L ' + Number(n || 0).toLocaleString('es-HN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const round = n => Math.round((n + Number.EPSILON) * 100) / 100;
+const norm = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const today = () => new Date().toLocaleDateString('es-HN', { day: '2-digit', month: '2-digit', year: 'numeric' });
 const DEMO_TODAY = new Date(2026, 10, 25);
 const daysUntil = str => { const [d,m,y] = str.split('/').map(Number); return Math.round((new Date(y, m-1, d) - DEMO_TODAY) / 86400000); };
@@ -81,7 +82,7 @@ const sellers = [
 /* ------------------------------------------------------------------ ESTADO */
 const state = {
   screen:'login', shift:null, cart:[], client:null, payMethod:'efectivo',
-  category:'Todas', productFilter:'', selectedClient:'C001', cxcTab:'todas',
+  category:'Todas', productFilter:'', productLimit:8, selectedClient:'C001', cxcTab:'todas',
   cxcFilter:'', promosOnly:false, revealed:false, lastSale:null,
   range:'hoy', ticketNo:428, receiptNo:912
 };
@@ -221,6 +222,10 @@ function processing(text, done) {
 function emptyState(title, hint, action='', label='') {
   return `<div class="empty-state"><svg class="ico"><use href="#i-search"/></svg><b>${title}</b><span>${hint}</span>${action ? `<button type="button" class="btn btn-soft" data-empty="${action}">${label}</button>` : ''}</div>`;
 }
+function debounce(fn, ms=100) {
+  let timer = null;
+  return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), ms); };
+}
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-empty]'); if (!b) return;
   if (b.dataset.empty === 'clients') { $('#clientSearch').value = ''; renderClientList(); }
@@ -338,30 +343,34 @@ $('#categoryChips').innerHTML = ['Todas','Abarrotes','Agro','Ferretería','Láct
   .map(c => `<button class="chip ${c === 'Todas' ? 'active' : ''}" data-cat="${c}">${c}</button>`).join('');
 
 function renderProducts() {
-  const q = state.productFilter.trim().toLowerCase();
+  const q = norm(state.productFilter.trim());
   const list = products.filter(p =>
     (state.category === 'Todas' || p.cat === state.category) &&
-    (!q || p.name.toLowerCase().includes(q) || p.code.includes(q) || p.id.toLowerCase().includes(q)) &&
+    (!q || norm(p.name).includes(q) || p.code.includes(q) || norm(p.id).includes(q)) &&
     (!state.promosOnly || p.promo)
   );
   $('#resultCount').textContent = list.length + (list.length === 1 ? ' producto' : ' productos');
-  $('#productGrid').innerHTML = list.length ? list.map((p, i) => `
-    <button class="product-card ${p.stock === 0 ? 'oos' : ''}" data-add="${p.id}" style="animation-delay:${Math.min(i * 22, 260)}ms">
+  const visible = list.slice(0, state.productLimit);
+  $('#productGrid').innerHTML = visible.length ? visible.map((p, i) => `
+    <button class="product-card ${p.stock === 0 ? 'oos' : ''}" data-add="${p.id}" style="animation-delay:${Math.min(i * 14, 90)}ms">
       ${p.promo ? `<span class="p-promo">${p.promo}</span>` : ''}
       <span class="p-icon"><svg class="ico"><use href="#i-box"/></svg></span>
       <span class="p-name">${p.name}</span>
       <span class="p-code">${p.id} · ${p.cat}</span>
       <span class="p-bottom"><span class="p-price">${money(p.price)}</span><span class="p-stock">${p.stock === 0 ? 'Agotado' : p.stock + ' und'}</span></span>
     </button>`).join('') : `<div class="catalog-empty"><svg class="ico"><use href="#i-search"/></svg><div>No se encontraron productos</div><small>Intente con otro código o categoría</small></div>`;
+  if (list.length > visible.length) $('#productGrid').insertAdjacentHTML('beforeend', `<button class="catalog-more" id="showMoreProducts">Mostrar ${Math.min(8, list.length - visible.length)} productos más</button>`);
 }
-$('#productSearch').addEventListener('input', e => { state.productFilter = e.target.value; renderProducts(); });
+$('#productSearch').addEventListener('input', debounce(e => { state.productFilter = e.target.value; state.productLimit = 8; renderProducts(); }));
 $('#categoryChips').addEventListener('click', e => {
   const chip = e.target.closest('[data-cat]'); if (!chip) return;
   state.category = chip.dataset.cat;
+  state.productLimit = 8;
   $$('#categoryChips .chip').forEach(c => { c.classList.toggle('active', c === chip); c.setAttribute('aria-pressed', String(c === chip)); });
   renderProducts();
 });
 $('#productGrid').addEventListener('click', e => {
+  if (e.target.closest('#showMoreProducts')) { state.productLimit += 8; renderProducts(); return; }
   const card = e.target.closest('[data-add]'); if (card) addToCart(card.dataset.add);
 });
 
@@ -640,8 +649,8 @@ $('#printInvoice').addEventListener('click', () => window.print());
 /* ------------------------------------------------------------------ 03 CLIENTES */
 function initials(name) { return name.split(' ').map(w => w[0]).slice(0,2).join(''); }
 function renderClientList() {
-  const q = $('#clientSearch').value.trim().toLowerCase();
-  const list = clients.filter(c => !q || c.name.toLowerCase().includes(q) || c.doc.includes(q));
+  const q = norm($('#clientSearch').value.trim());
+  const list = clients.filter(c => !q || norm(c.name).includes(q) || c.doc.includes(q));
   $('#clientList').innerHTML = list.map(c => `
     <button class="client-row ${c.id === state.selectedClient ? 'active' : ''}" data-client="${c.id}">
       <span class="avatar">${initials(c.name)}</span>
@@ -649,7 +658,7 @@ function renderClientList() {
       <span class="cr-badge ${c.status === 'Vencido' ? 'warn' : ''}">${c.status}</span>
     </button>`).join('') || emptyState('Sin clientes', 'No hay coincidencias con la búsqueda actual.', 'clients', 'Limpiar búsqueda');
 }
-$('#clientSearch').addEventListener('input', renderClientList);
+$('#clientSearch').addEventListener('input', debounce(renderClientList));
 $('#clientList').addEventListener('click', e => {
   const b = e.target.closest('[data-client]'); if (!b) return;
   state.selectedClient = b.dataset.client; renderClientList(); renderClientDetail();
@@ -736,8 +745,8 @@ function renderProductStats() {
     <div class="stat-card"><small>Valor del inventario</small><b>${money(products.reduce((s,p)=>s+p.cost*p.stock,0))}</b></div>`;
 }
 function renderProductTable() {
-  const q = $('#productTableSearch').value.trim().toLowerCase(), cat = $('#categoryFilter').value;
-  const list = products.filter(p => (!q || p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q) || p.code.includes(q)) && (cat === 'todas' || p.cat === cat) && (!state.promosOnly || p.promo));
+  const q = norm($('#productTableSearch').value.trim()), cat = $('#categoryFilter').value;
+  const list = products.filter(p => (!q || norm(p.name).includes(q) || norm(p.id).includes(q) || p.code.includes(q)) && (cat === 'todas' || p.cat === cat) && (!state.promosOnly || p.promo));
   $('#productTableBody').innerHTML = list.map(p => `<tr>
     <td><div class="p-name-cell"><span class="p-dot"><svg class="ico"><use href="#i-box"/></svg></span><div><div>${p.name}</div><small class="mono" style="color:var(--muted);font-size:9px">${p.id} · ${p.code}</small></div></div></td>
     <td>${p.cat}</td><td class="mono">${money(p.price)}</td><td class="mono">${money(p.dist)}</td><td class="mono">${money(p.mayor)}</td>
@@ -746,7 +755,7 @@ function renderProductTable() {
     <td><div class="row-actions"><button class="mini-btn" data-edit="${p.id}" title="Editar" aria-label="Editar ${p.name}"><svg class="ico"><use href="#i-tag"/></svg></button><button class="mini-btn" data-toggle="${p.id}" title="${p.stock === 0 ? 'Activar' : 'Desactivar'}" aria-label="${p.stock === 0 ? 'Activar' : 'Desactivar'} ${p.name}"><svg class="ico"><use href="#i-${p.stock === 0 ? 'check' : 'x'}"/></svg></button></div></td>
   </tr>`).join('') || `<tr class="empty-state-row"><td colspan="8">${emptyState('Sin productos', 'Ajuste la búsqueda, la categoría o el filtro de promociones.', 'products', 'Limpiar filtros')}</td></tr>`;
 }
-$('#productTableSearch').addEventListener('input', renderProductTable);
+$('#productTableSearch').addEventListener('input', debounce(renderProductTable));
 $('#categoryFilter').addEventListener('change', renderProductTable);
 $('#filterPromos').addEventListener('click', e => {
   state.promosOnly = !state.promosOnly;
@@ -821,8 +830,8 @@ function renderCxc() {
     <div class="cxc-card"><small>Al corriente</small><b>${money(current)}</b><div class="progress"><i style="width:${(current/total*100).toFixed(0)}%"></i></div></div>
     <div class="cxc-card"><small>Por vencer (≤ 15 días)</small><b>${money(soon)}</b><div class="progress"><i style="width:${(soon/total*100).toFixed(0)}%"></i></div></div>
     <div class="cxc-card warn"><small>Vencido · ${(overdue/total*100).toFixed(1)}% morosidad</small><b>${money(overdue)}</b><div class="progress warn"><i style="width:${(overdue/total*100).toFixed(0)}%"></i></div></div>`;
-  const q = state.cxcFilter.trim().toLowerCase();
-  const list = cxc.filter(k => (state.cxcTab==='todas'||k.status.toLowerCase()===state.cxcTab) && (!q||k.client.toLowerCase().includes(q)||k.doc.toLowerCase().includes(q)));
+  const q = norm(state.cxcFilter.trim());
+  const list = cxc.filter(k => (state.cxcTab==='todas'||norm(k.status)===state.cxcTab) && (!q||norm(k.client).includes(q)||norm(k.doc).includes(q)));
   $('#cxcTableBody').innerHTML = list.map(k => `<tr>
     <td><b>${k.client}</b></td><td class="mono">${k.doc}</td><td>${k.issue}</td><td>${k.due}</td>
     <td class="mono"><b>${money(k.balance)}</b></td><td class="mono ${k.days>0?'stock-low':''}">${k.days}</td>
@@ -835,7 +844,7 @@ $('#cxcTabs').addEventListener('click', e => {
   const t = e.target.closest('[data-tab]'); if (!t) return;
   state.cxcTab = t.dataset.tab; $$('.tab').forEach(x=>{ x.classList.toggle('active',x===t); x.setAttribute('aria-pressed', String(x===t)); }); renderCxc();
 });
-$('#cxcSearch').addEventListener('input', e => { state.cxcFilter = e.target.value; renderCxc(); });
+$('#cxcSearch').addEventListener('input', debounce(e => { state.cxcFilter = e.target.value; renderCxc(); }));
 $('#cxcTableBody').addEventListener('click', e => {
   const p = e.target.closest('[data-payrow]'), s = e.target.closest('[data-stmt]');
   if (p) openPayment(p.dataset.payrow);
@@ -864,7 +873,9 @@ function openPayment(clientName) {
           if (c) c.balance = round(Math.max(0, c.balance - amt));
           const no = ++state.receiptNo;
           persist();
-          renderCxc(); renderClientDetail(); renderDashboard();
+          renderCxc();
+          if (state.screen === 'clientes') renderClientDetail();
+          if (state.screen === 'dashboard') renderDashboard();
           modal({
             title:'Recibo de dinero', sub:'Pago registrado correctamente',
             body:`<div class="success-ico"><svg class="ico"><use href="#i-check"/></svg></div>
@@ -961,13 +972,13 @@ $('#revealBtn').addEventListener('click', () => {
 });
 
 /* ------------------------------------------------------------------ 08 DASHBOARD */
-function countUp(el, target, prefix='', dec=0) {
+function countUp(el, target, prefix='', dec=0, instant=false) {
   const suffix = el.dataset.suffix || '';
   const token = (parseInt(el.dataset.animToken || 0, 10) + 1);
   el.dataset.animToken = token;
   const paint = v => el.textContent = prefix + v.toLocaleString('es-HN',{minimumFractionDigits:dec,maximumFractionDigits:dec}) + suffix;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { paint(target); return; }
-  const dur = 900, start = performance.now();
+  if (instant || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { paint(target); return; }
+  const dur = 600, start = performance.now();
   const step = now => {
     if (+el.dataset.animToken !== token) return;
     const p = Math.min(1,(now-start)/dur), e = 1-Math.pow(1-p,3);
@@ -1000,6 +1011,7 @@ function renderCommissions() {
 }
 function renderDashboard() {
   const r = state.range, d = chartData[r];
+  const kpiReady = $('#kpiGrid').dataset.ready === '1';
   const overdueAmt = cxc.filter(k => k.status === 'Vencido').reduce((s,k) => s + k.balance, 0);
   const totalCxc = cxc.reduce((s,k) => s + k.balance, 0) || 1;
   const morosidad = +(overdueAmt / totalCxc * 100).toFixed(1);
@@ -1017,21 +1029,25 @@ function renderDashboard() {
     const el = $(`[data-kpi="${i}"]`);
     if (c.suf) el.dataset.suffix = c.suf;
     const target = typeof c.value === 'number' ? c.value : parseFloat(c.value.replace(',',''));
-    countUp(el, target, c.pre, c.dec);
+    countUp(el, target, c.pre, c.dec, kpiReady);
   });
+  $('#kpiGrid').dataset.ready = '1';
 
-  const w=620,h=170,pad=18, max=Math.max(...d)*1.12;
-  const pts=d.map((v,i)=>[pad+i*(w-2*pad)/(d.length-1), h-pad-(v/max)*(h-2*pad)]);
-  const line='M'+pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' L ');
-  const area=line+` L ${pts[pts.length-1][0].toFixed(1)} ${h-pad} L ${pts[0][0].toFixed(1)} ${h-pad} Z`;
-  const labels=r==='hoy'?['8a','10a','12p','2p','4p','6p']:r==='semana'?['Lun','Mar','Mié','Jue','Vie','Sáb','Dom']:['Ene','Mar','May','Jul','Sep','Nov'];
-  $('#lineChart').innerHTML=`<svg viewBox="0 0 ${w} ${h+16}" preserveAspectRatio="none">
-    <defs><linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9C4F22" stop-opacity=".26"/><stop offset="1" stop-color="#9C4F22" stop-opacity="0"/></linearGradient></defs>
-    ${[0,1,2,3].map(i=>`<line class="chart-grid" x1="${pad}" y1="${pad+i*(h-2*pad)/3}" x2="${w-pad}" y2="${pad+i*(h-2*pad)/3}"/>`).join('')}
-    <path class="chart-area" d="${area}"/><path class="chart-line" d="${line}"/>
-    ${pts.map(p=>`<circle class="chart-dot" cx="${p[0]}" cy="${p[1]}" r="3.2"/>`).join('')}
-    ${labels.map((l,i)=>`<text class="chart-label" x="${pad+i*(w-2*pad)/(labels.length-1)}" y="${h+9}" text-anchor="middle">${l}</text>`).join('')}
-  </svg>`;
+  if ($('#lineChart').dataset.range !== r) {
+    const w=620,h=170,pad=18, max=Math.max(...d)*1.12;
+    const pts=d.map((v,i)=>[pad+i*(w-2*pad)/(d.length-1), h-pad-(v/max)*(h-2*pad)]);
+    const line='M'+pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' L ');
+    const area=line+` L ${pts[pts.length-1][0].toFixed(1)} ${h-pad} L ${pts[0][0].toFixed(1)} ${h-pad} Z`;
+    const labels=r==='hoy'?['8a','10a','12p','2p','4p','6p']:r==='semana'?['Lun','Mar','Mié','Jue','Vie','Sáb','Dom']:['Ene','Mar','May','Jul','Sep','Nov'];
+    $('#lineChart').innerHTML=`<svg viewBox="0 0 ${w} ${h+16}" preserveAspectRatio="none">
+      <defs><linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9C4F22" stop-opacity=".26"/><stop offset="1" stop-color="#9C4F22" stop-opacity="0"/></linearGradient></defs>
+      ${[0,1,2,3].map(i=>`<line class="chart-grid" x1="${pad}" y1="${pad+i*(h-2*pad)/3}" x2="${w-pad}" y2="${pad+i*(h-2*pad)/3}"/>`).join('')}
+      <path class="chart-area" d="${area}"/><path class="chart-line" d="${line}"/>
+      ${pts.map(p=>`<circle class="chart-dot" cx="${p[0]}" cy="${p[1]}" r="3.2"/>`).join('')}
+      ${labels.map((l,i)=>`<text class="chart-label" x="${pad+i*(w-2*pad)/(labels.length-1)}" y="${h+9}" text-anchor="middle">${l}</text>`).join('')}
+    </svg>`;
+    $('#lineChart').dataset.range = r;
+  }
 
   const vencidoPct = morosidad;
   const porVencerPct = +(porVencer() / totalCxc * 100).toFixed(1);
@@ -1042,16 +1058,25 @@ function renderDashboard() {
     <div class="dl-row"><i style="background:#A85E2C"></i> Por vencer <b>${porVencerPct.toFixed(1)}%</b></div>
     <div class="dl-row"><i style="background:#B4473F"></i> Vencido <b>${vencidoPct.toFixed(1)}%</b></div>`;
 
-  const heat=[[1,2,4],[2,3,4],[1,3,3],[2,4,3]];
-  $('#heatmap').innerHTML=`<table class="heat-table"><thead><tr><th>SEGMENTO</th><th>BAJA</th><th>MEDIA</th><th>ALTA</th></tr></thead><tbody>
-    ${['Frecuentes','Mayoristas','Crédito','Corporativo'].map((seg,i)=>`<tr><td>${seg}</td>${heat[i].map(v=>`<td><div class="heat-cell h-${v}">${['Bajo','Medio','Alto','Máximo'][v-1]}</div></td>`).join('')}</tr>`).join('')}
-  </tbody></table>`;
+  if ($('#heatmap').dataset.ready !== '1') {
+    const heat=[[1,2,4],[2,3,4],[1,3,3],[2,4,3]];
+    $('#heatmap').innerHTML=`<table class="heat-table"><thead><tr><th>SEGMENTO</th><th>BAJA</th><th>MEDIA</th><th>ALTA</th></tr></thead><tbody>
+      ${['Frecuentes','Mayoristas','Crédito','Corporativo'].map((seg,i)=>`<tr><td>${seg}</td>${heat[i].map(v=>`<td><div class="heat-cell h-${v}">${['Bajo','Medio','Alto','Máximo'][v-1]}</div></td>`).join('')}</tr>`).join('')}
+    </tbody></table>`;
+    $('#heatmap').dataset.ready = '1';
+  }
 
-  $('#sellerGoals').innerHTML=sellers.map(s=>`<div class="goal-row"><div class="goal-top"><b>${s.name}</b><span>${s.pct}% de ${s.goal}</span></div><div class="goal-bar"><i style="width:${s.pct}%"></i></div></div>`).join('');
-  renderCommissions();
+  if ($('#sellerGoals').dataset.ready !== '1') {
+    $('#sellerGoals').innerHTML=sellers.map(s=>`<div class="goal-row"><div class="goal-top"><b>${s.name}</b><span>${s.pct}% de ${s.goal}</span></div><div class="goal-bar"><i style="width:${s.pct}%"></i></div></div>`).join('');
+    $('#sellerGoals').dataset.ready = '1';
+  }
+  if ($('#commissionsCard').dataset.ready !== '1') { renderCommissions(); $('#commissionsCard').dataset.ready = '1'; }
 
-  const maxSales=Math.max(...topProducts.map(p=>p.sales));
-  $('#topProducts').innerHTML=topProducts.map((p,i)=>`<tr><td class="mono" style="color:var(--muted)">${String(i+1).padStart(2,'0')}</td><td><b>${p.name}</b></td><td class="mono">${p.units}</td><td class="mono">${money(p.sales)}</td><td><div class="top-share"><div class="bar"><i style="width:${p.sales/maxSales*100}%"></i></div><span>${(p.sales/maxSales*100).toFixed(0)}%</span></div></td></tr>`).join('');
+  if ($('#topProducts').dataset.ready !== '1') {
+    const maxSales=Math.max(...topProducts.map(p=>p.sales));
+    $('#topProducts').innerHTML=topProducts.map((p,i)=>`<tr><td class="mono" style="color:var(--muted)">${String(i+1).padStart(2,'0')}</td><td><b>${p.name}</b></td><td class="mono">${p.units}</td><td class="mono">${money(p.sales)}</td><td><div class="top-share"><div class="bar"><i style="width:${p.sales/maxSales*100}%"></i></div><span>${(p.sales/maxSales*100).toFixed(0)}%</span></div></td></tr>`).join('');
+    $('#topProducts').dataset.ready = '1';
+  }
 }
 $('#rangeChips').addEventListener('click', e => {
   const b=e.target.closest('[data-range]'); if(!b)return;
@@ -1111,6 +1136,7 @@ document.addEventListener('keydown', e => {
     e.preventDefault(); $('#productSearch').focus();
   }
   if (e.key === 'Enter' && document.activeElement === $('#productSearch') && state.screen === 'pos') {
+    state.productFilter = $('#productSearch').value; state.productLimit = 8; renderProducts();
     const first = $('#productGrid [data-add]'); if (first) addToCart(first.dataset.add);
   }
 });
