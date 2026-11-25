@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T23:20:16.660275766+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T23:20:31.529994843+00:00`
 
-**Resumen:** 1 abiertas, 0 en curso, 0 bloqueadas, 3 completadas, 1 personas
+**Resumen:** 0 abiertas, 1 en curso, 0 bloqueadas, 3 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,14 +21,20 @@
 
 ### ekbfjefbfb
 
-- **JET-8D88LZ**  Auditoría HCI por pantalla y aplicación de los 18 agentes — `Abierta`  rama `sin rama`
+- **JET-8D88LZ**  Auditoría HCI por pantalla y aplicación de los 18 agentes — `En curso`  rama `main`
   - Contexto: Leer los 18 perfiles de /home/alberto/Jet/agents y aplicar sus criterios adaptados a web: detalle, responsive, empatía, minimalismo, movimiento, limpieza, arquitectura, seguridad, evidencia y calidad. Auditar las 8 pantallas y secciones compartidas; documentar hallazgos y correcciones en un informe breve sin relleno. Verificar WCAG 2.2, Nielsen, Fitts/Hick/Miller/Prägnanz/Doherty, ausencia de overflow en 360/390/768…
   - Prioridad: Alta
   - Archivos sensibles: prototipo/README.md, prototipo/UIUX_AUDIT.md, prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
 
 ## Bloqueos de archivos y ramas
 
-_Sin bloqueos activos._
+- **BLOQUEO** `prototipo/README.md` → JET-8D88LZ (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/UIUX_AUDIT.md` → JET-8D88LZ (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/app.js` → JET-8D88LZ (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/index.html` → JET-8D88LZ (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/server.py` → JET-8D88LZ (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/styles.css` → JET-8D88LZ (responsable ekbfjefbfb, En curso)
+- **RAMA** `main` → JET-8D88LZ (responsable ekbfjefbfb)
 
 ## Completadas recientemente
 
@@ -66,6 +72,7 @@ _Sin mensajes del equipo._
 - `2026-11-25T23:18:29.499356167+00:00`  **AVANCE**  ekbfjefbfb  JET-LPSNR9  avanzó «Aligerar rendimiento y densidad visual de la interfaz»: Optimización validada. Catálogo inicial 8 con carga progresiva, debounce de búsquedas, búsqueda sin acentos, caché de gráfico/tablas del dashboard, renders ocultos eliminados,…
 - `2026-11-25T23:18:54.253239789+00:00`  **COMPLETADA**  ekbfjefbfb  JET-LPSNR9  completó «Aligerar rendimiento y densidad visual de la interfaz», rama main, commit ea33582
 - `2026-11-25T23:20:16.660266946+00:00`  **TAREA CREADA**  ekbfjefbfb  JET-8D88LZ  creó «Auditoría HCI por pantalla y aplicación de los 18 agentes» para ekbfjefbfb
+- `2026-11-25T23:20:31.529984123+00:00`  **TAREA TOMADA**  ekbfjefbfb  JET-8D88LZ  tomó «Auditoría HCI por pantalla y aplicación de los 18 agentes» y comenzó a trabajar
 
 ## Equipo
 

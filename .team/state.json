@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-25T23:20:16.660275766Z",
+  "updated_at": "2026-11-25T23:20:31.529994843Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -84,12 +84,13 @@
       "id": "JET-8D88LZ",
       "title": "Auditoría HCI por pantalla y aplicación de los 18 agentes",
       "context": "Leer los 18 perfiles de /home/alberto/Jet/agents y aplicar sus criterios adaptados a web: detalle, responsive, empatía, minimalismo, movimiento, limpieza, arquitectura, seguridad, evidencia y calidad. Auditar las 8 pantallas y secciones compartidas; documentar hallazgos y correcciones en un informe breve sin relleno. Verificar WCAG 2.2, Nielsen, Fitts/Hick/Miller/Prägnanz/Doherty, ausencia de overflow en 360/390/768/1440, feedback <400 ms, teclado/mouse, 4 suites, performance y git diff. Subir a main.",
-      "status": "open",
+      "status": "in_progress",
       "priority": "high",
       "assignee_id": "ekbfjefbfb",
       "assignee_name": "ekbfjefbfb",
       "created_by_id": "ekbfjefbfb",
       "created_by_name": "ekbfjefbfb",
+      "branch": "main",
       "files": [
         "prototipo/README.md",
         "prototipo/UIUX_AUDIT.md",
@@ -99,7 +100,8 @@
         "prototipo/styles.css"
       ],
       "created_at": "2026-11-25T23:20:16.660266946Z",
-      "updated_at": "2026-11-25T23:20:16.660266946Z",
+      "updated_at": "2026-11-25T23:20:31.529984123Z",
+      "started_at": "2026-11-25T23:20:31.529984123Z",
       "agent": "opencode",
       "archived": false,
       "notes": []
@@ -195,6 +197,15 @@
     }
   },
   "events": [
+    {
+      "id": "98cf481e-4a59-461a-96fb-50effc27d206",
+      "at": "2026-11-25T23:20:31.529984123Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_taken",
+      "task_id": "JET-8D88LZ",
+      "message": "tomó «Auditoría HCI por pantalla y aplicación de los 18 agentes» y comenzó a trabajar"
+    },
     {
       "id": "faf4a260-d1e7-4b99-bc7a-9cdf53d0bc53",
       "at": "2026-11-25T23:20:16.660266946Z",
