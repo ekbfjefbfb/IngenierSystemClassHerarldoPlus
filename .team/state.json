@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-25T23:18:29.499523590Z",
+  "updated_at": "2026-11-25T23:18:54.253257459Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -84,7 +84,7 @@
       "id": "JET-LPSNR9",
       "title": "Aligerar rendimiento y densidad visual de la interfaz",
       "context": "El usuario percibe la UI como cargada y pesada. Medir el costo actual de navegación, búsqueda y dashboard; reducir renders innecesarios, debounce de búsqueda, trabajo oculto, animaciones y efectos costosos, densidad del catálogo y sombras/blur. Mantener funciones, paleta marfil/carbón/cobre, login independiente y ciclo abrir/cerrar. Verificar 4 suites, comparar métricas antes/después, revisar móvil y git diff; actualizar README y subir a main.",
-      "status": "in_progress",
+      "status": "done",
       "priority": "high",
       "assignee_id": "ekbfjefbfb",
       "assignee_name": "ekbfjefbfb",
@@ -98,8 +98,13 @@
         "prototipo/styles.css"
       ],
       "created_at": "2026-11-25T23:03:22.901699644Z",
-      "updated_at": "2026-11-25T23:18:29.499356167Z",
+      "updated_at": "2026-11-25T23:18:54.253239789Z",
       "started_at": "2026-11-25T23:03:43.828755925Z",
+      "completed_at": "2026-11-25T23:18:54.253239789Z",
+      "completed_by_id": "ekbfjefbfb",
+      "completed_by_name": "ekbfjefbfb",
+      "completed_branch": "main",
+      "commit": "ea33582",
       "agent": "opencode",
       "archived": false,
       "notes": [
@@ -109,6 +114,13 @@
           "author_name": "ekbfjefbfb",
           "body": "Optimización validada. Catálogo inicial 8 con carga progresiva, debounce de búsquedas, búsqueda sin acentos, caché de gráfico/tablas del dashboard, renders ocultos eliminados, animaciones y sombras reducidas, blur retirado en móvil. Métricas: dashboard primer render TaskDuration ~0.316→0.267-0.273 s y layouts 55→36-38; repetido 0.141 s y 3 layouts; POS search layouts 16→12-13 y nodos 892→262. 4 suites con 0 errores. Commit y push ea33582.",
           "created_at": "2026-11-25T23:18:29.499356167Z"
+        },
+        {
+          "id": "d1c8cd4c-178a-485d-bc8a-33f5c20f8ca2",
+          "author_id": "ekbfjefbfb",
+          "author_name": "ekbfjefbfb",
+          "body": "Completado y validado. Catálogo progresivo de 8, búsquedas con debounce y sin acentos, dashboard cacheado, renders ocultos eliminados, animaciones/sombras reducidas y blur retirado en móvil. Métricas: dashboard 55→36-38 layouts y 0.316→0.267-0.273 s; repetido 0.141 s/3 layouts; POS search 892→262 nodos. 4 suites con 0 errores. Push ea33582.",
+          "created_at": "2026-11-25T23:18:54.253239789Z"
         }
       ]
     },
@@ -159,6 +171,15 @@
     }
   },
   "events": [
+    {
+      "id": "635210b3-0f88-49a4-bf39-5a90f22a8e24",
+      "at": "2026-11-25T23:18:54.253239789Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_completed",
+      "task_id": "JET-LPSNR9",
+      "message": "completó «Aligerar rendimiento y densidad visual de la interfaz», rama main, commit ea33582"
+    },
     {
       "id": "56c2ee4b-7c74-46ea-a5c8-e639276b2520",
       "at": "2026-11-25T23:18:29.499356167Z",
