@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T22:12:50.535123778+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T22:13:05.786799168+00:00`
 
-**Resumen:** 1 abiertas, 0 en curso, 0 bloqueadas, 0 completadas, 1 personas
+**Resumen:** 0 abiertas, 1 en curso, 0 bloqueadas, 0 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,14 +21,19 @@
 
 ### ekbfjefbfb
 
-- **JET-3R9S92**  Reducir fatiga visual y validar apertura/cierre con mouse — `Abierta`  rama `sin rama`
+- **JET-3R9S92**  Reducir fatiga visual y validar apertura/cierre con mouse — `En curso`  rama `main`
   - Contexto: El usuario reporta que la interfaz actual cansa la vista y quiere que sea elite, sin colores agresivos, con jerarquía clara, entrada de sesión independiente y apertura/cierre de turno operables solo con mouse. Archivos implicados: prototipo/styles.css, prototipo/index.html, prototipo/app.js, prototipo/server.py, prototipo/README.md. Criterio: paleta carbón/cobre neutra sin azul ni verde, contraste accesible, una sol…
   - Prioridad: Alta
   - Archivos sensibles: prototipo/README.md, prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
 
 ## Bloqueos de archivos y ramas
 
-_Sin bloqueos activos._
+- **BLOQUEO** `prototipo/README.md` → JET-3R9S92 (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/app.js` → JET-3R9S92 (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/index.html` → JET-3R9S92 (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/server.py` → JET-3R9S92 (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/styles.css` → JET-3R9S92 (responsable ekbfjefbfb, En curso)
+- **RAMA** `main` → JET-3R9S92 (responsable ekbfjefbfb)
 
 ## Completadas recientemente
 
@@ -42,6 +47,7 @@ _Sin mensajes del equipo._
 
 - `2026-11-25T22:10:34.589741515+00:00`  **EQUIPO**  ekbfjefbfb  ekbfjefbfb se unió al espacio de equipo
 - `2026-11-25T22:12:50.535074202+00:00`  **TAREA CREADA**  ekbfjefbfb  JET-3R9S92  creó «Reducir fatiga visual y validar apertura/cierre con mouse» para ekbfjefbfb
+- `2026-11-25T22:13:05.786771770+00:00`  **TAREA TOMADA**  ekbfjefbfb  JET-3R9S92  tomó «Reducir fatiga visual y validar apertura/cierre con mouse» y comenzó a trabajar
 
 ## Equipo
 

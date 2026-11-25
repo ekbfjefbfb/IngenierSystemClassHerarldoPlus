@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-25T22:12:50.535123778Z",
+  "updated_at": "2026-11-25T22:13:05.786799168Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -24,12 +24,13 @@
       "id": "JET-3R9S92",
       "title": "Reducir fatiga visual y validar apertura/cierre con mouse",
       "context": "El usuario reporta que la interfaz actual cansa la vista y quiere que sea elite, sin colores agresivos, con jerarquía clara, entrada de sesión independiente y apertura/cierre de turno operables solo con mouse. Archivos implicados: prototipo/styles.css, prototipo/index.html, prototipo/app.js, prototipo/server.py, prototipo/README.md. Criterio: paleta carbón/cobre neutra sin azul ni verde, contraste accesible, una sola acción primaria por pantalla, login fuera del shell, botón de cerrar turno visible, ciclo login→abrir→cerrar→login probado en Chromium, suites existentes sin errores, backend SQLite y Render siguen funcionando.",
-      "status": "open",
+      "status": "in_progress",
       "priority": "high",
       "assignee_id": "ekbfjefbfb",
       "assignee_name": "ekbfjefbfb",
       "created_by_id": "ekbfjefbfb",
       "created_by_name": "ekbfjefbfb",
+      "branch": "main",
       "files": [
         "prototipo/README.md",
         "prototipo/app.js",
@@ -38,13 +39,23 @@
         "prototipo/styles.css"
       ],
       "created_at": "2026-11-25T22:12:50.535074202Z",
-      "updated_at": "2026-11-25T22:12:50.535074202Z",
+      "updated_at": "2026-11-25T22:13:05.786771770Z",
+      "started_at": "2026-11-25T22:13:05.786771770Z",
       "agent": "opencode",
       "archived": false,
       "notes": []
     }
   },
   "events": [
+    {
+      "id": "4e24ed80-6f5d-4e73-a186-ba429c9d9e56",
+      "at": "2026-11-25T22:13:05.786771770Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_taken",
+      "task_id": "JET-3R9S92",
+      "message": "tomó «Reducir fatiga visual y validar apertura/cierre con mouse» y comenzó a trabajar"
+    },
     {
       "id": "bc192f4a-e8b8-46ad-9144-f8ccfe8ae5af",
       "at": "2026-11-25T22:12:50.535074202Z",
