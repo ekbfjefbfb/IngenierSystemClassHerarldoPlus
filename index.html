@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E2E23">
+<title>COAGRO POS · Prototipo UI/UX 2026</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ======================= SPRITE DE ICONOS ======================= -->
+<svg class="svg-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.6 12 3l9 7.6V20a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0M16 5.2a3.2 3.2 0 0 1 0 6.1M17.5 14.2A5.8 5.8 0 0 1 21.2 20"/></symbol>
+  <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M5 3h14v18l-2.4-1.6L14.2 21l-2.4-1.6L9.4 21l-2.3-1.6L5 21z"/><path d="M9 8h6M9 12h6M9 16h3"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="m12 2.8 8.5 4.4v9.6L12 21.2 3.5 16.8V7.2z"/><path d="m3.5 7.2 8.5 4.5 8.5-4.5M12 11.7v9.5M7.7 5l8.5 4.5"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H19a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5.5A2.5 2.5 0 0 1 3 16.5z"/><path d="M3 9h18M16 13.5h2"/></symbol>
+  <symbol id="i-cash" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 12h.01M18 12h.01"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18M7 16l4-5 3 2.5 5-7"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6.5 7l1 13h9l1-13M10 11v5M14 11v5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m4.5 12.5 5 5 10-11"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M5 5 19 19M19 5 5 19"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+  <symbol id="i-print" viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v4a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v7H7z"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2.8 20h18.4z"/><path d="M12 9v5M12 17h.01"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6M10 19a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-scan" viewBox="0 0 24 24"><path d="M4 9V5a1 1 0 0 1 1-1h4M15 4h4a1 1 0 0 1 1 1v4M20 15v4a1 1 0 0 1-1 1h-4M9 20H5a1 1 0 0 1-1-1v-4M3 12h18"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 10h19M6 15h4"/></symbol>
+  <symbol id="i-bank" viewBox="0 0 24 24"><path d="m3 9 9-5 9 5M5 9v9M9.5 9v9M14.5 9v9M19 9v9M3 20h18"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8zM19 17l.7 2.3L22 20l-2.3.7L19 23l-.7-2.3L16 20l2.3-.7z"/></symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5M15 8l4 4-4 4M19 12H9"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.2"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></symbol>
+</svg>
+
+<div class="app" id="app">
+
+  <!-- ======================= SIDEBAR (DESKTOP) ======================= -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">C<span>.</span></div>
+      <div class="brand-text"><strong>COAGRO</strong><small>Sistema comercial · Olancho</small></div>
+    </div>
+
+    <div class="side-scroll">
+      <p class="side-label">OPERACIÓN</p>
+      <nav class="side-nav" aria-label="Navegación principal">
+        <button class="nav-item" data-go="login"><svg class="ico"><use href="#i-home"/></svg><span>Inicio</span></button>
+        <button class="nav-item" data-go="pos"><svg class="ico"><use href="#i-grid"/></svg><span>Punto de venta</span><kbd>/</kbd></button>
+        <button class="nav-item" data-go="clientes"><svg class="ico"><use href="#i-users"/></svg><span>Clientes y crédito</span></button>
+        <button class="nav-item" data-go="factura"><svg class="ico"><use href="#i-receipt"/></svg><span>Facturación SAR</span></button>
+        <button class="nav-item" data-go="productos"><svg class="ico"><use href="#i-box"/></svg><span>Productos y precios</span></button>
+      </nav>
+      <p class="side-label">GESTIÓN</p>
+      <nav class="side-nav" aria-label="Navegación de gestión">
+        <button class="nav-item" data-go="cxc"><svg class="ico"><use href="#i-wallet"/></svg><span>Cuentas por cobrar</span><span class="nav-dot" id="navMoraDot"></span></button>
+        <button class="nav-item" data-go="cierre"><svg class="ico"><use href="#i-cash"/></svg><span>Caja y cierres</span></button>
+        <button class="nav-item" data-go="dashboard"><svg class="ico"><use href="#i-chart"/></svg><span>Reportes</span></button>
+      </nav>
+    </div>
+
+    <div class="side-foot">
+      <div class="shift-mini">
+        <span class="pulse-dot"></span>
+        <div><strong id="shiftState">Turno cerrado</strong><small id="shiftMeta">Caja 01 · Catacamas</small></div>
+      </div>
+      <button class="user-mini" id="userMini">
+        <span class="avatar">AC</span>
+        <span class="user-mini-text"><strong id="userMiniName">Alberto C.</strong><small id="userMiniRole">Cajero · Terminal 01</small></span>
+        <svg class="ico"><use href="#i-more"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ======================= MAIN ======================= -->
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menú"><svg class="ico"><use href="#i-menu"/></svg></button>
+      <div class="crumb"><span id="crumbModule">Operación</span><svg class="ico"><use href="#i-chev"/></svg><strong id="crumbTitle">Inicio de sesión</strong></div>
+      <div class="top-actions">
+        <span class="api-chip" id="apiChip">Comprobando…</span>
+        <span class="branch-chip"><span class="branch-dot"></span> Catacamas · Matriz</span>
+        <button class="icon-btn notify" id="notifyBtn" aria-label="Notificaciones"><svg class="ico"><use href="#i-bell"/></svg><span class="badge" id="notifyBadge">3</span></button>
+        <span class="clock" id="liveClock">--:--</span>
+        <span class="avatar avatar-top">AC</span>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+
+      <!-- ==================== 01 · LOGIN / APERTURA ==================== -->
+      <section class="screen active" data-screen="login">
+        <div class="login-shell">
+          <div class="login-art">
+            <div class="art-grid"></div>
+            <div class="art-orb art-orb-1"></div><div class="art-orb art-orb-2"></div>
+            <div class="art-content">
+              <div class="art-brand"><span class="brand-mark small">C<span>.</span></span><strong>COAGRO</strong></div>
+              <h1>Vender más rápido.<br><em>Cobrar con confianza.</em></h1>
+              <p>Punto de venta, facturación fiscal SAR y fidelización en una sola operación. Diseñado para el mostrador de Catacamas.</p>
+              <div class="art-stats">
+                <div class="art-stat"><b data-count="600">0</b><small>clientes / día</small></div>
+                <div class="art-stat"><b data-count="35">0</b><small>min → &lt; 8 min</small></div>
+                <div class="art-stat"><b data-count="3">0</b><small>sucursales conectadas</small></div>
+              </div>
+            </div>
+            <div class="art-foot">ISC-302 · Proyecto integrador · Opción B</div>
+          </div>
+
+          <div class="login-panel">
+            <div class="login-card" id="loginCard">
+              <div class="card-heading">
+                <span class="eyebrow">ACCESO SEGURO</span>
+                <h2>Iniciar sesión</h2>
+                <p>Use sus credenciales asignadas por el administrador.</p>
+              </div>
+
+              <form id="loginForm" novalidate>
+                <label class="field">
+                  <span>Usuario</span>
+                  <div class="input-wrap"><svg class="ico"><use href="#i-users"/></svg><input id="loginUser" type="text" value="cajero01" autocomplete="username" placeholder="Usuario o código de empleado"></div>
+                  <small class="field-error" id="userError"></small>
+                </label>
+                <label class="field">
+                  <span>Contraseña</span>
+                  <div class="input-wrap"><svg class="ico"><use href="#i-lock"/></svg><input id="loginPass" type="password" value="demo1234" autocomplete="current-password" placeholder="••••••••"><button type="button" class="in-btn" id="togglePass" aria-label="Mostrar contraseña"><svg class="ico"><use href="#i-eye"/></svg></button></div>
+                  <small class="field-error" id="passError"></small>
+                </label>
+                <div class="form-row">
+                  <label class="check"><input type="checkbox" id="remember" checked><span></span> Recordar terminal</label>
+                  <button type="button" class="link-btn" id="forgotBtn">¿Olvidó su contraseña?</button>
+                </div>
+                <button class="btn btn-primary btn-block ripple" type="submit" id="loginSubmit"><span>Ingresar</span><svg class="ico"><use href="#i-chev"/></svg></button>
+              </form>
+
+              <div class="terminal-note"><svg class="ico"><use href="#i-scan"/></svg><span>Terminal asignada <strong>Caja 01</strong> · validada</span><span class="ok-dot"></span></div>
+              <p class="demo-hint">Demo: cualquier usuario y contraseña con 4+ caracteres.</p>
+            </div>
+
+            <div class="login-card" id="openingCard" hidden>
+              <div class="card-heading">
+                <span class="eyebrow">PASO 2 DE 2</span>
+                <h2>Apertura de caja</h2>
+                <p>Registre el fondo inicial. El desglose evita errores en el arqueo.</p>
+              </div>
+              <div class="opening-meta"><span><svg class="ico"><use href="#i-cash"/></svg> Caja 01</span><span><svg class="ico"><use href="#i-calendar"/></svg> <b id="openingDate"></b></span></div>
+              <div class="denom-list" id="openingDenoms"></div>
+              <div class="opening-total"><span>Fondo inicial</span><strong id="openingTotal">L 0.00</strong></div>
+              <small class="field-error" id="openingError"></small>
+              <div class="btn-row">
+                <button class="btn btn-ghost" id="backLogin">Volver</button>
+                <button class="btn btn-primary ripple" id="openShiftBtn">Abrir turno <svg class="ico"><use href="#i-chev"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 02 · POS ==================== -->
+      <section class="screen" data-screen="pos">
+        <div class="page-head">
+          <div><span class="eyebrow">MÓDULO 01 · TPS</span><h1>Punto de venta</h1><p>Búsqueda predictiva, cálculo fiscal automático y cobro en un solo flujo.</p></div>
+          <div class="head-actions"><span class="pill pill-live"><span class="pulse-dot"></span> Turno activo</span><button class="btn btn-soft" id="posScanTop"><svg class="ico"><use href="#i-scan"/></svg> Escanear</button></div>
+        </div>
+
+        <div class="pos-grid">
+          <div class="panel pos-catalog">
+            <div class="search-row">
+              <div class="search-field"><svg class="ico"><use href="#i-search"/></svg><input id="productSearch" placeholder="Buscar por nombre, código o código de barras…" autocomplete="off"><kbd>/</kbd></div>
+              <button class="btn btn-primary btn-icon" id="scanBtn" aria-label="Simular lector de código de barras"><svg class="ico"><use href="#i-scan"/></svg></button>
+            </div>
+            <div class="chips" id="categoryChips"></div>
+            <div class="catalog-meta"><span id="resultCount">0 productos</span><span class="hint">Teclea <kbd>Enter</kbd> para agregar el primero</span></div>
+            <div class="product-grid" id="productGrid"></div>
+          </div>
+
+          <aside class="panel ticket" id="ticket">
+            <div class="ticket-head">
+              <div><span class="eyebrow">TICKET #<span id="ticketNumber">00428</span></span><h2>Venta actual</h2></div>
+              <button class="icon-btn" id="clearCart" aria-label="Vaciar ticket" title="Vaciar ticket"><svg class="ico"><use href="#i-trash"/></svg></button>
+            </div>
+            <button class="client-select" id="clientSelect">
+              <span class="avatar avatar-sm">CF</span>
+              <span><small>Cliente</small><strong id="ticketClient">Consumidor final</strong></span>
+              <svg class="ico"><use href="#i-chev"/></svg>
+            </button>
+
+            <div class="cart-head"><span>Producto</span><span>Cant.</span><span>Importe</span></div>
+            <div class="cart-lines" id="cartLines"></div>
+
+            <div class="ticket-summary">
+              <div class="sum-row"><span>Subtotal gravado 15%</span><b id="sumBase15">L 0.00</b></div>
+              <div class="sum-row"><span>Subtotal gravado 18%</span><b id="sumBase18">L 0.00</b></div>
+              <div class="sum-row"><span>Exento</span><b id="sumExento">L 0.00</b></div>
+              <div class="sum-row"><span>ISV (15% + 18%)</span><b id="sumIsv">L 0.00</b></div>
+              <div class="sum-row discount-row"><span>Descuento</span><div class="discount-input"><span>L</span><input id="discountInput" type="number" min="0" step="0.01" value="0"></div></div>
+              <div class="sum-total"><span>TOTAL</span><strong id="sumTotal">L 0.00</strong></div>
+            </div>
+
+            <div class="pay-methods" id="payMethods">
+              <button class="pay-chip active" data-pay="efectivo"><svg class="ico"><use href="#i-cash"/></svg> Efectivo</button>
+              <button class="pay-chip" data-pay="ach"><svg class="ico"><use href="#i-bank"/></svg> ACH</button>
+              <button class="pay-chip" data-pay="tarjeta"><svg class="ico"><use href="#i-card"/></svg> Tarjeta</button>
+              <button class="pay-chip" data-pay="credito"><svg class="ico"><use href="#i-wallet"/></svg> Crédito</button>
+            </div>
+
+            <div class="ticket-actions">
+              <button class="btn btn-primary btn-block btn-charge ripple" id="chargeBtn" disabled><span>Cobrar</span><strong id="chargeTotal">L 0.00</strong><svg class="ico"><use href="#i-chev"/></svg></button>
+              <button class="btn btn-ghost btn-block" id="holdBtn">Guardar venta en espera</button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ==================== 03 · CLIENTES ==================== -->
+      <section class="screen" data-screen="clientes">
+        <div class="page-head">
+          <div><span class="eyebrow">MÓDULO 04 · CRM</span><h1>Clientes y crédito</h1><p>Ficha 360°, historial de consumo y evaluación de crédito en tiempo real.</p></div>
+          <button class="btn btn-primary" id="newClientBtn"><svg class="ico"><use href="#i-plus"/></svg> Nuevo cliente</button>
+        </div>
+        <div class="clients-grid">
+          <div class="panel clients-list">
+            <div class="search-field compact"><svg class="ico"><use href="#i-search"/></svg><input id="clientSearch" placeholder="Buscar cliente o RTN…"></div>
+            <div class="client-items" id="clientList"></div>
+          </div>
+          <div class="panel client-detail" id="clientDetail"></div>
+        </div>
+      </section>
+
+      <!-- ==================== 04 · FACTURA SAR ==================== -->
+      <section class="screen" data-screen="factura">
+        <div class="page-head">
+          <div><span class="eyebrow">MÓDULO 02 · FACTURACIÓN FISCAL</span><h1>Comprobante fiscal SAR</h1><p>Vista previa oficial antes de la emisión. CAI, rangos y QR de autenticidad.</p></div>
+          <div class="head-actions">
+            <button class="btn btn-soft" id="printInvoice"><svg class="ico"><use href="#i-print"/></svg> Imprimir</button>
+            <button class="btn btn-primary ripple" id="emitInvoice"><svg class="ico"><use href="#i-check"/></svg> Emitir factura</button>
+          </div>
+        </div>
+        <div class="invoice-wrap">
+          <div class="invoice-paper" id="invoicePaper">
+            <div class="inv-top">
+              <div class="inv-brand"><span class="brand-mark small">C<span>.</span></span><div><strong>COMERCIALIZADORA AGROPECUARIA Y FERRETERA DE CATACAMAS</strong><span>COAGRO · RTN 0801-1990-1234567</span><span>Calle Central #85, Catacamas, Olancho · Tel. 2792-4455</span></div></div>
+              <div class="inv-stamp"><span>FACTURA</span><strong id="invNumber">001-001-01-00045231</strong><small>Régimen SAR · Honduras</small></div>
+            </div>
+            <div class="inv-meta">
+              <div><small>FECHA DE EMISIÓN</small><strong id="invDate">25/11/2026</strong></div>
+              <div><small>FECHA LÍMITE SAR</small><strong id="invLimit">25/12/2026</strong></div>
+              <div><small>CAI VINCULADO</small><strong class="mono" id="invCai">A1B2-C3D4-E5F6-G7H8-I9J0-K1L2</strong></div>
+              <div><small>TURNO / CAJERO</small><strong id="invTurno">T-00428 · Alberto C.</strong></div>
+            </div>
+            <div class="inv-parties">
+              <div><small>ADQUIRENTE</small><strong id="invClient">María Fernanda López</strong><span id="invClientDoc">RTN 0801-1990-12345</span><span id="invClientAddr">Catacamas, Olancho</span></div>
+              <div><small>CONDICIÓN DE PAGO</small><strong id="invPay">Efectivo · Contado</strong><span id="invExento">Cliente no exonerado</span></div>
+            </div>
+            <table class="inv-table">
+              <thead><tr><th>CANT.</th><th>DESCRIPCIÓN</th><th>GRAVADO 15%</th><th>GRAVADO 18%</th><th>EXENTO</th><th>ISV</th><th>TOTAL</th></tr></thead>
+              <tbody id="invLines"></tbody>
+            </table>
+            <div class="inv-bottom">
+              <div class="inv-notes"><strong>Notas fiscales</strong><p>Comprobante autorizado por el Servicio de Administración de Rentas. Conserve este documento para efectos de deducción y garantía.</p><div class="qr-block"><div class="qr" id="invQr"></div><div><small>VERIFICACIÓN TRIBUTARIA</small><span class="mono" id="invHash">SAR-9F3B2A7C</span></div></div></div>
+              <div class="inv-totals">
+                <div><span>Subtotal gravado</span><b id="invSubtotal">L 0.00</b></div>
+                <div><span>ISV 15%</span><b id="invIsv15">L 0.00</b></div>
+                <div><span>ISV 18%</span><b id="invIsv18">L 0.00</b></div>
+                <div><span>Retención 1% (art. 122)</span><b id="invRet">L 0.00</b></div>
+                <div><span>Descuento</span><b id="invDisc">L 0.00</b></div>
+                <div class="inv-grand"><span>TOTAL A PAGAR</span><strong id="invTotal">L 0.00</strong></div>
+              </div>
+            </div>
+            <div class="inv-foot"><span>001-001-01-00045231</span><span>Autorizado CAI vigente · Generado por COAGRO POS</span><span>Liberado en SAR: <b id="invReleased">Pendiente</b></span></div>
+          </div>
+          <div class="invoice-side">
+            <div class="panel side-card"><span class="eyebrow">ESTADO DEL COMPROBANTE</span><h3 id="invStatusTitle">Borrador</h3><p id="invStatusText">Revise los importes y datos del adquirente antes de emitir.</p><div class="status-steps" id="invSteps"><span class="done"></span><span class="done"></span><span></span><span></span></div><small>1. Datos · 2. Cálculo · 3. Emisión · 4. Reporte SAR</small></div>
+            <div class="panel side-card"><span class="eyebrow">CONTROL FISCAL</span><ul class="check-list"><li><svg class="ico"><use href="#i-check"/></svg> CAI dentro de vigencia</li><li><svg class="ico"><use href="#i-check"/></svg> Correlativo en rango autorizado</li><li><svg class="ico"><use href="#i-check"/></svg> ISV calculado por sistema</li><li><svg class="ico"><use href="#i-check"/></svg> QR de autenticidad generado</li></ul></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 05 · PRODUCTOS ==================== -->
+      <section class="screen" data-screen="productos">
+        <div class="page-head">
+          <div><span class="eyebrow">MÓDULO 03 · CATÁLOGO</span><h1>Productos y precios</h1><p>Listas segmentadas, combos y descuentos máximos por vendedor.</p></div>
+          <button class="btn btn-primary" id="newProductBtn"><svg class="ico"><use href="#i-plus"/></svg> Nuevo producto</button>
+        </div>
+        <div class="stat-strip" id="productStats"></div>
+        <div class="panel table-panel">
+          <div class="table-toolbar">
+            <div class="search-field compact"><svg class="ico"><use href="#i-search"/></svg><input id="productTableSearch" placeholder="Buscar producto o código…"></div>
+            <select id="categoryFilter" class="select"><option value="todas">Todas las categorías</option></select>
+            <button class="btn btn-soft" id="filterPromos"><svg class="ico"><use href="#i-tag"/></svg> Solo promociones</button>
+          </div>
+          <div class="table-scroll"><table class="data-table" id="productTable"><thead><tr><th>PRODUCTO</th><th>CATEGORÍA</th><th>MOSTRADOR</th><th>DISTRIBUIDOR</th><th>MAYOR</th><th>STOCK</th><th>PROMOCIÓN</th><th></th></tr></thead><tbody id="productTableBody"></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- ==================== 06 · CUENTAS POR COBRAR ==================== -->
+      <section class="screen" data-screen="cxc">
+        <div class="page-head">
+          <div><span class="eyebrow">MÓDULO 04 · CRM / CxC</span><h1>Cuentas por cobrar</h1><p>Saldos, vencimientos y registro de abonos con recálculo automático.</p></div>
+          <div class="head-actions"><button class="btn btn-soft" id="statementBtn"><svg class="ico"><use href="#i-receipt"/></svg> Estado de cuenta</button><button class="btn btn-primary" id="newPaymentBtn"><svg class="ico"><use href="#i-plus"/></svg> Registrar abono</button></div>
+        </div>
+        <div class="cxc-summary" id="cxcSummary"></div>
+        <div class="panel table-panel">
+          <div class="table-toolbar">
+            <div class="tabs" id="cxcTabs"><button class="tab active" data-tab="todas">Todas</button><button class="tab" data-tab="vigente">Vigentes</button><button class="tab" data-tab="vencido">Vencidas</button></div>
+            <div class="search-field compact"><svg class="ico"><use href="#i-search"/></svg><input id="cxcSearch" placeholder="Buscar cliente o factura…"></div>
+          </div>
+          <div class="table-scroll"><table class="data-table" id="cxcTable"><thead><tr><th>CLIENTE</th><th>FACTURA</th><th>EMISIÓN</th><th>VENCIMIENTO</th><th>SALDO</th><th>DÍAS MORA</th><th>ESTADO</th><th></th></tr></thead><tbody id="cxcTableBody"></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- ==================== 07 · CIERRE DE CAJA ==================== -->
+      <section class="screen" data-screen="cierre">
+        <div class="page-head">
+          <div><span class="eyebrow">MÓDULO 01 · ARQUEO CIEGO</span><h1>Cierre de turno</h1><p>El cajero cuenta el efectivo físico sin ver el saldo teórico del sistema.</p></div>
+          <span class="pill pill-live"><span class="pulse-dot"></span> Turno T-00428 activo</span>
+        </div>
+        <div class="closing-grid">
+          <div class="panel blind-panel">
+            <div class="blind-head"><div><span class="eyebrow">CONTEO CIEGO</span><h2>Desglose de efectivo</h2><p>Ingrese la cantidad de billetes y monedas contados físicamente.</p></div><div class="head-actions"><button class="btn btn-soft" id="withdrawBtn"><svg class="ico"><use href="#i-download"/></svg> Retiro parcial</button><button class="btn btn-soft" id="fillDemo">Usar conteo demo</button></div></div>
+            <div class="denom-grid" id="closingDenoms"></div>
+            <div class="blind-total"><span>Total contado</span><strong id="blindTotal">L ••••••</strong><small>El sistema oculta el teórico hasta revelar el cuadre</small></div>
+            <button class="btn btn-primary btn-block ripple" id="revealBtn">Revelar cuadre <svg class="ico"><use href="#i-eye"/></svg></button>
+          </div>
+          <aside class="panel reconcile-panel" id="reconcilePanel">
+            <div class="empty-reconcile"><svg class="ico"><use href="#i-lock"/></svg><h3>Cuadre protegido</h3><p>Complete el conteo ciego y presione <b>Revelar cuadre</b> para comparar contra el saldo del sistema.</p></div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ==================== 08 · DASHBOARD ==================== -->
+      <section class="screen" data-screen="dashboard">
+        <div class="page-head">
+          <div><span class="eyebrow">MÓDULO 06 · DSS / EIS</span><h1>Panel comercial</h1><p>Indicadores accionables para dirección: ventas, margen, cartera y metas.</p></div>
+          <div class="head-actions"><div class="segmented" id="rangeChips"><button class="active" data-range="hoy">Hoy</button><button data-range="semana">7 días</button><button data-range="mes">Mes</button></div><button class="btn btn-soft" id="exportDash"><svg class="ico"><use href="#i-download"/></svg> Exportar</button></div>
+        </div>
+        <div class="kpi-grid" id="kpiGrid"></div>
+        <div class="dash-grid">
+          <div class="panel chart-card"><div class="card-title"><div><span class="eyebrow">TENDENCIA</span><h3>Ventas por hora</h3></div><span class="legend"><i></i> Lps.</span></div><div class="line-chart" id="lineChart"></div></div>
+          <div class="panel chart-card"><div class="card-title"><div><span class="eyebrow">CARTERA</span><h3>Salud de la cartera</h3></div></div><div class="donut-wrap"><div class="donut" id="morosityDonut"><div class="donut-center"><b id="donutCenterPct">12.5%</b><small>morosidad</small></div></div><div class="donut-legend" id="donutLegend"></div></div></div>
+          <div class="panel chart-card"><div class="card-title"><div><span class="eyebrow">RENTABILIDAD</span><h3>Mapa de calor de clientes</h3></div><span class="legend">Margen de contribución</span></div><div id="heatmap"></div></div>
+          <div class="panel chart-card"><div class="card-title"><div><span class="eyebrow">DESEMPEÑO</span><h3>Metas de vendedores</h3></div></div><div id="sellerGoals"></div></div>
+          <div class="panel chart-card chart-wide" id="commissionsCard"></div>
+          <div class="panel chart-card chart-wide"><div class="card-title"><div><span class="eyebrow">TOP PRODUCTOS</span><h3>Los 10 más vendidos</h3></div><button class="link-btn" id="goProducts">Ver catálogo <svg class="ico"><use href="#i-chev"/></svg></button></div><div class="table-scroll"><table class="data-table"><thead><tr><th>#</th><th>PRODUCTO</th><th>UNIDADES</th><th>VENTAS</th><th>PARTICIPACIÓN</th></tr></thead><tbody id="topProducts"></tbody></table></div></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ======================= BOTTOM NAV (MÓVIL) ======================= -->
+  <!-- Barra de cobro fija en zona del pulgar (móvil) -->
+  <div class="mobile-checkout" id="mobileCheckout">
+    <div><small>TOTAL DEL TICKET</small><strong id="mobileTotal">L 0.00</strong></div>
+    <button class="btn btn-primary ripple" id="mobileCharge">Cobrar <svg class="ico"><use href="#i-chev"/></svg></button>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Navegación móvil">
+    <button class="bn-item" data-go="login"><svg class="ico"><use href="#i-home"/></svg><span>Inicio</span></button>
+    <button class="bn-item bn-main" data-go="pos"><svg class="ico"><use href="#i-grid"/></svg><span>Vender</span></button>
+    <button class="bn-item" data-go="clientes"><svg class="ico"><use href="#i-users"/></svg><span>Clientes</span></button>
+    <button class="bn-item" data-go="cxc"><svg class="ico"><use href="#i-wallet"/></svg><span>Cartera</span></button>
+    <button class="bn-item" id="moreBtn"><svg class="ico"><use href="#i-more"/></svg><span>Más</span></button>
+  </nav>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="modal-root" id="modalRoot" role="dialog" aria-modal="true"></div>
+<div class="toast-root" id="toastRoot" aria-live="polite"></div>
+<div class="scan-line" id="scanLine"><div class="scan-bar"></div><span>Leyendo código de barras…</span></div>
+
+<script src="app.js"></script>
+</body>
+</html>
