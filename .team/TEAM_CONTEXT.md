@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T23:18:54.253257459+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T23:20:16.660275766+00:00`
 
-**Resumen:** 0 abiertas, 0 en curso, 0 bloqueadas, 3 completadas, 1 personas
+**Resumen:** 1 abiertas, 0 en curso, 0 bloqueadas, 3 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -19,7 +19,12 @@
 
 ## Tareas activas
 
-_No hay tareas activas._
+### ekbfjefbfb
+
+- **JET-8D88LZ**  Auditoría HCI por pantalla y aplicación de los 18 agentes — `Abierta`  rama `sin rama`
+  - Contexto: Leer los 18 perfiles de /home/alberto/Jet/agents y aplicar sus criterios adaptados a web: detalle, responsive, empatía, minimalismo, movimiento, limpieza, arquitectura, seguridad, evidencia y calidad. Auditar las 8 pantallas y secciones compartidas; documentar hallazgos y correcciones en un informe breve sin relleno. Verificar WCAG 2.2, Nielsen, Fitts/Hick/Miller/Prägnanz/Doherty, ausencia de overflow en 360/390/768…
+  - Prioridad: Alta
+  - Archivos sensibles: prototipo/README.md, prototipo/UIUX_AUDIT.md, prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
 
 ## Bloqueos de archivos y ramas
 
@@ -60,6 +65,7 @@ _Sin mensajes del equipo._
 - `2026-11-25T23:03:43.828755925+00:00`  **TAREA TOMADA**  ekbfjefbfb  JET-LPSNR9  tomó «Aligerar rendimiento y densidad visual de la interfaz» y comenzó a trabajar
 - `2026-11-25T23:18:29.499356167+00:00`  **AVANCE**  ekbfjefbfb  JET-LPSNR9  avanzó «Aligerar rendimiento y densidad visual de la interfaz»: Optimización validada. Catálogo inicial 8 con carga progresiva, debounce de búsquedas, búsqueda sin acentos, caché de gráfico/tablas del dashboard, renders ocultos eliminados,…
 - `2026-11-25T23:18:54.253239789+00:00`  **COMPLETADA**  ekbfjefbfb  JET-LPSNR9  completó «Aligerar rendimiento y densidad visual de la interfaz», rama main, commit ea33582
+- `2026-11-25T23:20:16.660266946+00:00`  **TAREA CREADA**  ekbfjefbfb  JET-8D88LZ  creó «Auditoría HCI por pantalla y aplicación de los 18 agentes» para ekbfjefbfb
 
 ## Equipo
 
