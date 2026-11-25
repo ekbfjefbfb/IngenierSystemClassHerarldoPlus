@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "project": "IngenierSystemClassHerarldoPlus",
+  "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
+  "created_at": "2026-11-25T22:10:33.400822812Z",
+  "updated_at": "2026-11-25T22:12:50.535123778Z",
+  "developers": {
+    "ekbfjefbfb": {
+      "id": "ekbfjefbfb",
+      "name": "ekbfjefbfb",
+      "email": "orbelinanavarro2@gmail.com",
+      "aliases": [
+        "orbelinanavarro2"
+      ],
+      "role": "lead",
+      "role_updated_at": "2026-11-25T22:10:34.589741515Z",
+      "role_provisional": false,
+      "joined_at": "2026-11-25T22:10:34.589741515Z",
+      "last_seen": "2026-11-25T22:10:34.589741515Z"
+    }
+  },
+  "tasks": {
+    "JET-3R9S92": {
+      "id": "JET-3R9S92",
+      "title": "Reducir fatiga visual y validar apertura/cierre con mouse",
+      "context": "El usuario reporta que la interfaz actual cansa la vista y quiere que sea elite, sin colores agresivos, con jerarquía clara, entrada de sesión independiente y apertura/cierre de turno operables solo con mouse. Archivos implicados: prototipo/styles.css, prototipo/index.html, prototipo/app.js, prototipo/server.py, prototipo/README.md. Criterio: paleta carbón/cobre neutra sin azul ni verde, contraste accesible, una sola acción primaria por pantalla, login fuera del shell, botón de cerrar turno visible, ciclo login→abrir→cerrar→login probado en Chromium, suites existentes sin errores, backend SQLite y Render siguen funcionando.",
+      "status": "open",
+      "priority": "high",
+      "assignee_id": "ekbfjefbfb",
+      "assignee_name": "ekbfjefbfb",
+      "created_by_id": "ekbfjefbfb",
+      "created_by_name": "ekbfjefbfb",
+      "files": [
+        "prototipo/README.md",
+        "prototipo/app.js",
+        "prototipo/index.html",
+        "prototipo/server.py",
+        "prototipo/styles.css"
+      ],
+      "created_at": "2026-11-25T22:12:50.535074202Z",
+      "updated_at": "2026-11-25T22:12:50.535074202Z",
+      "agent": "opencode",
+      "archived": false,
+      "notes": []
+    }
+  },
+  "events": [
+    {
+      "id": "bc192f4a-e8b8-46ad-9144-f8ccfe8ae5af",
+      "at": "2026-11-25T22:12:50.535074202Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_created",
+      "task_id": "JET-3R9S92",
+      "message": "creó «Reducir fatiga visual y validar apertura/cierre con mouse» para ekbfjefbfb"
+    },
+    {
+      "id": "ed45f5b5-5b6b-439e-b57e-6f72d8c3ff50",
+      "at": "2026-11-25T22:10:34.589741515Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "developer_joined",
+      "message": "ekbfjefbfb se unió al espacio de equipo"
+    }
+  ]
+}
