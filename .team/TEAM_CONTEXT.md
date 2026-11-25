@@ -1,7 +1,7 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T23:03:43.828762429+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T23:18:29.499523590+00:00`
 
 **Resumen:** 0 abiertas, 1 en curso, 0 bloqueadas, 2 completadas, 1 personas
 
@@ -25,6 +25,7 @@
   - Contexto: El usuario percibe la UI como cargada y pesada. Medir el costo actual de navegación, búsqueda y dashboard; reducir renders innecesarios, debounce de búsqueda, trabajo oculto, animaciones y efectos costosos, densidad del catálogo y sombras/blur. Mantener funciones, paleta marfil/carbón/cobre, login independiente y ciclo abrir/cerrar. Verificar 4 suites, comparar métricas antes/después, revisar móvil y git diff; actua…
   - Prioridad: Alta
   - Archivos sensibles: prototipo/README.md, prototipo/app.js, prototipo/index.html, prototipo/styles.css
+  - Último avance: ekbfjefbfb — Optimización validada. Catálogo inicial 8 con carga progresiva, debounce de búsquedas, búsqueda sin acentos, caché de gráfico/tablas del dashboard, renders ocultos eliminados, animaciones y sombras reducidas, blur retirado en móvil. Métricas: dashboard primer render TaskDuration…
 
 ## Bloqueos de archivos y ramas
 
@@ -65,6 +66,7 @@ _Sin mensajes del equipo._
 - `2026-11-25T22:45:52.331844535+00:00`  **COMPLETADA**  ekbfjefbfb  JET-WP7RDV  completó «Pulido final de producción y accesibilidad», rama main, commit 53bc88b
 - `2026-11-25T23:03:22.901699644+00:00`  **TAREA CREADA**  ekbfjefbfb  JET-LPSNR9  creó «Aligerar rendimiento y densidad visual de la interfaz» para ekbfjefbfb
 - `2026-11-25T23:03:43.828755925+00:00`  **TAREA TOMADA**  ekbfjefbfb  JET-LPSNR9  tomó «Aligerar rendimiento y densidad visual de la interfaz» y comenzó a trabajar
+- `2026-11-25T23:18:29.499356167+00:00`  **AVANCE**  ekbfjefbfb  JET-LPSNR9  avanzó «Aligerar rendimiento y densidad visual de la interfaz»: Optimización validada. Catálogo inicial 8 con carga progresiva, debounce de búsquedas, búsqueda sin acentos, caché de gráfico/tablas del dashboard, renders ocultos eliminados,…
 
 ## Equipo
 

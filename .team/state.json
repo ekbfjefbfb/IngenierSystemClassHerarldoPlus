@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-25T23:03:43.828762429Z",
+  "updated_at": "2026-11-25T23:18:29.499523590Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -98,11 +98,19 @@
         "prototipo/styles.css"
       ],
       "created_at": "2026-11-25T23:03:22.901699644Z",
-      "updated_at": "2026-11-25T23:03:43.828755925Z",
+      "updated_at": "2026-11-25T23:18:29.499356167Z",
       "started_at": "2026-11-25T23:03:43.828755925Z",
       "agent": "opencode",
       "archived": false,
-      "notes": []
+      "notes": [
+        {
+          "id": "6b46a74a-016f-48b5-98e9-25012369a1fc",
+          "author_id": "ekbfjefbfb",
+          "author_name": "ekbfjefbfb",
+          "body": "Optimización validada. Catálogo inicial 8 con carga progresiva, debounce de búsquedas, búsqueda sin acentos, caché de gráfico/tablas del dashboard, renders ocultos eliminados, animaciones y sombras reducidas, blur retirado en móvil. Métricas: dashboard primer render TaskDuration ~0.316→0.267-0.273 s y layouts 55→36-38; repetido 0.141 s y 3 layouts; POS search layouts 16→12-13 y nodos 892→262. 4 suites con 0 errores. Commit y push ea33582.",
+          "created_at": "2026-11-25T23:18:29.499356167Z"
+        }
+      ]
     },
     "JET-WP7RDV": {
       "id": "JET-WP7RDV",
@@ -151,6 +159,15 @@
     }
   },
   "events": [
+    {
+      "id": "56c2ee4b-7c74-46ea-a5c8-e639276b2520",
+      "at": "2026-11-25T23:18:29.499356167Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "note_added",
+      "task_id": "JET-LPSNR9",
+      "message": "avanzó «Aligerar rendimiento y densidad visual de la interfaz»: Optimización validada. Catálogo inicial 8 con carga progresiva, debounce de búsquedas, búsqueda sin acentos, caché de gráfico/tablas del dashboard, renders ocultos eliminados, animaciones y sombras reducidas, blur retirado en móvil. Métricas: dashboard primer render TaskDuration ~0.316→0.267-0.273 s y layouts 55→36-38; repetido 0.141 s y 3 layouts; POS search layouts 16→12-13 y nodos 892→262. 4 suites con 0 errores. Commit y push ea33582."
+    },
     {
       "id": "c1041678-7ce4-429e-9713-88435e970adc",
       "at": "2026-11-25T23:03:43.828755925Z",
