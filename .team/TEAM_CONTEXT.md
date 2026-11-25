@@ -1,7 +1,7 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T22:39:02.071696121+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T22:45:38.578851105+00:00`
 
 **Resumen:** 0 abiertas, 1 en curso, 0 bloqueadas, 1 completadas, 1 personas
 
@@ -24,6 +24,7 @@
 - **JET-WP7RDV**  Pulido final de producción y accesibilidad — `En curso`  rama `main`
   - Contexto: Última pasada técnica y visual sobre el prototipo ya estable. Revisar y corregir meta theme-color y favicon, añadir aria-current, aria-live en importes, timeout y aborto de API, bloqueo del login durante arranque, cabeceras CSP/Permissions-Policy, límite de cuerpo JSON, comportamiento hover en pantallas táctiles y contraste preferido. Verificar las 4 suites, /health, ciclo login-abrir-cerrar-login y git diff; actual…
   - Archivos sensibles: prototipo/README.md, prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
+  - Último avance: ekbfjefbfb — Pulido final aplicado y validado: favicon, meta theme-color y descripción, aria-current/aria-live/aria-label, login bloqueado durante arranque, API con AbortController y timeout de 5 s, CSP/Permissions-Policy/nosniff/anti-clickjacking, límite JSON 2 MB, hover táctil y prefers-co…
 
 ## Bloqueos de archivos y ramas
 
@@ -59,6 +60,7 @@ _Sin mensajes del equipo._
 - `2026-11-25T22:31:41.101661823+00:00`  **COMPLETADA**  ekbfjefbfb  JET-3R9S92  completó «Reducir fatiga visual y validar apertura/cierre con mouse», rama main, commit 5a716f3
 - `2026-11-25T22:38:50.060926917+00:00`  **TAREA CREADA**  ekbfjefbfb  JET-WP7RDV  creó «Pulido final de producción y accesibilidad» para ekbfjefbfb
 - `2026-11-25T22:39:02.071687228+00:00`  **TAREA TOMADA**  ekbfjefbfb  JET-WP7RDV  tomó «Pulido final de producción y accesibilidad» y comenzó a trabajar
+- `2026-11-25T22:45:38.578654909+00:00`  **AVANCE**  ekbfjefbfb  JET-WP7RDV  avanzó «Pulido final de producción y accesibilidad»: Pulido final aplicado y validado: favicon, meta theme-color y descripción, aria-current/aria-live/aria-label, login bloqueado durante arranque, API con AbortController y timeout de 5 s, …
 
 ## Equipo
 

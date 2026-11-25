@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-25T22:39:02.071696121Z",
+  "updated_at": "2026-11-25T22:45:38.578851105Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -99,14 +99,31 @@
         "prototipo/styles.css"
       ],
       "created_at": "2026-11-25T22:38:50.060926917Z",
-      "updated_at": "2026-11-25T22:39:02.071687228Z",
+      "updated_at": "2026-11-25T22:45:38.578654909Z",
       "started_at": "2026-11-25T22:39:02.071687228Z",
       "agent": "opencode",
       "archived": false,
-      "notes": []
+      "notes": [
+        {
+          "id": "18d322b8-e5da-4b4b-bfd7-6379a639978e",
+          "author_id": "ekbfjefbfb",
+          "author_name": "ekbfjefbfb",
+          "body": "Pulido final aplicado y validado: favicon, meta theme-color y descripción, aria-current/aria-live/aria-label, login bloqueado durante arranque, API con AbortController y timeout de 5 s, CSP/Permissions-Policy/nosniff/anti-clickjacking, límite JSON 2 MB, hover táctil y prefers-contrast. 4 suites con 0 errores; /health 200; favicon 200; ciclo mouse login-abrir-cerrar-login OK. Commit y push 53bc88b.",
+          "created_at": "2026-11-25T22:45:38.578654909Z"
+        }
+      ]
     }
   },
   "events": [
+    {
+      "id": "7d1e89ee-89cd-465f-9009-7ebe69ea78b5",
+      "at": "2026-11-25T22:45:38.578654909Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "note_added",
+      "task_id": "JET-WP7RDV",
+      "message": "avanzó «Pulido final de producción y accesibilidad»: Pulido final aplicado y validado: favicon, meta theme-color y descripción, aria-current/aria-live/aria-label, login bloqueado durante arranque, API con AbortController y timeout de 5 s, CSP/Permissions-Policy/nosniff/anti-clickjacking, límite JSON 2 MB, hover táctil y prefers-contrast. 4 suites con 0 errores; /health 200; favicon 200; ciclo mouse login-abrir-cerrar-login OK. Commit y push 53bc88b."
+    },
     {
       "id": "ad25acee-3fb3-45b9-9d8a-666a5e3b0675",
       "at": "2026-11-25T22:39:02.071687228Z",
