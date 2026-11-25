@@ -57,7 +57,6 @@
     <div class="side-scroll">
       <p class="side-label">OPERACIÓN</p>
       <nav class="side-nav" aria-label="Navegación principal">
-        <button class="nav-item" data-go="login"><svg class="ico"><use href="#i-home"/></svg><span>Inicio</span></button>
         <button class="nav-item" data-go="pos"><svg class="ico"><use href="#i-grid"/></svg><span>Punto de venta</span><kbd>/</kbd></button>
         <button class="nav-item" data-go="clientes"><svg class="ico"><use href="#i-users"/></svg><span>Clientes y crédito</span></button>
         <button class="nav-item" data-go="factura"><svg class="ico"><use href="#i-receipt"/></svg><span>Facturación SAR</span></button>
@@ -91,6 +90,7 @@
       <div class="crumb"><span id="crumbModule">Operación</span><svg class="ico"><use href="#i-chev"/></svg><strong id="crumbTitle">Inicio de sesión</strong></div>
       <div class="top-actions">
         <span class="api-chip" id="apiChip">Comprobando…</span>
+        <button class="btn btn-soft top-shift-close" id="topCloseShift" hidden><svg class="ico"><use href="#i-lock"/></svg> Cerrar turno</button>
         <span class="branch-chip"><span class="branch-dot"></span> Catacamas · Matriz</span>
         <button class="icon-btn notify" id="notifyBtn" aria-label="Notificaciones"><svg class="ico"><use href="#i-bell"/></svg><span class="badge" id="notifyBadge">3</span></button>
         <span class="clock" id="liveClock">--:--</span>
@@ -179,7 +179,7 @@
           <div class="panel pos-catalog">
             <div class="search-row">
               <div class="search-field"><svg class="ico"><use href="#i-search"/></svg><input id="productSearch" placeholder="Buscar por nombre, código o código de barras…" autocomplete="off"><kbd>/</kbd></div>
-              <button class="btn btn-primary btn-icon" id="scanBtn" aria-label="Simular lector de código de barras"><svg class="ico"><use href="#i-scan"/></svg></button>
+              <button class="btn btn-soft btn-icon" id="scanBtn" aria-label="Simular lector de código de barras"><svg class="ico"><use href="#i-scan"/></svg></button>
             </div>
             <div class="chips" id="categoryChips"></div>
             <div class="catalog-meta"><span id="resultCount">0 productos</span><span class="hint">Teclea <kbd>Enter</kbd> para agregar el primero</span></div>
@@ -228,7 +228,7 @@
       <section class="screen" data-screen="clientes">
         <div class="page-head">
           <div><span class="eyebrow">MÓDULO 04 · CRM</span><h1>Clientes y crédito</h1><p>Ficha 360°, historial de consumo y evaluación de crédito en tiempo real.</p></div>
-          <button class="btn btn-primary" id="newClientBtn"><svg class="ico"><use href="#i-plus"/></svg> Nuevo cliente</button>
+          <button class="btn btn-soft" id="newClientBtn"><svg class="ico"><use href="#i-plus"/></svg> Nuevo cliente</button>
         </div>
         <div class="clients-grid">
           <div class="panel clients-list">
@@ -332,7 +332,7 @@
             <div class="blind-head"><div><span class="eyebrow">CONTEO CIEGO</span><h2>Desglose de efectivo</h2><p>Ingrese la cantidad de billetes y monedas contados físicamente.</p></div><div class="head-actions"><button class="btn btn-soft" id="withdrawBtn"><svg class="ico"><use href="#i-download"/></svg> Retiro parcial</button><button class="btn btn-soft" id="fillDemo">Usar conteo demo</button></div></div>
             <div class="denom-grid" id="closingDenoms"></div>
             <div class="blind-total"><span>Total contado</span><strong id="blindTotal">L ••••••</strong><small>El sistema oculta el teórico hasta revelar el cuadre</small></div>
-            <button class="btn btn-primary btn-block ripple" id="revealBtn">Revelar cuadre <svg class="ico"><use href="#i-eye"/></svg></button>
+            <button class="btn btn-soft btn-block ripple" id="revealBtn">Revelar cuadre <svg class="ico"><use href="#i-eye"/></svg></button>
           </div>
           <aside class="panel reconcile-panel" id="reconcilePanel">
             <div class="empty-reconcile"><svg class="ico"><use href="#i-lock"/></svg><h3>Cuadre protegido</h3><p>Complete el conteo ciego y presione <b>Revelar cuadre</b> para comparar contra el saldo del sistema.</p></div>
@@ -368,7 +368,7 @@
   </div>
 
   <nav class="bottom-nav" aria-label="Navegación móvil">
-    <button class="bn-item" data-go="login"><svg class="ico"><use href="#i-home"/></svg><span>Inicio</span></button>
+    <button class="bn-item" data-go="factura"><svg class="ico"><use href="#i-receipt"/></svg><span>Factura</span></button>
     <button class="bn-item bn-main" data-go="pos"><svg class="ico"><use href="#i-grid"/></svg><span>Vender</span></button>
     <button class="bn-item" data-go="clientes"><svg class="ico"><use href="#i-users"/></svg><span>Clientes</span></button>
     <button class="bn-item" data-go="cxc"><svg class="ico"><use href="#i-wallet"/></svg><span>Cartera</span></button>

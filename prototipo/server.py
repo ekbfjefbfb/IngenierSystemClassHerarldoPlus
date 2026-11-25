@@ -222,6 +222,9 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(data)))
         self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("X-Frame-Options", "DENY")
+        self.send_header("Referrer-Policy", "no-referrer")
         self.end_headers()
         self.wfile.write(data)
 
@@ -231,7 +234,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         path = self.path.split("?", 1)[0]
-        if path == "/api/health":
+        if path in ("/api/health", "/health"):
             self.send_json({"ok": True, "db": str(DB_PATH.relative_to(ROOT)), "seed": "determinista v1"})
             return
         if path == "/api/state":
@@ -259,6 +262,9 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", MIME.get(target.suffix.lower(), "application/octet-stream"))
         self.send_header("Content-Length", str(len(data)))
         self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("X-Frame-Options", "DENY")
+        self.send_header("Referrer-Policy", "no-referrer")
         self.end_headers()
         self.wfile.write(data)
 

@@ -159,7 +159,7 @@ function toast(msg, type='') {
   el.innerHTML = `<svg class="ico"><use href="#i-${type === 'error' || type === 'warn' ? 'alert' : 'check'}"/></svg><span>${msg}</span>`;
   const root = $('#toastRoot');
   root.appendChild(el);
-  while (root.children.length > 3) root.firstElementChild.remove();
+  while (root.children.length > 2) root.firstElementChild.remove();
   setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 320); }, 3000);
 }
 
@@ -225,6 +225,12 @@ document.addEventListener('click', e => {
 function navTo(name) {
   if (!titles[name]) return;
   state.screen = name;
+  document.body.classList.toggle('auth-mode', name === 'login');
+  if (name === 'login') {
+    $('#loginCard').hidden = false;
+    $('#openingCard').hidden = true;
+    $('#openingError').textContent = '';
+  }
   $$('.screen').forEach(s => s.classList.toggle('active', s.dataset.screen === name));
   $$('[data-go]').forEach(b => b.classList.toggle('active', b.dataset.go === name));
   $('#crumbModule').textContent = titles[name][0];
@@ -234,7 +240,14 @@ function navTo(name) {
   window.scrollTo({ top:0, behavior:'smooth' });
   renderAll();
   if (name !== 'pos') $('#mobileCheckout').classList.remove('show');
+  const closeBtn = $('#topCloseShift');
+  if (closeBtn) closeBtn.hidden = !state.shift || name === 'login' || name === 'cierre';
 }
+$('#topCloseShift').addEventListener('click', () => {
+  if (!state.shift) return;
+  navTo('cierre');
+  toast('Cierre de turno · complete el conteo ciego', 'warn');
+});
 document.addEventListener('click', e => {
   const go = e.target.closest('[data-go]');
   if (go) { e.preventDefault(); navTo(go.dataset.go); }
@@ -277,7 +290,7 @@ $('#openingDenoms').addEventListener('input', updateOpening);
 $('#togglePass').addEventListener('click', () => {
   const p = $('#loginPass');
   p.type = p.type === 'password' ? 'text' : 'password';
-  $('#togglePass').style.color = p.type === 'text' ? 'var(--emerald)' : '';
+  $('#togglePass').style.color = p.type === 'text' ? 'var(--accent)' : '';
 });
 $('#loginForm').addEventListener('submit', e => {
   e.preventDefault();
@@ -573,7 +586,7 @@ function makeQR(text) {
   }
   let rects = '';
   m.forEach((row, y) => row.forEach((v, x) => { if (v) rects += `<rect x="${x}" y="${y}" width="1" height="1"/>`; }));
-  return `<svg viewBox="-1 -1 ${n+2} ${n+2}" xmlns="http://www.w3.org/2000/svg" fill="#10231B" shape-rendering="crispEdges">${rects}</svg>`;
+  return `<svg viewBox="-1 -1 ${n+2} ${n+2}" xmlns="http://www.w3.org/2000/svg" fill="#231E1A" shape-rendering="crispEdges">${rects}</svg>`;
 }
 function renderInvoice(sale) {
   const t = sale.totals;
@@ -639,7 +652,7 @@ function renderClientDetail() {
     { date:'28/10/2026', doc:'FAC-00104', text:'Compra general', total:c.purchases * .08, state:'Pagada' }
   ];
   $('#clientDetail').innerHTML = `
-    <div class="cd-head"><span class="avatar" style="background:linear-gradient(145deg,${c.status === 'Vencido' ? '#B4614F,#7A3C31' : '#2E7053,#1B4B38'})">${initials(c.name)}</span>
+    <div class="cd-head"><span class="avatar" style="background:linear-gradient(145deg,${c.status === 'Vencido' ? '#9E4139,#7A3430' : '#7A4A2E,#2C211B'})">${initials(c.name)}</span>
       <div class="cd-id"><h2>${c.name}</h2><p>Identidad: ${c.doc} · Tel. ${c.phone} · ${c.addr}</p></div>
       <div class="cd-tags"><span class="tag ${c.status === 'Vencido' ? 'warn' : 'good'}">${c.status}</span><span class="tag">${c.cat}</span></div>
     </div>
@@ -987,7 +1000,7 @@ function renderDashboard() {
   ];
   $('#kpiGrid').innerHTML = cards.map((c,i) => `<div class="kpi-card ${c.warn?'warn':''}">
     <small>${c.label}</small><div><b data-kpi="${i}">${c.pre}0${c.suf||''}</b><span class="delta ${c.down?'down':''}">${c.delta}</span></div>
-    <svg class="kpi-spark" viewBox="0 0 64 26"><path d="M0 22 L10 18 L20 20 L30 12 L40 15 L50 7 L64 3" fill="none" stroke="${c.warn?'#ECA63A':'#1E7A55'}" stroke-width="2"/></svg>
+    <svg class="kpi-spark" viewBox="0 0 64 26"><path d="M0 22 L10 18 L20 20 L30 12 L40 15 L50 7 L64 3" fill="none" stroke="${c.warn?'#A85E2C':'#9C4F22'}" stroke-width="2"/></svg>
   </div>`).join('');
   cards.forEach((c,i) => {
     const el = $(`[data-kpi="${i}"]`);
@@ -1002,7 +1015,7 @@ function renderDashboard() {
   const area=line+` L ${pts[pts.length-1][0].toFixed(1)} ${h-pad} L ${pts[0][0].toFixed(1)} ${h-pad} Z`;
   const labels=r==='hoy'?['8a','10a','12p','2p','4p','6p']:r==='semana'?['Lun','Mar','Mié','Jue','Vie','Sáb','Dom']:['Ene','Mar','May','Jul','Sep','Nov'];
   $('#lineChart').innerHTML=`<svg viewBox="0 0 ${w} ${h+16}" preserveAspectRatio="none">
-    <defs><linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1E7A55" stop-opacity=".26"/><stop offset="1" stop-color="#1E7A55" stop-opacity="0"/></linearGradient></defs>
+    <defs><linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9C4F22" stop-opacity=".26"/><stop offset="1" stop-color="#9C4F22" stop-opacity="0"/></linearGradient></defs>
     ${[0,1,2,3].map(i=>`<line class="chart-grid" x1="${pad}" y1="${pad+i*(h-2*pad)/3}" x2="${w-pad}" y2="${pad+i*(h-2*pad)/3}"/>`).join('')}
     <path class="chart-area" d="${area}"/><path class="chart-line" d="${line}"/>
     ${pts.map(p=>`<circle class="chart-dot" cx="${p[0]}" cy="${p[1]}" r="3.2"/>`).join('')}
@@ -1013,10 +1026,10 @@ function renderDashboard() {
   const porVencerPct = +(porVencer() / totalCxc * 100).toFixed(1);
   const alCorrientePct = Math.max(0, +(100 - vencidoPct - porVencerPct).toFixed(1));
   $('#donutCenterPct').textContent = vencidoPct.toFixed(1) + '%';
-  $('#morosityDonut').style.background = `conic-gradient(#1E7A55 0 ${alCorrientePct}%, #ECA63A ${alCorrientePct}% ${alCorrientePct + porVencerPct}%, #D4554B ${alCorrientePct + porVencerPct}% 100%)`;
-  $('#donutLegend').innerHTML=`<div class="dl-row"><i style="background:#1E7A55"></i> Al corriente <b>${alCorrientePct.toFixed(1)}%</b></div>
-    <div class="dl-row"><i style="background:#ECA63A"></i> Por vencer <b>${porVencerPct.toFixed(1)}%</b></div>
-    <div class="dl-row"><i style="background:#D4554B"></i> Vencido <b>${vencidoPct.toFixed(1)}%</b></div>`;
+  $('#morosityDonut').style.background = `conic-gradient(#9C4F22 0 ${alCorrientePct}%, #A85E2C ${alCorrientePct}% ${alCorrientePct + porVencerPct}%, #B4473F ${alCorrientePct + porVencerPct}% 100%)`;
+  $('#donutLegend').innerHTML=`<div class="dl-row"><i style="background:#9C4F22"></i> Al corriente <b>${alCorrientePct.toFixed(1)}%</b></div>
+    <div class="dl-row"><i style="background:#A85E2C"></i> Por vencer <b>${porVencerPct.toFixed(1)}%</b></div>
+    <div class="dl-row"><i style="background:#B4473F"></i> Vencido <b>${vencidoPct.toFixed(1)}%</b></div>`;
 
   const heat=[[1,2,4],[2,3,4],[1,3,3],[2,4,3]];
   $('#heatmap').innerHTML=`<table class="heat-table"><thead><tr><th>SEGMENTO</th><th>BAJA</th><th>MEDIA</th><th>ALTA</th></tr></thead><tbody>
@@ -1048,7 +1061,7 @@ $('#notifyBtn').addEventListener('click', () => modal({
   title:'Alertas del sistema', sub:'3 notificaciones pendientes',
   body:`<div class="modal-list">
     <div class="cd-alert" style="margin:0"><svg class="ico"><use href="#i-alert"/></svg><span><b>Cartera vencida</b><br>2 clientes superan los 20 días de mora.</span></div>
-    <div class="cd-alert" style="margin:0;background:var(--blue-soft);border-color:#C9D9EA;color:#2C537A"><svg class="ico"><use href="#i-calendar"/></svg><span><b>CAI por vencer</b><br>Rango fiscal vigente hasta el 30/11/2026.</span></div>
+    <div class="cd-alert" style="margin:0;background:var(--neutral-soft);border-color:#D8C9B6;color:#6A4A34"><svg class="ico"><use href="#i-calendar"/></svg><span><b>CAI por vencer</b><br>Rango fiscal vigente hasta el 30/11/2026.</span></div>
     <div class="cd-alert" style="margin:0;background:var(--amber-soft)"><svg class="ico"><use href="#i-box"/></svg><span><b>Stock bajo</b><br>4 productos requieren reposición.</span></div>
   </div>`, foot:'<button class="btn btn-primary" data-close>Entendido</button>'
 }));
@@ -1116,6 +1129,7 @@ function renderAll() {
 }
 
 /* ------------------------------------------------------------------ INICIO */
+document.body.classList.add('auth-mode');
 renderOpeningDenoms();
 renderClosingDenoms();
 $$('#categoryChips .chip').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.cat === state.category)));

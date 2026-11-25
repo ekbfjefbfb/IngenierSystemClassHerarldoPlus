@@ -45,7 +45,8 @@ Tras ingresar, registre el **fondo inicial** con los steppers y presione **Abrir
 - **Alta densidad donde importa:** tablas y ticket compactos con cifras monoespacio alineadas (tabular figures).
 - **Accesibilidad:** foco visible y automático al abrir modal, *focus trap* (Tab no sale del diálogo), `aria-pressed` en chips/pestañas, `aria-label`, contraste AA, navegación por teclado y `Esc` para cerrar modales descartables.
 - **Estados vacíos accionables:** búsquedas sin resultados muestran mensaje y botón «Limpiar» en clientes, productos y CxC.
-- **Palette:** verde bosque + lima + ámbar sobre lienzo claro, acorde a una ferretería agro.
+- **Paleta:** marfil, carbón cálido y cobre; sin azul ni verde. Superficies claras, contraste alto y un solo acento para reducir la fatiga visual.
+- **Entrada independiente:** el login no muestra el shell. Al abrir turno entra al POS; el botón «Cerrar turno» de la barra superior lleva al arqueo y, al confirmar, regresa al login.
 
 ## Backend y datos
 
