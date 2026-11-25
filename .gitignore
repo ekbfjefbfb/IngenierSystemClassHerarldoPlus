@@ -1,0 +1,12 @@
+# Base de datos generada por server.py (se crea sola al arrancar)
+prototipo/data/*.db
+prototipo/data/*.db-journal
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Sistema / editores
+.DS_Store
+Thumbs.db
+*.swp
