@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T22:38:50.060933760+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T22:39:02.071696121+00:00`
 
-**Resumen:** 1 abiertas, 0 en curso, 0 bloqueadas, 1 completadas, 1 personas
+**Resumen:** 0 abiertas, 1 en curso, 0 bloqueadas, 1 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,13 +21,18 @@
 
 ### ekbfjefbfb
 
-- **JET-WP7RDV**  Pulido final de producción y accesibilidad — `Abierta`  rama `sin rama`
+- **JET-WP7RDV**  Pulido final de producción y accesibilidad — `En curso`  rama `main`
   - Contexto: Última pasada técnica y visual sobre el prototipo ya estable. Revisar y corregir meta theme-color y favicon, añadir aria-current, aria-live en importes, timeout y aborto de API, bloqueo del login durante arranque, cabeceras CSP/Permissions-Policy, límite de cuerpo JSON, comportamiento hover en pantallas táctiles y contraste preferido. Verificar las 4 suites, /health, ciclo login-abrir-cerrar-login y git diff; actual…
   - Archivos sensibles: prototipo/README.md, prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
 
 ## Bloqueos de archivos y ramas
 
-_Sin bloqueos activos._
+- **BLOQUEO** `prototipo/README.md` → JET-WP7RDV (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/app.js` → JET-WP7RDV (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/index.html` → JET-WP7RDV (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/server.py` → JET-WP7RDV (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/styles.css` → JET-WP7RDV (responsable ekbfjefbfb, En curso)
+- **RAMA** `main` → JET-WP7RDV (responsable ekbfjefbfb)
 
 ## Completadas recientemente
 
@@ -53,6 +58,7 @@ _Sin mensajes del equipo._
 - `2026-11-25T22:31:24.651628669+00:00`  **AVANCE**  ekbfjefbfb  JET-3R9S92  avanzó «Reducir fatiga visual y validar apertura/cierre con mouse»: Validación completa: 4 suites en Chromium con 0 errores de consola; /health responde 200 con cabeceras de seguridad; ciclo mouse login→abrir→cerrar→login OK; SQLite verifi…
 - `2026-11-25T22:31:41.101661823+00:00`  **COMPLETADA**  ekbfjefbfb  JET-3R9S92  completó «Reducir fatiga visual y validar apertura/cierre con mouse», rama main, commit 5a716f3
 - `2026-11-25T22:38:50.060926917+00:00`  **TAREA CREADA**  ekbfjefbfb  JET-WP7RDV  creó «Pulido final de producción y accesibilidad» para ekbfjefbfb
+- `2026-11-25T22:39:02.071687228+00:00`  **TAREA TOMADA**  ekbfjefbfb  JET-WP7RDV  tomó «Pulido final de producción y accesibilidad» y comenzó a trabajar
 
 ## Equipo
 

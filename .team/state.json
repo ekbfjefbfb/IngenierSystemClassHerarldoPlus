@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-25T22:38:50.060933760Z",
+  "updated_at": "2026-11-25T22:39:02.071696121Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -84,12 +84,13 @@
       "id": "JET-WP7RDV",
       "title": "Pulido final de producción y accesibilidad",
       "context": "Última pasada técnica y visual sobre el prototipo ya estable. Revisar y corregir meta theme-color y favicon, añadir aria-current, aria-live en importes, timeout y aborto de API, bloqueo del login durante arranque, cabeceras CSP/Permissions-Policy, límite de cuerpo JSON, comportamiento hover en pantallas táctiles y contraste preferido. Verificar las 4 suites, /health, ciclo login-abrir-cerrar-login y git diff; actualizar README y subir a main.",
-      "status": "open",
+      "status": "in_progress",
       "priority": "normal",
       "assignee_id": "ekbfjefbfb",
       "assignee_name": "ekbfjefbfb",
       "created_by_id": "ekbfjefbfb",
       "created_by_name": "ekbfjefbfb",
+      "branch": "main",
       "files": [
         "prototipo/README.md",
         "prototipo/app.js",
@@ -98,13 +99,23 @@
         "prototipo/styles.css"
       ],
       "created_at": "2026-11-25T22:38:50.060926917Z",
-      "updated_at": "2026-11-25T22:38:50.060926917Z",
+      "updated_at": "2026-11-25T22:39:02.071687228Z",
+      "started_at": "2026-11-25T22:39:02.071687228Z",
       "agent": "opencode",
       "archived": false,
       "notes": []
     }
   },
   "events": [
+    {
+      "id": "ad25acee-3fb3-45b9-9d8a-666a5e3b0675",
+      "at": "2026-11-25T22:39:02.071687228Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_taken",
+      "task_id": "JET-WP7RDV",
+      "message": "tomó «Pulido final de producción y accesibilidad» y comenzó a trabajar"
+    },
     {
       "id": "9ca68267-0f26-42ca-8c1b-850a8468b1cd",
       "at": "2026-11-25T22:38:50.060926917Z",
