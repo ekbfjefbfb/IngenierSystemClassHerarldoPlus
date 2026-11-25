@@ -24,7 +24,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 DB_PATH = ROOT / "data" / "coagro.db"
-PORT = int(os.environ.get("COAGRO_PORT", "8000"))
+# Render inyecta PORT; en local se usa COAGRO_PORT o 8000.
+PORT = int(os.environ.get("PORT") or os.environ.get("COAGRO_PORT") or "8000")
+HOST = os.environ.get("HOST", "0.0.0.0")
 LOCK = threading.Lock()
 
 SEED = {
@@ -289,7 +291,7 @@ if __name__ == "__main__":
         ensure_seed(con)
     finally:
         con.close()
-    server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
+    server = ThreadingHTTPServer((HOST, PORT), Handler)
     print(f"COAGRO POS backend → http://localhost:{PORT}  (SQLite: {DB_PATH})")
     try:
         server.serve_forever()
