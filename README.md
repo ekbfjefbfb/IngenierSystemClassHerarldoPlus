@@ -13,6 +13,8 @@ para **Comercializadora Agropecuaria y Ferretera de Catacamas (COAGRO)**.
   - `UIUX_AUDIT.md` — auditoría HCI por pantalla, agentes aplicados y evidencia.
 - `docs/COAGRO_Auditoria_Requerimientos.md` — cobertura real contra la consigna y rúbrica.
 - `docs/COAGRO_Guia_Defensa.pdf` — guion por integrante, demostración, preguntas y límites.
+- `docs/COAGRO_Fase1_Compacta.pdf` — documento de 12 páginas con DFD, diccionario, mapa y ocho wireframes.
+- URL pública estática: https://ekbfjefbfb.github.io/IngenierSystemClassHerarldoPlus/
 - `docs/generar_pdf.py` — regeneración reproducible del PDF.
 - Documentos base del caso de estudio y consigna (PDF/DOCX).
 

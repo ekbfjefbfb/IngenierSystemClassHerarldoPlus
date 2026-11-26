@@ -120,15 +120,15 @@ story += [Spacer(1, 28 * mm), P("COAGRO POS", "TitleCO"),
 
 # Cómo usar
 story += [P("1. Cómo usar esta guía", "H1CO"),
-          P("La defensa dura entre 8 y 10 minutos. Cada integrante domina una sección y todos deben conocer el flujo completo. La demostración se hace desde http://localhost:8000 o desde la URL pública de Render cuando esté verificada."),
+          P("La defensa dura entre 8 y 10 minutos. Cada integrante domina una sección y todos deben conocer el flujo completo. La demostración completa se hace en http://localhost:8000. La URL pública https://ekbfjefbfb.github.io/IngenierSystemClassHerarldoPlus/ muestra el front-end en modo local."),
           P("Regla de honestidad", "H2CO"),
-          P("El proyecto demuestra un prototipo funcional con backend SQLite local. No demuestra autenticación real, integración SAR, persistencia de ventas y facturas, Figma/Balsamiq ni tiempo real. Esos vacíos están documentados y tienen tareas JET abiertas."),
+          P("El proyecto ya demuestra autenticación, roles, persistencia transaccional, PWA, ventas netas y margen. No demuestra integración SAR real ni un archivo Figma/Balsamiq. Esos dos límites deben declararse con precisión."),
           table(["Tema", "Qué se puede afirmar", "Qué no se debe afirmar"], [
               ["Producto", "Prototipo navegable de POS, CRM, CxC, cierre, comisiones y dashboard.", "Sistema productivo completo."],
-              ["Datos", "Productos, clientes, cartera y correlativos viven en SQLite.", "Turnos, ventas, detalles y facturas ya son persistentes."],
+              ["Datos", "Turnos, ventas, detalles, facturas, clientes y cartera viven en SQLite.", "Persistencia multi-servidor o en la nube sin disco."],
               ["Fiscal", "Cálculo ISV 15/18, exento, retención 1% y comprobante visual.", "Integración o autorización real del SAR."],
-              ["Seguridad", "CSP, permisos, nosniff, validación server-side y datos demo.", "Autenticación y roles reales."],
-              ["Entrega", "Repositorio GitHub público y prototipo web.", "Enlace Figma/Balsamiq o URL Render verificada."],
+              ["Seguridad", "PBKDF2, sesiones, roles, bitácora, CSP y validación server-side.", "Secretos productivos ni pasarelas bancarias reales."],
+              ["Entrega", "Repositorio y URL pública del prototipo web.", "Archivo o enlace Figma/Balsamiq."],
           ], widths=[28*mm, 70*mm, 75*mm]),
           Spacer(1, 6*mm),
           P("Orden de exposición", "H2CO"),
@@ -141,17 +141,17 @@ story += [P("2. Arquitectura y stack", "H1CO"),
           table(["Capa", "Tecnología", "Responsabilidad"], [
               ["Interfaz", "HTML + CSS + JavaScript", "8 pantallas, formularios, modales, gráficos y navegación responsive."],
               ["API", "Python http.server", "Estado canónico, validación, reset, salud y archivos estáticos."],
-              ["Datos", "SQLite", "Productos, clientes, cuentas por cobrar y correlativos."],
+              ["Datos", "SQLite", "Usuarios, turnos, ventas, detalles, facturas, clientes, cartera y auditoría."],
               ["Respaldo", "localStorage", "Funcionamiento local si la API no responde."],
               ["Despliegue", "Render Web Service", "python3 server.py; PORT inyectado por Render."],
           ], widths=[27*mm, 42*mm, 104*mm]),
           Spacer(1, 5*mm),
           P("Endpoints", "H2CO"),
-          P("GET /api/state<br/>PUT /api/state<br/>POST /api/reset<br/>GET /api/health<br/>GET /health", "MonoCO"),
+          P("POST /api/login · POST /api/logout · GET /api/me<br/>POST /api/shifts/open · POST /api/shifts/:id/close<br/>POST /api/sales · GET /api/dashboard<br/>POST /api/talonarios · POST /api/promotions<br/>POST /api/credit/evaluate · POST /api/collections/run<br/>GET /api/audit · GET /health", "MonoCO"),
           P("Seguridad aplicada", "H2CO"),
-          P("CSP, Permissions-Policy, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, límite de cuerpo JSON de 2 MB y consultas SQL parametrizadas."),
+          P("PBKDF2, sesiones de 8 horas, roles, bitácora, CSP, Permissions-Policy, nosniff, anti-clickjacking, límite JSON de 2 MB y consultas SQL parametrizadas."),
           P("Flujo de datos", "H2CO"),
-          P("Una venta en el POS calcula ISV y total en el navegador. El cobro registra el resultado. Los datos maestros se sincronizan a SQLite. Si la API falla, la interfaz muestra Modo local y usa localStorage. El turno, carrito y factura actual siguen en memoria."),
+          P("El POS calcula una vista previa y el servidor recalcula ISV, promociones y total. La venta se confirma en una transacción SQLite con detalle, tenders, factura, stock, turno y CxC. Si falla la red, la venta entra en una cola offline y se reconcilia con clave idempotente."),
           PageBreak()]
 
 # DFD 0
@@ -173,7 +173,7 @@ story += [P("4. DFD nivel 1", "H1CO"),
           P("Balanceo que se debe explicar", "H2CO"),
           P("Los datos de venta alimentan facturación y reportes. Las facturas emitidas alimentan cuentas por cobrar cuando la venta es a crédito. Productos y clientes alimentan ventas. Ventas alimentan comisiones. Clientes, cartera y ventas alimentan reportes."),
           P("Almacenes", "H2CO"),
-          P("D1 Productos, D2 Clientes, D3 Ventas, D4 Facturas y D5 Cuentas por cobrar. El prototipo actual persiste D1, D2 y D5; D3, D4 y turnos están en la tarea JET-RJWY8F."),
+          P("D1 Productos, D2 Clientes, D3 Ventas, D4 Facturas y D5 Cuentas por cobrar ya son persistentes. Turnos, detalles y tenders también tienen tablas relacionales."),
           PageBreak()]
 
 # Mapa
@@ -202,7 +202,7 @@ story += [P("6. Cobertura de requerimientos", "H1CO"),
           P("No funcionales completos", "H2CO"),
           P("RNF-03 usabilidad, RNF-04 rendimiento y RNF-07 validación."),
           P("Tablas persistentes actuales", "H2CO"),
-          P("Clientes, Productos y CuentasPorCobrar. Faltan TurnosCaja, VentasPOS, DetalleVentas y FacturasFiscalesSAR."),
+          P("Las siete tablas exigidas ya son persistentes: Clientes, Productos, TurnosCaja, VentasPOS, DetalleVentas, FacturasFiscalesSAR y CuentasPorCobrar."),
           PageBreak()]
 
 # Rúbrica oficial
@@ -211,14 +211,14 @@ story += [P("6.1 Rúbrica oficial y entregables", "H1CO"),
               ["F1. Problema y requerimientos", "30", "Contenido completo; DOCX de 16 páginas supera el máximo de 12."],
               ["F1. DFD y diccionario", "40", "Nivel 0, nivel 1 y 19 elementos presentes."],
               ["F1. Mapa y wireframes", "30", "Mapa completo; cuatro bocetos de ocho."],
-              ["F2. Funcionalidad e interactividad", "30", "Web funcional; falta Figma/Balsamiq y URL pública verificada."],
+              ["F2. Funcionalidad e interactividad", "30", "Web funcional y URL pública lista; falta Figma/Balsamiq."],
               ["F2. Calidad visual y dashboard", "30", "Responsive, validaciones, modales, ARIA y KPIs."],
               ["F2. Documentación y modelo", "20", "Falta modelo relacional completo y manual consolidado."],
               ["F2. Dominio y defensa", "20", "Esta guía cubre guion, demostración y preguntas."],
           ], widths=[58*mm, 18*mm, 97*mm]),
           Spacer(1, 5*mm),
           P("Conclusión de rúbrica", "H2CO"),
-          P("El riesgo más alto no es técnico: es entregar un prototipo web donde la consigna exige Figma o Balsamiq y un enlace público. También debe ajustarse el documento de fase 1 a 12 páginas y completarse el modelo relacional."),
+          P("El documento de fase 1 ya tiene 12 páginas, ocho wireframes y modelo relacional. El único riesgo de formato es entregar un prototipo web donde la consigna exige Figma o Balsamiq."),
           PageBreak()]
 
 # Pantalla 1
@@ -231,7 +231,7 @@ story += [P("7. Demostración por pantalla", "H1CO"),
           P("Qué decir", "H2CO"),
           P("La entrada es independiente para reducir carga cognitiva. El estado de conexión es visible. La apertura usa desglose de efectivo para evitar errores de arqueo."),
           P("Límite", "H2CO"),
-          P("La autenticación es simulada. No hay usuarios ni roles reales. Tarea JET-P9VNP9."),
+          P("La autenticación usa PBKDF2, sesiones y roles. Para la demo: cajero01 o admin con contraseña demo."),
           PageBreak()]
 
 # Pantalla 2
@@ -243,7 +243,7 @@ story += [P("Pantalla 2 · POS y venta rápida", "H2CO"),
           P("Qué decir", "H2CO"),
           P("La búsqueda ignora acentos y usa debounce. Los objetivos cumplen 24 px. El total se anuncia a lectores de pantalla. En móvil, Cobrar queda en la zona del pulgar."),
           P("Límite", "H2CO"),
-          P("El lector de barras está simulado y la venta aún no se guarda en SQLite. Tarea JET-RJWY8F."),
+          P("El lector de barras está simulado. La venta sí se guarda en SQLite con detalle, pago, factura y stock."),
           PageBreak()]
 
 # Pantalla 3 factura
@@ -255,7 +255,7 @@ story += [P("Pantalla 3 · Pago combinado y factura SAR", "H2CO"),
           P("Qué decir", "H2CO"),
           P("El pago combinado responde a RF-04. El ISV se calcula por producto al 15 % o 18 %, con exentos. La retención del 1 % se presenta como información fiscal."),
           P("Límite", "H2CO"),
-          P("No hay conexión SAR ni administración de talonarios. El QR es ilustrativo. Tarea JET-5THMMC."),
+          P("No hay conexión SAR real. El QR es ilustrativo. La administración de CAI, rango, vigencia y correlativo sí está implementada."),
           PageBreak()]
 
 # Pantalla 4 clientes
@@ -267,7 +267,7 @@ story += [P("Pantalla 4 · Cliente 360° y crédito", "H2CO"),
           P("Qué decir", "H2CO"),
           P("La ficha reúne información comercial y crediticia en bloques. El uso de crédito es visible. Las alertas ayudan a prevenir nuevas ventas a clientes vencidos."),
           P("Límite", "H2CO"),
-          P("No hay score crediticio ni cobranza automatizada. Tarea JET-N2T8HD."),
+          P("El score crediticio es explicable y la cobranza genera recordatorios automáticos con registro de envío."),
           PageBreak()]
 
 # Pantalla 5 productos
@@ -279,7 +279,7 @@ story += [P("Pantalla 5 · Catálogo y promociones", "H2CO"),
           P("Qué decir", "H2CO"),
           P("Existen precios mostrador, distribuidor y mayor. La edición valida importes y existencia. La promoción actual es un campo textual."),
           P("Límite", "H2CO"),
-          P("Faltan vigencia, combos y descuento máximo por vendedor. Tarea JET-N8HGZE."),
+          P("La vigencia, los combos y el descuento máximo por vendedor ya se validan en POS y servidor."),
           PageBreak()]
 
 # Pantalla 6 CxC
@@ -303,7 +303,7 @@ story += [P("Pantalla 7 · Cierre y arqueo ciego", "H2CO"),
           P("Qué decir", "H2CO"),
           P("El arqueo ciego evita que el cajero ajuste el conteo al saldo esperado. El botón Cerrar turno de la barra superior lleva directamente a esta pantalla. Al confirmar, regresa al login."),
           P("Límite", "H2CO"),
-          P("El cierre no queda persistido. Tarea JET-RJWY8F."),
+          P("El cierre guarda efectivo contado, diferencia, observación y estado del turno en SQLite."),
           PageBreak()]
 
 # Pantalla 8 dashboard
@@ -315,7 +315,7 @@ story += [P("Pantalla 8 · Dashboard comercial", "H2CO"),
           P("Qué decir", "H2CO"),
           P("El dashboard usa caché para no reconstruir gráficos y tablas en cada visita. La dona se calcula desde CxC. Las comisiones aplican tasa según cumplimiento de meta."),
           P("Límite", "H2CO"),
-          P("Faltan ventas netas, margen por línea y tiempo real. Tarea JET-WGW2DY."),
+          P("Ventas netas y margen por línea ya se calculan desde SQLite. El tiempo real depende de refrescar o consultar el periodo."),
           PageBreak()]
 
 # Móvil
@@ -360,15 +360,15 @@ story += [P("10. Demostración en diez pasos", "H1CO"),
 story += [P("11. Preguntas probables y respuestas", "H1CO"),
           table(["Pregunta", "Respuesta defendible"], [
               ["¿Por qué no está en Figma o Balsamiq?", "La consigna lo pide. El equipo construyó un prototipo web funcional para demostrar lógica y UI/UX. La migración o aceptación del sustituto está en JET-TVD6WK."],
-              ["¿Dónde se guardan las ventas?", "Todavía no en SQLite. Se guardan productos, clientes, CxC y correlativos. Turnos, ventas, detalles y facturas están en JET-RJWY8F."],
+              ["¿Dónde se guardan las ventas?", "En SQLite: venta, detalle, tenders, factura, stock, turno y CxC si es crédito. La transacción revierte todo si falla."],
               ["¿La factura es real ante el SAR?", "No. Es un comprobante visual con cálculo fiscal y QR ilustrativo. No existe integración SAR."],
               ["¿Cómo calculan el ISV?", "Cada producto tiene tasa 0, 15 o 18. El sistema suma bases, calcula impuesto, aplica descuento y muestra retención informativa del 1 %."],
               ["¿Qué ocurre si cae la API?", "La interfaz cambia a Modo local y usa localStorage. No se pierde la navegación, pero no hay reconciliación automática todavía."],
               ["¿Por qué Python?", "Permite un backend sin dependencias, con SQLite y despliegue simple en Render. El puerto lo inyecta Render."],
-              ["¿Dónde está lo ACID?", "La escritura de la instantánea maestra usa una transacción SQLite. La venta completa aún no es transaccional porque no se persiste."],
+              ["¿Dónde está lo ACID?", "POST /api/sales ejecuta venta, detalle, tenders, factura, stock, turno y CxC en una sola transacción SQLite. Un pago insuficiente deja cero ventas y stock intacto."],
               ["¿Hay seguridad real?", "Hay CSP, permisos, nosniff, anti-clickjacking, validación y datos demo. No hay autenticación ni roles reales."],
               ["¿Cómo midieron rendimiento?", "Cinco suites, caché, debounce y catálogo progresivo. Dashboard repetido: 0.1412 s y 3 layouts. Sin tareas largas."],
-              ["¿Qué faltaría para producción?", "Auth y roles, persistencia transaccional, SAR real, auditoría, PWA, secretos, copias de seguridad y pruebas en dispositivos físicos."],
+              ["¿Qué faltaría para producción?", "SAR real, pasarelas bancarias, secretos productivos, disco persistente, copias de seguridad, observabilidad y pruebas en dispositivos físicos."],
           ], widths=[53*mm, 120*mm]),
           PageBreak()]
 
@@ -395,15 +395,15 @@ story += [P("12. Evidencia técnica", "H1CO"),
 
 # Tareas
 story += [P("13. Trabajo pendiente en JET", "H1CO"),
-          table(["ID", "Tarea", "Prioridad"], [
-              ["JET-RJWY8F", "Persistir turnos, ventas, detalles y facturas.", "Alta"],
-              ["JET-P9VNP9", "Autenticación, roles y trazabilidad.", "Alta"],
-              ["JET-5THMMC", "Talonarios CAI, rangos y fechas.", "Alta"],
-              ["JET-N8HGZE", "Promociones, combos y descuentos por vendedor.", "Alta"],
-              ["JET-WGW2DY", "Ventas netas y margen por línea.", "Alta"],
-              ["JET-N2T8HD", "Evaluación crediticia y cobranza automatizada.", "Normal"],
-              ["JET-RZNGXE", "Disponibilidad offline y reconciliación.", "Normal"],
-              ["JET-TVD6WK", "Moodle, wireframes, Figma/Balsamiq y URL pública.", "Alta"],
+          table(["ID", "Tarea", "Estado"], [
+              ["JET-RJWY8F", "Persistencia transaccional.", "Completada"],
+              ["JET-P9VNP9", "Autenticación, roles y trazabilidad.", "Completada"],
+              ["JET-5THMMC", "Talonarios CAI, rangos y fechas.", "Completada"],
+              ["JET-N8HGZE", "Promociones, combos y descuentos.", "Completada"],
+              ["JET-WGW2DY", "Ventas netas y margen por línea.", "Completada"],
+              ["JET-N2T8HD", "Evaluación crediticia y cobranza.", "Completada"],
+              ["JET-RZNGXE", "PWA, offline y reconciliación.", "Completada"],
+              ["JET-TVD6WK", "Documento, wireframes y URL pública listos; Figma/Balsamiq pendiente de cuenta externa.", "Parcial"],
           ], widths=[30*mm, 120*mm, 23*mm]),
           Spacer(1, 5*mm),
           P("Conclusión", "H2CO"),

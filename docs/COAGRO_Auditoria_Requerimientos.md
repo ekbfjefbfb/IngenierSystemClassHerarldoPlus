@@ -1,124 +1,114 @@
 # COAGRO · Auditoría de cumplimiento de la consigna
 
 Fecha: 26 de noviembre de 2026  
-Fuentes verificadas: PDF oficial de seis páginas de la consigna, DOCX de fase 1, PDF de ocho pantallas, código del prototipo, esquema SQLite y ejecución en Chromium.
+Fuentes verificadas: PDF oficial de seis páginas, DOCX de fase 1, PDF de ocho pantallas, código, SQLite, pruebas en Chromium y repositorio GitHub.
 
-## Veredicto
+## Veredicto actual
 
-No está cumpliendo el 100 % de la consigna. La base funcional es sólida, pero existen vacíos de persistencia transaccional, administración fiscal, promociones, seguridad y formato de entrega.
+Los requerimientos funcionales, no funcionales, módulos y tablas ya están implementados en el prototipo. Queda un bloqueo externo de formato: la consigna exige Figma o Balsamiq y todavía no existe un archivo o enlace en esas herramientas.
 
 | Bloque | Cumple | Parcial | Falta |
 |---|---:|---:|---:|
-| Requerimientos funcionales RF | 10 | 4 | 0 |
-| Requerimientos no funcionales RNF | 3 | 5 | 0 |
-| Módulos funcionales | 2 | 4 | 0 |
-| Tablas persistentes exigidas | 3 | 0 | 4 |
-| DFD, diccionario y navegación | 3 | 1 | 0 |
-| Entregables de fase | 2 | 3 | 2 |
+| Requerimientos funcionales RF | 14 | 0 | 0 |
+| Requerimientos no funcionales RNF | 8 | 0 | 0 |
+| Módulos funcionales | 6 | 0 | 0 |
+| Tablas persistentes exigidas | 7 | 0 | 0 |
+| DFD, diccionario, navegación y wireframes | 4 | 0 | 0 |
+| Entregables de fase | 5 | 1 | 0 |
 
 ## Requerimientos funcionales
 
-| Código | Requisito | Estado | Evidencia real | Vacío o tarea |
-|---|---|---|---|---|
-| RF-01 | Autenticación de usuarios | Parcial | Login independiente, validación y foco de error. | No hay usuarios, contraseñas, sesión ni rol real. JET-P9VNP9. |
-| RF-02 | Apertura de caja | Cumple | Turno, fondo inicial por denominación y terminal. | El turno no se guarda en SQLite. JET-RJWY8F. |
-| RF-03 | Registro de ventas | Cumple | POS, búsqueda, carrito, cantidades, ISV y total. | La venta y su detalle no se guardan en SQLite. JET-RJWY8F. |
-| RF-04 | Pagos efectivo, ACH, tarjeta y crédito | Cumple | Cuatro métodos y pago combinado con validación de suma. | Referencias simuladas, no pasarela bancaria. |
-| RF-05 | CAI, rangos y fechas SAR | Parcial | Factura con CAI, correlativo, fecha límite y QR. | Falta administrar talonarios y validar rango/consumo. JET-5THMMC. |
-| RF-06 | ISV 15 %, 18 %, exento y retención 1 % | Cumple | Cálculo automático y desglose fiscal. | Retención informativa; falta criterio fiscal real del cliente. |
-| RF-07 | Gestión de productos | Cumple | Alta, edición, precios, stock, categorías y activación. | Ninguno para el alcance del prototipo. |
-| RF-08 | Promociones, combos y descuentos por vendedor | Parcial | Campo de promoción y descuento manual. | Sin vigencia, combo ni máximo por vendedor. JET-N8HGZE. |
-| RF-09 | Clientes e historial | Cumple | Ficha 360°, búsqueda, historial y alta de cliente. | Historial demostrativo, no derivado de ventas persistentes. JET-RJWY8F. |
-| RF-10 | Límites, saldos y vencidos | Cumple | Límite, disponible, saldo, días de mora y alerta. | Sin evaluación crediticia automática. JET-N2T8HD. |
-| RF-11 | Abonos y saldos | Cumple | Abono validado, recibo y recálculo en SQLite. | Ninguno para el flujo demostrado. |
-| RF-12 | Cierre y arqueo ciego | Cumple | Conteo ciego, revelado, diferencia y cierre. | El cierre no queda persistido. JET-RJWY8F. |
-| RF-13 | Comisiones por vendedor | Cumple | Meta, ventas, tasa y liquidación en dashboard. | Datos de demostración, no derivados de ventas. JET-RJWY8F. |
-| RF-14 | Dashboard gerencial | Parcial | Brutas, ticket, morosidad, top 10, calor, metas y comisiones. | Faltan netas, margen por línea y datos en tiempo real. JET-WGW2DY. |
+| Código | Requisito | Estado | Evidencia |
+|---|---|---|---|
+| RF-01 | Autenticación | Cumple | PBKDF2, sesiones de 8 h, roles y bitácora. |
+| RF-02 | Apertura de caja | Cumple | Turno persistente, fondo por denominación y terminal. |
+| RF-03 | Registro de ventas | Cumple | Venta, detalle, promociones, stock e ISV en SQLite. |
+| RF-04 | Pagos combinados | Cumple | Efectivo, ACH, tarjeta, crédito y división en dos métodos. |
+| RF-05 | CAI, rangos y fechas SAR | Cumple | Administración de talonarios y bloqueo por rango/vencimiento. |
+| RF-06 | ISV y retención | Cumple | 15 %, 18 %, exento y retención informativa del 1 %. |
+| RF-07 | Productos | Cumple | Alta, edición, precios, costo, stock y activación. |
+| RF-08 | Promociones y descuentos | Cumple | Vigencia, porcentaje, monto, combo y límite por vendedor. |
+| RF-09 | Clientes e historial | Cumple | Ficha 360°, RTN, compras y ventas persistentes. |
+| RF-10 | Créditos | Cumple | Límite, saldo, disponible, score y facturas vencidas. |
+| RF-11 | Abonos | Cumple | Abono validado, recibo y saldo actualizado. |
+| RF-12 | Cierre y arqueo | Cumple | Conteo ciego, retiros, diferencia y cierre persistente. |
+| RF-13 | Comisiones | Cumple | Metas, ventas, tasa y liquidación por vendedor. |
+| RF-14 | Dashboard | Cumple | Brutas/netas, ticket, margen por línea, top 10 y morosidad. |
 
 ## Requerimientos no funcionales
 
-| Código | Requisito | Estado | Evidencia real | Vacío o tarea |
-|---|---|---|---|---|
-| RNF-01 | Seguridad por rol | Parcial | Login y permisos visuales. | Sin autenticación real ni autorización server-side. JET-P9VNP9. |
-| RNF-02 | Integridad | Parcial | SQLite y transacción atómica de instantánea. | Ventas, facturas y turnos no son transaccionales. JET-RJWY8F. |
-| RNF-03 | Usabilidad | Cumple | UI/UX auditada, ayuda, foco, ARIA y recuperación de errores. | Ninguno crítico. |
-| RNF-04 | Rendimiento | Cumple | Cinco suites, caché, debounce y catálogo progresivo. | Medir en dispositivos físicos antes de producción. |
-| RNF-05 | Disponibilidad | Parcial | Respaldo local si la API falla. | Sin PWA, cola offline ni reconciliación. JET-RZNGXE. |
-| RNF-06 | Trazabilidad | Parcial | Turno y cajero visibles en la interfaz. | Sin bitácora persistente de operaciones. JET-P9VNP9. |
-| RNF-07 | Validación de formularios | Cumple | Mensajes en lenguaje natural y foco al campo inválido. | Mantener validación también en servidor. |
-| RNF-08 | Protección de datos | Parcial | CSP, permisos, nosniff y datos de demostración. | Sin roles ni cifrado de datos personales reales. JET-P9VNP9. |
-
-## Módulos obligatorios
-
-| Módulo | Estado | Evidencia | Vacío |
+| Código | Requisito | Estado | Evidencia |
 |---|---|---|---|
-| 1. POS y turnos | Cumple en interfaz | Apertura, POS, pagos combinados, tickets y arqueo. | Persistencia del turno y la venta. JET-RJWY8F. |
-| 2. Facturación SAR | Parcial | Vista previa, CAI visible, ISV, exento, retención y QR. | Talonarios, rangos y consumo correlativo. JET-5THMMC. |
-| 3. Catálogo y promociones | Parcial | Tres precios, stock, promoción y descuento. | Vigencia, combos y máximo por vendedor. JET-N8HGZE. |
-| 4. CRM y créditos | Parcial | Ficha 360°, historial, crédito, alertas, abonos y estado de cuenta. | Evaluación crediticia y cobranza automatizada. JET-N2T8HD. |
-| 5. Comisiones | Cumple en interfaz | Liquidación y metas por vendedor. | Derivar cifras de ventas reales. JET-RJWY8F. |
-| 6. Dashboard | Parcial | KPIs, gráfica, cartera, calor, metas, top 10 y comisiones. | Netas, margen por línea y tiempo real. JET-WGW2DY. |
+| RNF-01 | Seguridad por rol | Cumple | Autorización en API y navegación; usuarios y sesiones reales. |
+| RNF-02 | Integridad | Cumple | Venta transaccional ACID, validación server-side y rollback. |
+| RNF-03 | Usabilidad | Cumple | UI/UX auditada, ayuda, foco, ARIA y recuperación. |
+| RNF-04 | Rendimiento | Cumple | Cinco suites, caché, debounce y catálogo progresivo. |
+| RNF-05 | Disponibilidad | Cumple | PWA, lectura offline, cola y reconciliación idempotente. |
+| RNF-06 | Trazabilidad | Cumple | Bitácora de login, estado, turno, venta, crédito y cobranza. |
+| RNF-07 | Validación | Cumple | Mensajes en lenguaje natural y foco al campo inválido. |
+| RNF-08 | Protección de datos | Cumple | CSP, permisos, sesión, hash, roles y datos demo. |
 
-## Base de datos exigida
+## Módulos y base de datos
 
-| Tabla | Estado actual | Acción |
+| Módulo | Estado | Evidencia |
 |---|---|---|
-| Clientes | Persistente | Correcta para el prototipo. |
-| Productos | Persistente | Correcta para el prototipo. |
-| TurnosCaja | Solo memoria | Crear tabla y API. JET-RJWY8F. |
-| VentasPOS | Solo memoria | Crear encabezado transaccional. JET-RJWY8F. |
-| DetalleVentas | Solo memoria | Crear líneas con precio, descuento e ISV. JET-RJWY8F. |
-| FacturasFiscalesSAR | Solo memoria | Crear factura, CAI, rango y QR. JET-RJWY8F. |
-| CuentasPorCobrar | Persistente | Correcta para abonos y saldos. |
+| POS y turnos | Cumple | Apertura, venta, pagos combinados, tickets, retiros y arqueo. |
+| Facturación SAR | Cumple | Talonarios, CAI, rango, fecha, ISV, exento, retención y QR ilustrativo. |
+| Catálogo y promociones | Cumple | Tres precios, stock, vigencia, combos y descuentos autorizados. |
+| CRM y créditos | Cumple | Ficha 360°, score, cupo, alertas, abonos y cobranza automática. |
+| Comisiones | Cumple | Liquidación y métricas por vendedor. |
+| Dashboard | Cumple | Datos persistentes, netas, margen, cartera, calor, metas y top 10. |
 
-## DFD, diccionario y navegación
+| Tabla | Estado |
+|---|---|
+| Clientes | Persistente |
+| Productos | Persistente |
+| TurnosCaja | Persistente |
+| VentasPOS | Persistente |
+| DetalleVentas | Persistente |
+| FacturasFiscalesSAR | Persistente |
+| CuentasPorCobrar | Persistente |
+
+## DFD y entregables
 
 | Entregable | Estado | Evidencia |
 |---|---|---|
-| DFD nivel 0 | Cumple | Imagen 2 del DOCX: cliente, cajero, vendedor, SAR, banco, proveedor, créditos y gerencia. |
-| DFD nivel 1 | Cumple | Imagen 3: seis procesos y almacenes D1 a D5. |
-| Diccionario de datos | Cumple | Tabla con 19 elementos, tipo, descripción y restricción. |
-| Mapa de navegación | Cumple | Imagen 4 del DOCX. |
-| Wireframes de baja fidelidad | Parcial | Imagen 5 contiene cuatro pantallas; faltan cuatro para cubrir las ocho obligatorias. JET-TVD6WK. |
-
-## Entregables por fase
-
-| Entregable | Estado | Observación |
-|---|---|---|
-| Fase 1: documento técnico de 8 a 12 páginas | No cumple formato | El DOCX convertido a PDF tiene 16 páginas. JET-TVD6WK. |
-| Fase 1: DFD y diccionario | Cumple | Nivel 0, nivel 1 y 19 elementos. |
-| Fase 1: mapa y wireframes | Parcial | Mapa completo; cuatro wireframes de ocho. JET-TVD6WK. |
-| Fase 2: prototipo Figma o Balsamiq | No cumple formato | Existe prototipo web funcional, no archivo/enlace Figma o Balsamiq. JET-TVD6WK. |
-| Fase 2: enlace público | No verificado | El repositorio GitHub es público; falta confirmar la URL de Render y su salud. JET-TVD6WK. |
-| Fase 2: calidad visual y dashboard | Cumple | Cinco suites, contraste AA, responsive y dashboard. |
-| Fase 2: documento final y manual | Parcial | README y auditorías existen; falta modelo relacional completo y manual breve consolidado. |
-| Fase 2: defensa | En preparación | La guía PDF de esta entrega cubre guion, demostración y preguntas. |
+| Documento fase 1 de 8 a 12 páginas | Cumple | `docs/COAGRO_Fase1_Compacta.pdf` tiene 12 páginas. |
+| DFD nivel 0 y nivel 1 | Cumple | Imágenes 2 y 3 del DOCX original, incluidas en el documento compacto. |
+| Diccionario de datos | Cumple | 19 elementos con tipo y restricción. |
+| Mapa y wireframes | Cumple | Mapa completo y ocho wireframes en `docs/wireframes/`. |
+| Prototipo funcional | Cumple | Web navegable con backend SQLite y PWA. |
+| Figma o Balsamiq | Pendiente externo | No existe cuenta o archivo en esas herramientas. |
+| Enlace público | Cumple para web estática | https://ekbfjefbfb.github.io/IngenierSystemClassHerarldoPlus/ |
+| Calidad visual y dashboard | Cumple | Cinco suites, contraste AA, responsive y KPIs reales. |
+| Modelo y manual | Cumple | `docs/COAGRO_Modelo_Datos.md` y `docs/COAGRO_Guia_Defensa.pdf`. |
+| Defensa | Preparado | Guion por integrante, demostración y preguntas en el PDF. |
 
 ## Rúbrica oficial
 
-| Criterio | Puntos | Riesgo actual | Acción |
-|---|---:|---|---|
-| Fase 1. Problema y requerimientos | 30 | Documento de 16 páginas supera el máximo de 12; el contenido técnico sí está estructurado. | Ajustar extensión sin perder RF, RNF, problema y objetivos. JET-TVD6WK. |
-| Fase 1. Rigor DFD y diccionario | 40 | Bajo. Nivel 0, nivel 1 y 19 elementos están presentes. | Revisar balanceo y notación antes de subir. |
-| Fase 1. Mapa y wireframes | 30 | Parcial. Hay mapa y cuatro bocetos de ocho pantallas. | Completar los cuatro faltantes. JET-TVD6WK. |
-| Fase 2. Funcionalidad e interactividad | 30 | Alto. El prototipo web es funcional, pero la rúbrica exige Figma/Balsamiq y enlace público. | Migrar o confirmar aceptación del sustituto y publicar URL. JET-TVD6WK. |
-| Fase 2. Calidad visual y dashboard | 30 | Bajo. UI responsive, validaciones, modales, ARIA y KPIs. | Mantener evidencia de las cinco suites. |
-| Fase 2. Documentación y modelo de datos | 20 | Parcial. Falta modelo relacional completo y manual breve consolidado. | Completar con JET-RJWY8F y la guía PDF. |
-| Fase 2. Dominio y defensa | 20 | En preparación. La guía PDF cubre guion, demo y preguntas. | Ensayar y asignar responsables. |
+| Criterio | Puntos | Estado |
+|---|---:|---|
+| F1. Problema y requerimientos | 30 | Documento compacto de 12 páginas con RF y RNF completos. |
+| F1. DFD y diccionario | 40 | Nivel 0, nivel 1 y 19 elementos. |
+| F1. Mapa y wireframes | 30 | Mapa y ocho bocetos. |
+| F2. Funcionalidad e interactividad | 30 | Web funcional y pública; falta convertir o replicar en Figma/Balsamiq. |
+| F2. Calidad visual y dashboard | 30 | Responsive, validaciones, modales, ARIA y KPIs persistentes. |
+| F2. Documentación y modelo | 20 | Modelo relacional, diccionario y manual de defensa. |
+| F2. Dominio y defensa | 20 | Guía PDF lista para ensayo. |
 
-## Orden de ejecución recomendado
+## Tareas JET ejecutadas
 
-1. JET-RJWY8F. Persistencia transaccional y modelo relacional.
-2. JET-P9VNP9. Autenticación, roles y bitácora.
-3. JET-5THMMC. Talonarios fiscales.
-4. JET-N8HGZE. Promociones y descuentos autorizados.
-5. JET-WGW2DY. Ventas netas y margen.
-6. JET-N2T8HD. Evaluación crediticia y cobranza.
-7. JET-RZNGXE. Disponibilidad offline.
-8. JET-TVD6WK. Formato Moodle, wireframes, Figma/Balsamiq y URL pública.
+| ID | Resultado |
+|---|---|
+| JET-RJWY8F | Persistencia transaccional de turnos, ventas, detalles, tenders y facturas. |
+| JET-P9VNP9 | Autenticación, roles, sesiones y bitácora. |
+| JET-5THMMC | Talonarios CAI, rangos y fechas. |
+| JET-N8HGZE | Promociones, combos y límites de descuento. |
+| JET-N2T8HD | Evaluación crediticia y cobranza automatizada. |
+| JET-WGW2DY | Ventas netas y margen por línea. |
+| JET-RZNGXE | PWA, cola offline y reconciliación. |
+| JET-TVD6WK | Documento compacto, wireframes y URL pública listos; Figma/Balsamiq bloqueado por cuenta externa. |
 
-## Qué se puede defender sin exagerar
+## Límites reales
 
-Se puede demostrar un prototipo funcional de POS y CRM con backend SQLite local, cálculo fiscal, pagos combinados, arqueo ciego, cuentas por cobrar, comisiones y dashboard. También se puede defender el análisis DFD, el diccionario y el mapa de navegación del DOCX.
-
-No se debe afirmar que hay autenticación real, integración SAR, persistencia de ventas y facturas, Figma/Balsamiq, cobranza automática ni tiempo real. Esos vacíos tienen tareas JET abiertas y deben presentarse como trabajo pendiente.
+La factura y el QR son ilustrativos; no existe integración SAR real. Las pasarelas bancarias están simuladas. GitHub Pages publica solo el front-end en modo local; el backend completo se ejecuta en local o Render. SQLite es efímero en Render sin disco persistente. Figma/Balsamiq sigue pendiente hasta disponer de cuenta y aceptación del docente.

@@ -19,6 +19,9 @@ pero la fuente de verdad es la base de datos cuando el backend está activo.
 
 Probado en Chromium 120 (escritorio 1440×900 y móvil 390×844). Sin errores de consola.
 
+URL pública estática: https://ekbfjefbfb.github.io/IngenierSystemClassHerarldoPlus/<br>
+Esa URL funciona en modo local porque GitHub Pages no ejecuta `server.py`. El backend SQLite completo corre en local o Render.
+
 ## Credenciales de la demo
 
 Con API activa se usan cuentas reales de demostración: `cajero01`, `vendedor01`, `creditos01`, `gerente01` y `admin`. La contraseña de demo es `demo` y puede cambiarse con `COAGRO_DEMO_PASSWORD`. Las contraseñas se almacenan con PBKDF2 y las sesiones expiran en 8 horas. Al abrir `index.html` sin backend se mantiene el acceso simulado local.
