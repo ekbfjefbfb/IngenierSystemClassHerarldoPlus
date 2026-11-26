@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:36:24.712084920+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:36:47.295763447+00:00`
 
-**Resumen:** 1 abiertas, 0 en curso, 0 bloqueadas, 12 completadas, 1 personas
+**Resumen:** 0 abiertas, 1 en curso, 0 bloqueadas, 12 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,14 +21,17 @@
 
 ### ekbfjefbfb
 
-- **JET-TVD6WK**  Cerrar cumplimiento de entregables Moodle y Figma/Balsamiq — `Abierta`  rama `sin rama`
+- **JET-TVD6WK**  Cerrar cumplimiento de entregables Moodle y Figma/Balsamiq — `En curso`  rama `main`
   - Contexto: La consigna pide documento fase 1 de 8–12 páginas; el DOCX actual tiene 16. Pide prototipo Figma/Balsamiq con enlace público; existe prototipo web pero no enlace Figma/Balsamiq ni URL pública verificada. Pide wireframes de baja fidelidad de las pantallas clave; hay 4 bocetos. Ajustar documento, completar bocetos o documentar sustitución aceptada, publicar URL y adjuntar evidencia. Bloqueo: confirmar con el docente s…
   - Prioridad: Alta
   - Archivos sensibles: README.md, UNIVERSIDAD CRISTIANA EVANGÉLICA NUEVO MILENIO(1).docx, docs
 
 ## Bloqueos de archivos y ramas
 
-_Sin bloqueos activos._
+- **BLOQUEO** `README.md` → JET-TVD6WK (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `UNIVERSIDAD CRISTIANA EVANGÉLICA NUEVO MILENIO(1).docx` → JET-TVD6WK (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `docs` → JET-TVD6WK (responsable ekbfjefbfb, En curso)
+- **RAMA** `main` → JET-TVD6WK (responsable ekbfjefbfb)
 
 ## Completadas recientemente
 
