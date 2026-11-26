@@ -11,6 +11,9 @@ para **Comercializadora Agropecuaria y Ferretera de Catacamas (COAGRO)**.
   - `server.py` — backend Python (stdlib) con SQLite y API REST local.
   - `README.md` — instrucciones, endpoints y decisiones de UI/UX.
   - `UIUX_AUDIT.md` — auditoría HCI por pantalla, agentes aplicados y evidencia.
+- `docs/COAGRO_Auditoria_Requerimientos.md` — cobertura real contra la consigna y rúbrica.
+- `docs/COAGRO_Guia_Defensa.pdf` — guion por integrante, demostración, preguntas y límites.
+- `docs/generar_pdf.py` — regeneración reproducible del PDF.
 - Documentos base del caso de estudio y consigna (PDF/DOCX).
 
 ## Ejecutar
