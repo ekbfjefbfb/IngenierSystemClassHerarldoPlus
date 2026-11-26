@@ -69,6 +69,8 @@ por cobrar y correlativos fijos) y expone:
 | POST | `/api/shifts/:id/withdraw` | Registra retiro parcial |
 | POST | `/api/shifts/:id/close` | Cierra turno con conteo y diferencia |
 | POST | `/api/sales` | Venta transaccional con detalles, tenders y factura |
+| POST | `/api/talonarios` | Alta de CAI, rango y fecha límite |
+| PUT | `/api/talonarios/:id` | Edición de talonario y correlativo |
 | GET | `/api/health` o `/health` | Estado del servidor (compatible con Render) |
 
 Validación del servidor: ids únicos, importes no negativos, ISV en {0, 15, 18}, cuerpo JSON máximo 2 MB.

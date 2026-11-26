@@ -82,7 +82,7 @@ const sellers = [
 /* ------------------------------------------------------------------ ESTADO */
 const state = {
   screen:'login', shift:null, cart:[], client:null, payMethod:'efectivo',
-  user:null, token:null,
+  user:null, token:null, talonarios:[], promotions:[],
   category:'Todas', productFilter:'', productLimit:8, selectedClient:'C001', cxcTab:'todas',
   cxcFilter:'', promosOnly:false, revealed:false, lastSale:null,
   range:'hoy', ticketNo:428, receiptNo:912
@@ -164,6 +164,8 @@ function applyRemote(d) {
   clients.splice(0, clients.length, ...d.clients);
   cxc.splice(0, cxc.length, ...d.cxc);
   state.ticketNo = d.ticketNo; state.receiptNo = d.receiptNo;
+  if (Array.isArray(d.talonarios)) state.talonarios = d.talonarios;
+  if (Array.isArray(d.promotions)) state.promotions = d.promotions;
   state.shift = normalizeShift(d.activeShift);
 }
 function updateApiChip() {
@@ -716,6 +718,54 @@ $('#emitInvoice').addEventListener('click', () => {
   });
 });
 $('#printInvoice').addEventListener('click', () => window.print());
+
+function renderTalonarios() {
+  const list = state.talonarios.length ? state.talonarios : [{ id:'T001', cai:'A1B2-C3D4-E5F6-G7H8-I9J0-K1L2', range_start:1, range_end:99999, current_number:45231, due_date:'2026-12-31', active:1 }];
+  const canManage = !API_ON || ['admin','gerente'].includes(state.user?.role);
+  $('#newTalonarioBtn').hidden = !canManage;
+  $('#talonarioList').innerHTML = list.map(t => {
+    const span = Math.max(1, t.range_end - t.range_start + 1);
+    const used = Math.max(0, t.current_number - t.range_start);
+    const pct = Math.min(100, used / span * 100);
+    const expired = t.due_date < today().split('/').reverse().join('-');
+    const full = t.current_number > t.range_end;
+    return `<div class="talonario-row"><div class="tr-top"><span class="tr-cai" title="${t.cai}">${t.cai}</span><span class="badge ${!t.active||expired||full?'bad':'ok'}">${!t.active?'Inactivo':expired?'Vencido':full?'Agotado':'Activo'}</span></div><div class="tr-meta"><span>${String(t.range_start).padStart(5,'0')}–${String(t.range_end).padStart(5,'0')}</span><span>Próximo ${String(t.current_number).padStart(8,'0')}</span></div><div class="tr-bar"><i style="width:${pct}%"></i></div><div class="tr-meta"><span>Vence ${t.due_date}</span>${canManage?`<button class="link-btn" data-talonario="${t.id}">Editar</button>`:''}</div></div>`;
+  }).join('');
+}
+function openTalonario(t=null) {
+  const data = t || { cai:'', range_start:1, range_end:99999, current_number:1, due_date:'2026-12-31', active:1 };
+  modal({
+    title:t ? 'Editar talonario' : 'Nuevo talonario', sub:'Autorización fiscal SAR', wide:true,
+    body:`<label class="field"><span>CAI</span><div class="input-wrap"><input id="tCai" value="${data.cai}" placeholder="Código de autorización de impresión"></div><small class="field-error" id="tErr"></small></label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><label class="field"><span>Rango inicial</span><div class="input-wrap"><input id="tStart" type="number" min="1" value="${data.range_start}"></div></label><label class="field"><span>Rango final</span><div class="input-wrap"><input id="tEnd" type="number" min="1" value="${data.range_end}"></div></label><label class="field"><span>Próximo correlativo</span><div class="input-wrap"><input id="tCurrent" type="number" min="1" value="${data.current_number}"></div></label><label class="field"><span>Fecha límite</span><div class="input-wrap"><input id="tDue" type="date" value="${data.due_date}"></div></label></div>
+      <label class="check"><input type="checkbox" id="tActive" ${data.active?'checked':''}><span></span> Talonario activo</label>`,
+    foot:'<button class="btn btn-ghost" data-close>Cancelar</button><button class="btn btn-primary" id="saveTalonario">Guardar talonario</button>',
+    onMount(root) {
+      $('#saveTalonario', root).addEventListener('click', async () => {
+        const payload = { cai:$('#tCai',root).value.trim(), range_start:+$('#tStart',root).value, range_end:+$('#tEnd',root).value,
+          current_number:+$('#tCurrent',root).value, due_date:$('#tDue',root).value, active:$('#tActive',root).checked };
+        if (!payload.cai || payload.range_start<1 || payload.range_end<payload.range_start || payload.current_number<payload.range_start || payload.current_number>payload.range_end || !payload.due_date) {
+          $('#tErr',root).textContent = 'Complete CAI, rango, correlativo y fecha válidos.'; return;
+        }
+        try {
+          if (useApi) {
+            const res = t ? await api('/api/talonarios/'+t.id,'PUT',payload) : await api('/api/talonarios','POST',payload);
+            state.talonarios = res.talonarios;
+          } else {
+            if (t) Object.assign(t,payload);
+            else state.talonarios.push({ id:'T'+(state.talonarios.length+1), ...payload });
+          }
+          closeModal(); renderTalonarios(); toast('Talonario guardado');
+        } catch (err) { $('#tErr',root).textContent = err.message; }
+      });
+    }
+  });
+}
+$('#newTalonarioBtn').addEventListener('click', () => openTalonario());
+$('#talonarioList').addEventListener('click', e => {
+  const b = e.target.closest('[data-talonario]'); if (!b) return;
+  openTalonario(state.talonarios.find(t => t.id === b.dataset.talonario));
+});
 
 /* ------------------------------------------------------------------ 03 CLIENTES */
 function initials(name) { return name.split(' ').map(w => w[0]).slice(0,2).join(''); }
@@ -1277,6 +1327,7 @@ function renderAll() {
       totals:{b15:316,b18:0,ex:0,isv:round(316*.15),disc:0,total:round(316*1.15)} };
     renderInvoice(state.lastSale);
   }
+  if (state.screen === 'factura') renderTalonarios();
   if (state.screen === 'productos') { $('#categoryFilter').innerHTML = '<option value="todas">Todas las categorías</option>' + [...new Set(products.map(p=>p.cat))].map(c=>`<option value="${c}">${c}</option>`).join(''); renderProductStats(); renderProductTable(); }
   if (state.screen === 'cxc') renderCxc();
   if (state.screen === 'dashboard') renderDashboard();

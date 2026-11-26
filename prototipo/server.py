@@ -218,6 +218,7 @@ def insert_reference(con):
         )
         con.execute("INSERT OR IGNORE INTO meta VALUES ('invoiceNo','45231')")
         con.execute("INSERT OR IGNORE INTO meta VALUES ('shiftNo','428')")
+        con.execute("INSERT OR IGNORE INTO meta VALUES ('talonarioNo','2')")
 
 
 def insert_seed(con):
@@ -242,7 +243,7 @@ def insert_seed(con):
         con.executemany(
             "INSERT OR REPLACE INTO meta VALUES (?,?)",
             [("ticketNo", str(SEED["ticketNo"])), ("receiptNo", str(SEED["receiptNo"])),
-             ("shiftNo", "428"), ("seeded", "1")],
+             ("shiftNo", "428"), ("invoiceNo", "45231"), ("talonarioNo", "2"), ("seeded", "1")],
         )
 
 
@@ -465,7 +466,7 @@ def create_sale(con, payload):
         if credit_part > float(client["credit_limit"] - client["balance"]):
             raise ValueError("Crédito insuficiente")
     talonario = con.execute(
-        "SELECT * FROM fiscal_talonarios WHERE active=1 AND current_number<range_end AND due_date>=date('now') ORDER BY rowid LIMIT 1"
+        "SELECT * FROM fiscal_talonarios WHERE active=1 AND current_number<=range_end AND due_date>=date('now') ORDER BY rowid LIMIT 1"
     ).fetchone()
     if not talonario:
         raise ValueError("No hay talonario fiscal disponible")
@@ -542,6 +543,35 @@ def create_sale(con, payload):
     sale["method"] = " + ".join(t[0] for t in clean_tenders)
     sale["ref"] = " / ".join(t[2] for t in clean_tenders if t[2]) or "EFECTIVO"
     return sale
+
+
+def save_talonario(con, payload, talonario_id=None, user_id="U005"):
+    cai = str(payload.get("cai", "")).strip()
+    try:
+        start = int(payload.get("range_start", 0)); end = int(payload.get("range_end", 0))
+        current = int(payload.get("current_number", start)); due = str(payload.get("due_date", ""))
+        datetime.strptime(due, "%Y-%m-%d")
+    except (ValueError, TypeError):
+        raise ValueError("Rango o fecha de talonario inválidos")
+    if not cai or start <= 0 or end < start or current < start or current > end:
+        raise ValueError("CAI y rango deben ser válidos")
+    if talonario_id:
+        if not con.execute("SELECT id FROM fiscal_talonarios WHERE id=?", (talonario_id,)).fetchone():
+            raise ValueError("Talonario no encontrado")
+        con.execute(
+            "UPDATE fiscal_talonarios SET cai=?,range_start=?,range_end=?,due_date=?,current_number=?,active=? WHERE id=?",
+            (cai, start, end, due, current, 1 if payload.get("active", True) else 0, talonario_id),
+        )
+    else:
+        number = meta_int(con, "talonarioNo", 2)
+        talonario_id = f"T{number:03d}"
+        set_meta(con, "talonarioNo", number + 1)
+        con.execute(
+            "INSERT INTO fiscal_talonarios VALUES (?,?,?,?,?,?,?)",
+            (talonario_id, cai, start, end, due, current, 1 if payload.get("active", True) else 0),
+        )
+    audit(con, user_id, "save_talonario", "talonario", talonario_id, {"cai":cai,"range":[start,end],"due":due})
+    return dict(con.execute("SELECT * FROM fiscal_talonarios WHERE id=?", (talonario_id,)).fetchone())
 
 
 MIME = {
@@ -645,11 +675,28 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
     def do_PUT(self):
-        if self.path.split("?", 1)[0] != "/api/state":
+        path = self.path.split("?", 1)[0]
+        if path != "/api/state" and not path.startswith("/api/talonarios/"):
             self.send_json({"error": "Endpoint no encontrado"}, 404)
             return
         try:
             payload = self.body()
+            if path.startswith("/api/talonarios/"):
+                talonario_id = path.split("/")[-1]
+                with LOCK:
+                    con = connect()
+                    try:
+                        ensure_seed(con)
+                        user = self.auth(con, True)
+                        if user["role"] not in ("admin", "gerente"):
+                            self.send_json({"error": "Rol no autorizado para talonarios"}, 403)
+                            return
+                        with con:
+                            talonario = save_talonario(con, payload, talonario_id, user["id"])
+                        self.send_json({"talonario":talonario,"talonarios":[dict(r) for r in con.execute("SELECT * FROM fiscal_talonarios ORDER BY rowid")]})
+                    finally:
+                        con.close()
+                return
             with LOCK:
                 con = connect()
                 try:
@@ -768,6 +815,21 @@ class Handler(BaseHTTPRequestHandler):
                         with con:
                             shift = shift_action(con, shift_id, "withdraw", payload.get("amount", 0), payload.get("reason"), user["id"])
                         self.send_json({"shift": shift, "state": read_state(con)})
+                    finally:
+                        con.close()
+                return
+            if path == "/api/talonarios":
+                with LOCK:
+                    con = connect()
+                    try:
+                        ensure_seed(con)
+                        user = self.auth(con, True)
+                        if user["role"] not in ("admin", "gerente"):
+                            self.send_json({"error": "Rol no autorizado para talonarios"}, 403)
+                            return
+                        with con:
+                            talonario = save_talonario(con, payload, None, user["id"])
+                        self.send_json({"talonario":talonario,"talonarios":[dict(r) for r in con.execute("SELECT * FROM fiscal_talonarios ORDER BY rowid")]})
                     finally:
                         con.close()
                 return
