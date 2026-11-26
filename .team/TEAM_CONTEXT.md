@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:09:07.933730714+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:17:28.842357065+00:00`
 
-**Resumen:** 3 abiertas, 1 en curso, 0 bloqueadas, 9 completadas, 1 personas
+**Resumen:** 3 abiertas, 0 en curso, 0 bloqueadas, 10 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,9 +21,6 @@
 
 ### ekbfjefbfb
 
-- **JET-N2T8HD**  Completar evaluación crediticia y cobranza automatizada — `En curso`  rama `main`
-  - Contexto: El CRM tiene límite, saldo, historial y alertas, pero no evaluación de crédito ni cobranza automatizada. Implementar score/reglas explicables, autorización de venta a crédito, programación de recordatorios y registro automático de intentos. Verificar cliente apto, moroso y recordatorio generado.
-  - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
 - **JET-WGW2DY**  Agregar ventas netas y margen por línea al dashboard — `Abierta`  rama `sin rama`
   - Contexto: El módulo 6 exige ventas brutas vs. netas y margen por línea comercial. El dashboard muestra brutas, ticket, morosidad, top 10 y metas, pero no netas ni margen por línea. Calcular desde ventas persistentes, mostrar comparación y margen por categoría con tooltip y filtro de periodo. Verificar cuadre bruto = neto + descuentos/devoluciones según definición documentada.
   - Prioridad: Alta
@@ -38,14 +35,12 @@
 
 ## Bloqueos de archivos y ramas
 
-- **BLOQUEO** `prototipo/app.js` → JET-N2T8HD (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/index.html` → JET-N2T8HD (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/server.py` → JET-N2T8HD (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/styles.css` → JET-N2T8HD (responsable ekbfjefbfb, En curso)
-- **RAMA** `main` → JET-N2T8HD (responsable ekbfjefbfb)
+_Sin bloqueos activos._
 
 ## Completadas recientemente
 
+- **JET-N2T8HD**  Completar evaluación crediticia y cobranza automatizada  completada por ekbfjefbfb  rama `main`  commit `50bc838`
+  - Resultado: Completado. Evaluación crediticia explicable por estado, uso de límite, volumen y facturas vencidas; decisión Aprobado/Revisión/Rechazado persistida. Ventas a crédito validan score y cupo. Cobranza genera recordatorios pendientes al cargar estado y permite ejecutar/enviar con re…
 - **JET-N8HGZE**  Implementar promociones temporales, combos y descuentos por vendedor  completada por ekbfjefbfb  rama `main`  commit `a1c0278`
   - Resultado: Completado. Promociones persistentes con tipo porcentaje/monto/combo, vigencia, producto y estado. POS y servidor aplican la misma promoción. Límite de descuento por vendedor persistente y validado en UI/API. Verificado: Aceite 5% 87.40 base; Frijol 2x125 subtotal 125; promoción…
 - **JET-5THMMC**  Administrar talonarios fiscales CAI, rangos y fechas límite  completada por ekbfjefbfb  rama `main`  commit `fc93211`
