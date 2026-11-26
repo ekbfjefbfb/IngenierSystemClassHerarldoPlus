@@ -458,11 +458,42 @@ def promotional_subtotal(price, qty, promo):
     return subtotal, pct, promo["name"]
 
 
+def sale_response(con, sale_id):
+    sale = dict(con.execute("SELECT * FROM sales WHERE id=?", (sale_id,)).fetchone())
+    sale["lines"] = []
+    for row in con.execute("SELECT si.*,p.name,p.isv FROM sale_items si JOIN products p ON p.id=si.product_id WHERE sale_id=?", (sale_id,)):
+        sale["lines"].append({"name":row["name"],"qty":row["qty"],"price":row["unit_price"],"isv":row["isv"],"subtotal":row["subtotal"],"discount_pct":row["discount_pct"],"margin":row["margin"]})
+    sale["tenders"] = [dict(r) for r in con.execute("SELECT method,amount,reference FROM sale_tenders WHERE sale_id=?", (sale_id,))]
+    client_id = sale["client_id"]
+    sale["client"] = dict(con.execute("SELECT * FROM clients WHERE id=?", (client_id,)).fetchone()) if client_id else None
+    if sale["client"]:
+        sale["client"]["limit"] = sale["client"].pop("credit_limit")
+    invoice = con.execute("SELECT * FROM invoices WHERE sale_id=?", (sale_id,)).fetchone()
+    talonario = con.execute("SELECT * FROM fiscal_talonarios WHERE id=?", (invoice["cai_id"],)).fetchone() if invoice else None
+    sale["invoice"] = invoice["number"] if invoice else None
+    sale["invoice_id"] = invoice["id"] if invoice else None
+    sale["qr_hash"] = invoice["qr_hash"] if invoice else None
+    sale["cai"] = talonario["cai"] if talonario else None
+    sale["due_date"] = invoice["due_date"] if invoice else None
+    sale["date"] = sale["created_at"][:10]
+    sale["time"] = sale["created_at"][11:16]
+    sale["totals"] = {"b15":sale["base15"],"b18":sale["base18"],"ex":sale["exempt"],"isv":sale["tax"],"disc":sale["discount"],"total":sale["total"]}
+    sale["method"] = " + ".join(t["method"] for t in sale["tenders"])
+    sale["ref"] = " / ".join(t["reference"] for t in sale["tenders"] if t["reference"]) or "EFECTIVO"
+    return sale
+
+
 def create_sale(con, payload):
     items = payload.get("items")
     tenders = payload.get("tenders")
     if not isinstance(items, list) or not items:
         raise ValueError("La venta debe tener productos")
+    idempotency_key = str(payload.get("idempotency_key") or "")
+    sale_id = "V-" + hashlib.sha256(idempotency_key.encode()).hexdigest()[:10] if idempotency_key else None
+    if sale_id:
+        existing = con.execute("SELECT id FROM sales WHERE id=?", (sale_id,)).fetchone()
+        if existing:
+            return sale_response(con, sale_id)
     if not isinstance(tenders, list) or not tenders:
         raise ValueError("La venta debe tener un método de pago")
     shift_id = payload.get("shift_id")
@@ -530,7 +561,8 @@ def create_sale(con, payload):
         raise ValueError("No hay talonario fiscal disponible")
     ticket_no = meta_int(con, "ticketNo", 428)
     invoice_no = meta_int(con, "invoiceNo", 45231)
-    sale_id = f"V-{ticket_no:05d}"
+    if not sale_id:
+        sale_id = f"V-{ticket_no:05d}"
     invoice_id = f"FAC-{ticket_no:05d}"
     invoice_number = f"001-001-01-{invoice_no:08d}"
     created_at = now_iso()
@@ -580,27 +612,7 @@ def create_sale(con, payload):
         set_meta(con, "ticketNo", ticket_no + 1)
         set_meta(con, "invoiceNo", invoice_no + 1)
         audit(con, seller_id, "create_sale", "sale", sale_id, {"total": total, "invoice": invoice_number})
-    sale = dict(con.execute("SELECT * FROM sales WHERE id=?", (sale_id,)).fetchone())
-    sale["lines"] = []
-    for row in con.execute(
-        "SELECT si.*,p.name,p.isv FROM sale_items si JOIN products p ON p.id=si.product_id WHERE sale_id=?", (sale_id,)
-    ):
-        sale["lines"].append({"name":row["name"],"qty":row["qty"],"price":row["unit_price"],"isv":row["isv"],"subtotal":row["subtotal"]})
-    sale["tenders"] = [dict(r) for r in con.execute("SELECT method,amount,reference FROM sale_tenders WHERE sale_id=?", (sale_id,))]
-    sale["client"] = dict(con.execute("SELECT * FROM clients WHERE id=?", (client_id,)).fetchone()) if client_id else None
-    if sale["client"]:
-        sale["client"]["limit"] = sale["client"].pop("credit_limit")
-    sale["invoice"] = invoice_number
-    sale["invoice_id"] = invoice_id
-    sale["qr_hash"] = qr_hash
-    sale["cai"] = talonario["cai"]
-    sale["due_date"] = due_date
-    sale["date"] = created_at[:10]
-    sale["time"] = created_at[11:16]
-    sale["totals"] = {"b15":round(base15,2),"b18":round(base18,2),"ex":round(exempt,2),"isv":tax,"disc":discount,"total":total}
-    sale["method"] = " + ".join(t[0] for t in clean_tenders)
-    sale["ref"] = " / ".join(t[2] for t in clean_tenders if t[2]) or "EFECTIVO"
-    return sale
+    return sale_response(con, sale_id)
 
 
 def save_promotion(con, payload, promotion_id=None, user_id="U005"):
@@ -787,6 +799,7 @@ MIME = {
     ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8",
     ".js": "text/javascript; charset=utf-8", ".json": "application/json; charset=utf-8",
     ".md": "text/markdown; charset=utf-8", ".png": "image/png", ".svg": "image/svg+xml",
+    ".webmanifest": "application/manifest+json; charset=utf-8",
 }
 
 

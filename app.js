@@ -82,11 +82,13 @@ const sellers = [
 /* ------------------------------------------------------------------ ESTADO */
 const state = {
   screen:'login', shift:null, cart:[], client:null, payMethod:'efectivo',
-  user:null, token:null, talonarios:[], promotions:[], sellerLimits:{}, creditEvaluations:[], collectionEvents:[],
+  user:null, token:null, talonarios:[], promotions:[], sellerLimits:{}, creditEvaluations:[], collectionEvents:[], pendingSales:[],
   category:'Todas', productFilter:'', productLimit:8, selectedClient:'C001', cxcTab:'todas',
   cxcFilter:'', promosOnly:false, revealed:false, lastSale:null,
   range:'hoy', ticketNo:428, receiptNo:912
 };
+
+try { state.pendingSales = JSON.parse(localStorage.getItem('coagro_pending_sales') || '[]'); } catch (_) { state.pendingSales = []; }
 
 const titles = {
   login:['Operación','Inicio de sesión'], pos:['Módulo 01 · TPS','Punto de venta'],
@@ -146,7 +148,7 @@ async function api(path, method='GET', body=null) {
     const res = await fetch(path, opts);
     if (!res.ok) {
       let msg = ''; try { msg = (await res.json()).error; } catch (_) {}
-      throw new Error(msg || ('HTTP ' + res.status));
+      const err = new Error(msg || ('HTTP ' + res.status)); err.status = res.status; throw err;
     }
     return await res.json();
   } catch (err) {
@@ -173,8 +175,24 @@ function applyRemote(d) {
 }
 function updateApiChip() {
   const el = $('#apiChip'); if (!el) return;
-  el.textContent = useApi ? 'SQLite · API' : 'Modo local';
-  el.classList.toggle('local', !useApi);
+  const offline = !navigator.onLine || state.pendingSales.length > 0;
+  el.textContent = offline ? `Offline · ${state.pendingSales.length}` : useApi ? 'SQLite · API' : 'Modo local';
+  el.classList.toggle('local', offline || !useApi);
+}
+function savePendingSales() { try { localStorage.setItem('coagro_pending_sales', JSON.stringify(state.pendingSales)); } catch (_) {} updateApiChip(); }
+function queueSale(payload) { state.pendingSales.push({ key:payload.idempotency_key, payload, queuedAt:new Date().toISOString() }); savePendingSales(); }
+async function syncPendingSales() {
+  if (!useApi || !navigator.onLine || !state.pendingSales.length) return;
+  const queue = [...state.pendingSales];
+  for (const item of queue) {
+    try {
+      const res = await api('/api/sales','POST',item.payload);
+      applyRemote(res.state);
+      state.pendingSales = state.pendingSales.filter(x=>x.key!==item.key);
+      savePendingSales();
+      toast('Venta offline sincronizada · ' + res.sale.invoice);
+    } catch (err) { if (err.status) break; }
+  }
 }
 function persist() {
   if (!useApi) { saveData(); return; }
@@ -637,25 +655,33 @@ async function finalizeSale(t, tenders) {
   }
   const method = tenders.map(x => x.method).join(' + ');
   const ref = apiTenders.map(x => x.ref).filter(Boolean).join(' / ') || 'EFECTIVO';
-  let sale;
+  let sale, queued = false;
+  const payload = {
+    idempotency_key:'WEB-' + state.ticketNo + '-' + Date.now(),
+    shift_id:state.shift?.id, client_id:state.client ? state.client.id : null,
+    seller_id:state.user?.id || 'U001', discount:t.disc,
+    items:state.cart.map(l => ({ product_id:l.id, qty:l.qty })),
+    tenders:apiTenders.map(x => ({ method:x.method, amount:x.amount, reference:x.ref }))
+  };
   if (useApi && state.shift) {
     try {
-      const res = await api('/api/sales','POST',{
-        shift_id:state.shift.id, client_id:state.client ? state.client.id : null,
-        seller_id:state.user.id, discount:t.disc,
-        items:state.cart.map(l => ({ product_id:l.id, qty:l.qty })),
-        tenders:apiTenders.map(x => ({ method:x.method, amount:x.amount, reference:x.ref }))
-      });
+      const res = await api('/api/sales','POST',payload);
       sale = res.sale;
       applyRemote(res.state);
-    } catch (err) { toast('No se pudo registrar la venta: ' + err.message, 'error'); return; }
-  } else {
+    } catch (err) {
+      if (!err.status && navigator.onLine === false) { queueSale(payload); queued = true; useApi = false; updateApiChip(); toast('Venta guardada offline · se sincronizará al reconectar', 'warn'); }
+      else if (!err.status) { queueSale(payload); queued = true; useApi = false; updateApiChip(); toast('Sin respuesta del servidor · venta en cola', 'warn'); }
+      else { toast('No se pudo registrar la venta: ' + err.message, 'error'); return; }
+    }
+  }
+  if (!sale && !queued && API_ON && !useApi && state.token) { queueSale(payload); queued = true; toast('Venta guardada offline · se sincronizará al reconectar', 'warn'); }
+  if (!sale) {
     const creditPart = apiTenders.filter(x => x.method === 'Crédito autorizado').reduce((s,x) => s + x.amount, 0);
     sale = {
       no:state.ticketNo++, date:today(), time:new Date().toLocaleTimeString('es-HN',{hour:'2-digit',minute:'2-digit'}),
       client:state.client, method, ref, tenders:apiTenders, lines:state.cart.map(l => {
         const p = products.find(x => x.id === l.id);
-        return { name:p.name, qty:l.qty, price:p.price, isv:p.isv, subtotal:p.price * l.qty };
+        return { name:p.name, qty:l.qty, price:p.price, isv:p.isv, subtotal:lineSubtotal(p,l.qty) };
       }), totals:t, invoice:'001-001-01-00045231'
     };
     if (state.client && creditPart > 0) {
@@ -1430,6 +1456,18 @@ $$('#categoryChips .chip').forEach(c => c.setAttribute('aria-pressed', String(c.
 $$('#payMethods .pay-chip').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.pay === state.payMethod)));
 $$('#cxcTabs .tab').forEach(t => t.setAttribute('aria-pressed', String(t.dataset.tab === state.cxcTab)));
 $$('#rangeChips button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.range === state.range)));
+
+async function reconnect() {
+  if (!navigator.onLine) { updateApiChip(); return; }
+  try {
+    const d = await api('/api/state'); applyRemote(d); useApi = true; updateApiChip();
+    await syncPendingSales(); renderAll();
+  } catch (_) { useApi = false; updateApiChip(); }
+}
+window.addEventListener('online', reconnect);
+window.addEventListener('offline', () => { useApi = false; updateApiChip(); toast('Sin conexión · las ventas se guardarán en cola', 'warn'); });
+setInterval(syncPendingSales, 15000);
+if (API_ON && 'serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
 
 async function boot() {
   const app = $('#app'), submit = $('#loginSubmit');
