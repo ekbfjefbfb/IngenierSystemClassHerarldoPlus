@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:43:28.918980141+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:52:14.332664019+00:00`
 
-**Resumen:** 8 abiertas, 0 en curso, 0 bloqueadas, 5 completadas, 1 personas
+**Resumen:** 7 abiertas, 1 en curso, 0 bloqueadas, 5 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,7 +21,7 @@
 
 ### ekbfjefbfb
 
-- **JET-RJWY8F**  Persistir turnos, ventas, detalles y facturas en SQLite — `Abierta`  rama `sin rama`
+- **JET-RJWY8F**  Persistir turnos, ventas, detalles y facturas en SQLite — `En curso`  rama `main`
   - Contexto: La consigna exige TurnosCaja, VentasPOS, DetalleVentas y FacturasFiscalesSAR. Hoy solo productos, clientes y CxC son persistentes; turno, carrito y factura viven en memoria. Crear tablas y API transaccional ACID, modelo relacional consolidado y pruebas de recarga/rollback. Verificar que una venta con pago combinado genere turno, venta, detalle, factura y CxC si aplica, sin duplicados.
   - Prioridad: Alta
   - Archivos sensibles: docs/COAGRO_Modelo_Datos.md, prototipo/app.js, prototipo/server.py
@@ -54,7 +54,10 @@
 
 ## Bloqueos de archivos y ramas
 
-_Sin bloqueos activos._
+- **BLOQUEO** `docs/COAGRO_Modelo_Datos.md` → JET-RJWY8F (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/app.js` → JET-RJWY8F (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/server.py` → JET-RJWY8F (responsable ekbfjefbfb, En curso)
+- **RAMA** `main` → JET-RJWY8F (responsable ekbfjefbfb)
 
 ## Completadas recientemente
 
