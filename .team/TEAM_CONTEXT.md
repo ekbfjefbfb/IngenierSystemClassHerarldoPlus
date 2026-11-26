@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:17:46.125735889+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:24:26.990169843+00:00`
 
-**Resumen:** 2 abiertas, 1 en curso, 0 bloqueadas, 10 completadas, 1 personas
+**Resumen:** 2 abiertas, 0 en curso, 0 bloqueadas, 11 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,10 +21,6 @@
 
 ### ekbfjefbfb
 
-- **JET-WGW2DY**  Agregar ventas netas y margen por línea al dashboard — `En curso`  rama `main`
-  - Contexto: El módulo 6 exige ventas brutas vs. netas y margen por línea comercial. El dashboard muestra brutas, ticket, morosidad, top 10 y metas, pero no netas ni margen por línea. Calcular desde ventas persistentes, mostrar comparación y margen por categoría con tooltip y filtro de periodo. Verificar cuadre bruto = neto + descuentos/devoluciones según definición documentada.
-  - Prioridad: Alta
-  - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
 - **JET-TVD6WK**  Cerrar cumplimiento de entregables Moodle y Figma/Balsamiq — `Abierta`  rama `sin rama`
   - Contexto: La consigna pide documento fase 1 de 8–12 páginas; el DOCX actual tiene 16. Pide prototipo Figma/Balsamiq con enlace público; existe prototipo web pero no enlace Figma/Balsamiq ni URL pública verificada. Pide wireframes de baja fidelidad de las pantallas clave; hay 4 bocetos. Ajustar documento, completar bocetos o documentar sustitución aceptada, publicar URL y adjuntar evidencia. Bloqueo: confirmar con el docente s…
   - Prioridad: Alta
@@ -35,14 +31,12 @@
 
 ## Bloqueos de archivos y ramas
 
-- **BLOQUEO** `prototipo/app.js` → JET-WGW2DY (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/index.html` → JET-WGW2DY (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/server.py` → JET-WGW2DY (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/styles.css` → JET-WGW2DY (responsable ekbfjefbfb, En curso)
-- **RAMA** `main` → JET-WGW2DY (responsable ekbfjefbfb)
+_Sin bloqueos activos._
 
 ## Completadas recientemente
 
+- **JET-WGW2DY**  Agregar ventas netas y margen por línea al dashboard  completada por ekbfjefbfb  rama `main`  commit `404b46d`
+  - Resultado: Completado. Endpoint /api/dashboard calcula brutas, descuentos, netas, ticket, margen por línea/categoría, series y top 10 desde ventas persistentes. UI muestra netas con desglose de brutas/descuentos, ticket, margen y card de rentabilidad por categoría; filtro hoy/7d/mes. Verif…
 - **JET-N2T8HD**  Completar evaluación crediticia y cobranza automatizada  completada por ekbfjefbfb  rama `main`  commit `50bc838`
   - Resultado: Completado. Evaluación crediticia explicable por estado, uso de límite, volumen y facturas vencidas; decisión Aprobado/Revisión/Rechazado persistida. Ventas a crédito validan score y cupo. Cobranza genera recordatorios pendientes al cargar estado y permite ejecutar/enviar con re…
 - **JET-N8HGZE**  Implementar promociones temporales, combos y descuentos por vendedor  completada por ekbfjefbfb  rama `main`  commit `a1c0278`

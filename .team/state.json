@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-26T12:17:46.125735889Z",
+  "updated_at": "2026-11-26T12:24:26.990169843Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -448,7 +448,7 @@
       "id": "JET-WGW2DY",
       "title": "Agregar ventas netas y margen por línea al dashboard",
       "context": "El módulo 6 exige ventas brutas vs. netas y margen por línea comercial. El dashboard muestra brutas, ticket, morosidad, top 10 y metas, pero no netas ni margen por línea. Calcular desde ventas persistentes, mostrar comparación y margen por categoría con tooltip y filtro de periodo. Verificar cuadre bruto = neto + descuentos/devoluciones según definición documentada.",
-      "status": "in_progress",
+      "status": "done",
       "priority": "high",
       "assignee_id": "ekbfjefbfb",
       "assignee_name": "ekbfjefbfb",
@@ -462,11 +462,24 @@
         "prototipo/styles.css"
       ],
       "created_at": "2026-11-26T03:35:14.495731255Z",
-      "updated_at": "2026-11-26T12:17:46.125725621Z",
+      "updated_at": "2026-11-26T12:24:26.990154652Z",
       "started_at": "2026-11-26T12:17:46.125725621Z",
+      "completed_at": "2026-11-26T12:24:26.990154652Z",
+      "completed_by_id": "ekbfjefbfb",
+      "completed_by_name": "ekbfjefbfb",
+      "completed_branch": "main",
+      "commit": "404b46d",
       "agent": "opencode",
       "archived": false,
-      "notes": []
+      "notes": [
+        {
+          "id": "e0474ccb-e2ba-41b3-9d54-e346d662b687",
+          "author_id": "ekbfjefbfb",
+          "author_name": "ekbfjefbfb",
+          "body": "Completado. Endpoint /api/dashboard calcula brutas, descuentos, netas, ticket, margen por línea/categoría, series y top 10 desde ventas persistentes. UI muestra netas con desglose de brutas/descuentos, ticket, margen y card de rentabilidad por categoría; filtro hoy/7d/mes. Verificado cuadre bruto 179.40 - descuento 10 = neto 169.40 y margen 25.6% en Abarrotes. 5 suites con 0 errores. Push 404b46d.",
+          "created_at": "2026-11-26T12:24:26.990154652Z"
+        }
+      ]
     },
     "JET-WP7RDV": {
       "id": "JET-WP7RDV",
@@ -515,6 +528,15 @@
     }
   },
   "events": [
+    {
+      "id": "15ea7f41-e45e-48db-aa90-cbeaab3c8917",
+      "at": "2026-11-26T12:24:26.990154652Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_completed",
+      "task_id": "JET-WGW2DY",
+      "message": "completó «Agregar ventas netas y margen por línea al dashboard», rama main, commit 404b46d"
+    },
     {
       "id": "2a4ee804-e86e-4ef8-be65-aaeb7a26dae7",
       "at": "2026-11-26T12:17:46.125725621Z",
