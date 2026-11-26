@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-26T04:50:18.454511521Z",
+  "updated_at": "2026-11-26T05:35:10.346926024Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -285,7 +285,7 @@
       "id": "JET-P9VNP9",
       "title": "Implementar autenticación, roles y trazabilidad real",
       "context": "RNF-01, RNF-06 y RNF-08 requieren seguridad por rol, trazabilidad y protección de datos. Hoy el login es simulado, el usuario es fijo y no hay bitácora. Implementar usuarios, hash de contraseña, sesión, roles cajero/vendedor/créditos/gerente/admin y auditoría de operaciones. Verificar acceso denegado, cambio de turno y registro de quién/cuándo.",
-      "status": "in_progress",
+      "status": "done",
       "priority": "high",
       "assignee_id": "ekbfjefbfb",
       "assignee_name": "ekbfjefbfb",
@@ -300,11 +300,24 @@
         "prototipo/styles.css"
       ],
       "created_at": "2026-11-26T03:35:16.710822550Z",
-      "updated_at": "2026-11-26T04:50:18.454496939Z",
+      "updated_at": "2026-11-26T05:35:10.346568665Z",
       "started_at": "2026-11-26T04:50:18.454496939Z",
+      "completed_at": "2026-11-26T05:35:10.346568665Z",
+      "completed_by_id": "ekbfjefbfb",
+      "completed_by_name": "ekbfjefbfb",
+      "completed_branch": "main",
+      "commit": "26e4c72",
       "agent": "opencode",
       "archived": false,
-      "notes": []
+      "notes": [
+        {
+          "id": "7e36df6e-c782-46b1-820d-07aa5d885904",
+          "author_id": "ekbfjefbfb",
+          "author_name": "ekbfjefbfb",
+          "body": "Completado. Login real con PBKDF2 120000 iteraciones, migración de hash legacy, sesiones de 8 h en SQLite, token en sessionStorage, roles cajero/vendedor/creditos/gerente/admin, navegación y endpoints autorizados por rol, bitácora de login/logout/estado/turno/venta y visor de auditoría para admin/gerente. Corregido deadlock de escritura usando RLock. Verificado: contraseña incorrecta 401, sin sesión 403, cajero no edita productos 403, admin audit 200, rol creditos abre CxC y no ve POS, gerente no ve cierre. 5 suites con 0 errores; feedback 337 ms. Push 26e4c72.",
+          "created_at": "2026-11-26T05:35:10.346568665Z"
+        }
+      ]
     },
     "JET-RJWY8F": {
       "id": "JET-RJWY8F",
@@ -455,6 +468,15 @@
     }
   },
   "events": [
+    {
+      "id": "0ce549a4-3574-4bd6-970b-6077eb1bab58",
+      "at": "2026-11-26T05:35:10.346568665Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_completed",
+      "task_id": "JET-P9VNP9",
+      "message": "completó «Implementar autenticación, roles y trazabilidad real», rama main, commit 26e4c72"
+    },
     {
       "id": "ff6e49fa-52cf-4335-be1d-025efacc7427",
       "at": "2026-11-26T04:50:18.454496939Z",

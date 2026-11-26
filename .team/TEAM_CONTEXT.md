@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T04:50:18.454511521+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T05:35:10.346926024+00:00`
 
-**Resumen:** 6 abiertas, 1 en curso, 0 bloqueadas, 6 completadas, 1 personas
+**Resumen:** 6 abiertas, 0 en curso, 0 bloqueadas, 7 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,10 +21,6 @@
 
 ### ekbfjefbfb
 
-- **JET-P9VNP9**  Implementar autenticación, roles y trazabilidad real — `En curso`  rama `main`
-  - Contexto: RNF-01, RNF-06 y RNF-08 requieren seguridad por rol, trazabilidad y protección de datos. Hoy el login es simulado, el usuario es fijo y no hay bitácora. Implementar usuarios, hash de contraseña, sesión, roles cajero/vendedor/créditos/gerente/admin y auditoría de operaciones. Verificar acceso denegado, cambio de turno y registro de quién/cuándo.
-  - Prioridad: Alta
-  - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/requirements.txt, prototipo/server.py, prototipo/styles.css
 - **JET-5THMMC**  Administrar talonarios fiscales CAI, rangos y fechas límite — `Abierta`  rama `sin rama`
   - Contexto: RF-05 exige control y administración de talonarios autorizados por SAR. La factura muestra CAI y fecha límite, pero no hay alta/edición de talonarios ni validación de rango correlativo. Implementar catalogación de CAI, rango inicial/final, fecha límite, consumo correlativo y bloqueo por vencimiento/agotamiento. Verificar emisión dentro y fuera de rango.
   - Prioridad: Alta
@@ -50,15 +46,12 @@
 
 ## Bloqueos de archivos y ramas
 
-- **BLOQUEO** `prototipo/app.js` → JET-P9VNP9 (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/index.html` → JET-P9VNP9 (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/requirements.txt` → JET-P9VNP9 (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/server.py` → JET-P9VNP9 (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/styles.css` → JET-P9VNP9 (responsable ekbfjefbfb, En curso)
-- **RAMA** `main` → JET-P9VNP9 (responsable ekbfjefbfb)
+_Sin bloqueos activos._
 
 ## Completadas recientemente
 
+- **JET-P9VNP9**  Implementar autenticación, roles y trazabilidad real  completada por ekbfjefbfb  rama `main`  commit `26e4c72`
+  - Resultado: Completado. Login real con PBKDF2 120000 iteraciones, migración de hash legacy, sesiones de 8 h en SQLite, token en sessionStorage, roles cajero/vendedor/creditos/gerente/admin, navegación y endpoints autorizados por rol, bitácora de login/logout/estado/turno/venta y visor de au…
 - **JET-RJWY8F**  Persistir turnos, ventas, detalles y facturas en SQLite  completada por ekbfjefbfb  rama `main`  commit `47ca361`
   - Resultado: Completado. SQLite ahora persiste users, sessions, audit_log, shifts, sales, sale_items, sale_tenders, invoices, talonarios, promotions, evaluaciones y cobranza. API transaccional de turno y venta con validación, stock, ISV, pagos, factura, CxC y rollback. Front-end abre/restaur…
 - **JET-LTYA4A**  Auditar consigna y generar PDF de defensa  completada por ekbfjefbfb  rama `main`  commit `82bef43`
