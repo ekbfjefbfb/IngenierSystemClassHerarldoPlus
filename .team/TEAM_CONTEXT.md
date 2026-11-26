@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:35:18.801917851+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:35:20.837721610+00:00`
 
-**Resumen:** 7 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
+**Resumen:** 8 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -52,6 +52,9 @@
 - **JET-N2T8HD**  Completar evaluación crediticia y cobranza automatizada — `Abierta`  rama `sin rama`
   - Contexto: El CRM tiene límite, saldo, historial y alertas, pero no evaluación de crédito ni cobranza automatizada. Implementar score/reglas explicables, autorización de venta a crédito, programación de recordatorios y registro automático de intentos. Verificar cliente apto, moroso y recordatorio generado.
   - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
+- **JET-RZNGXE**  Mejorar disponibilidad y respaldo operativo — `Abierta`  rama `sin rama`
+  - Contexto: RNF-05 exige reducir interrupciones. Hoy hay fallback a localStorage, pero no hay service worker, cola de sincronización ni recuperación completa de turno. Implementar PWA/offline para lectura, cola de escrituras y reconciliación al volver la API. Verificar venta offline, reconexión y ausencia de duplicados.
+  - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css, prototipo/sw.js
 
 ## Bloqueos de archivos y ramas
 
