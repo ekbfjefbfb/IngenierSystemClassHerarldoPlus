@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T11:56:31.815782653+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:08:50.232318375+00:00`
 
-**Resumen:** 4 abiertas, 1 en curso, 0 bloqueadas, 8 completadas, 1 personas
+**Resumen:** 4 abiertas, 0 en curso, 0 bloqueadas, 9 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,10 +21,6 @@
 
 ### ekbfjefbfb
 
-- **JET-N8HGZE**  Implementar promociones temporales, combos y descuentos por vendedor — `En curso`  rama `main`
-  - Contexto: RF-08 exige ofertas temporales, combos y descuentos máximos por vendedor. Hoy la promoción es texto libre y el descuento solo se limita al subtotal. Implementar vigencia, tipo de promoción, combo y máximo por vendedor con validación en POS. Verificar promoción vencida, combo y descuento no autorizado.
-  - Prioridad: Alta
-  - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
 - **JET-WGW2DY**  Agregar ventas netas y margen por línea al dashboard — `Abierta`  rama `sin rama`
   - Contexto: El módulo 6 exige ventas brutas vs. netas y margen por línea comercial. El dashboard muestra brutas, ticket, morosidad, top 10 y metas, pero no netas ni margen por línea. Calcular desde ventas persistentes, mostrar comparación y margen por categoría con tooltip y filtro de periodo. Verificar cuadre bruto = neto + descuentos/devoluciones según definición documentada.
   - Prioridad: Alta
@@ -42,14 +38,12 @@
 
 ## Bloqueos de archivos y ramas
 
-- **BLOQUEO** `prototipo/app.js` → JET-N8HGZE (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/index.html` → JET-N8HGZE (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/server.py` → JET-N8HGZE (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/styles.css` → JET-N8HGZE (responsable ekbfjefbfb, En curso)
-- **RAMA** `main` → JET-N8HGZE (responsable ekbfjefbfb)
+_Sin bloqueos activos._
 
 ## Completadas recientemente
 
+- **JET-N8HGZE**  Implementar promociones temporales, combos y descuentos por vendedor  completada por ekbfjefbfb  rama `main`  commit `a1c0278`
+  - Resultado: Completado. Promociones persistentes con tipo porcentaje/monto/combo, vigencia, producto y estado. POS y servidor aplican la misma promoción. Límite de descuento por vendedor persistente y validado en UI/API. Verificado: Aceite 5% 87.40 base; Frijol 2x125 subtotal 125; promoción…
 - **JET-5THMMC**  Administrar talonarios fiscales CAI, rangos y fechas límite  completada por ekbfjefbfb  rama `main`  commit `fc93211`
   - Resultado: Completado. Alta/edición de talonarios con CAI, rango inicial/final, próximo correlativo, fecha límite y estado. La venta consume correlativo y bloquea por talonario inactivo, vencido o agotado. UI de administración en factura para admin/gerente. Corregido límite inclusivo y res…
 - **JET-P9VNP9**  Implementar autenticación, roles y trazabilidad real  completada por ekbfjefbfb  rama `main`  commit `26e4c72`
