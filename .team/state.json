@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-26T03:34:27.335159327Z",
+  "updated_at": "2026-11-26T03:34:42.661132633Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -174,12 +174,13 @@
       "id": "JET-LTYA4A",
       "title": "Auditar consigna y generar PDF de defensa",
       "context": "Auditar el DOCX y PDF de la consigna contra el prototipo y backend. Crear matriz de cobertura RF/RNF, módulos, tablas, DFD, diccionario, navegación, wireframes y entregables. Generar PDF en español para defensa con guion por integrante, demostración, preguntas probables y límites honestos. Crear tareas JET para cada vacío real. Verificar PDF, requisitos y git diff; actualizar README y subir a main.",
-      "status": "open",
+      "status": "in_progress",
       "priority": "high",
       "assignee_id": "ekbfjefbfb",
       "assignee_name": "ekbfjefbfb",
       "created_by_id": "ekbfjefbfb",
       "created_by_name": "ekbfjefbfb",
+      "branch": "main",
       "files": [
         "README.md",
         "docs/COAGRO_Auditoria_Requerimientos.md",
@@ -188,7 +189,8 @@
         "prototipo/UIUX_AUDIT.md"
       ],
       "created_at": "2026-11-26T03:34:27.334919365Z",
-      "updated_at": "2026-11-26T03:34:27.334919365Z",
+      "updated_at": "2026-11-26T03:34:42.661101942Z",
+      "started_at": "2026-11-26T03:34:42.661101942Z",
       "agent": "opencode",
       "archived": false,
       "notes": []
@@ -240,6 +242,15 @@
     }
   },
   "events": [
+    {
+      "id": "5bc2abf8-9b31-40c2-8e04-b408d7f0df74",
+      "at": "2026-11-26T03:34:42.661101942Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_taken",
+      "task_id": "JET-LTYA4A",
+      "message": "tomó «Auditar consigna y generar PDF de defensa» y comenzó a trabajar"
+    },
     {
       "id": "05191d56-3d91-4992-acd9-bb3517b5d1d8",
       "at": "2026-11-26T03:34:27.334919365Z",

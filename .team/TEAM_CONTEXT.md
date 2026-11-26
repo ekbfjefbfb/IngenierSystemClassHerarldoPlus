@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:34:27.335159327+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:34:42.661132633+00:00`
 
-**Resumen:** 1 abiertas, 0 en curso, 0 bloqueadas, 4 completadas, 1 personas
+**Resumen:** 0 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,14 +21,19 @@
 
 ### ekbfjefbfb
 
-- **JET-LTYA4A**  Auditar consigna y generar PDF de defensa — `Abierta`  rama `sin rama`
+- **JET-LTYA4A**  Auditar consigna y generar PDF de defensa — `En curso`  rama `main`
   - Contexto: Auditar el DOCX y PDF de la consigna contra el prototipo y backend. Crear matriz de cobertura RF/RNF, módulos, tablas, DFD, diccionario, navegación, wireframes y entregables. Generar PDF en español para defensa con guion por integrante, demostración, preguntas probables y límites honestos. Crear tareas JET para cada vacío real. Verificar PDF, requisitos y git diff; actualizar README y subir a main.
   - Prioridad: Alta
   - Archivos sensibles: README.md, docs/COAGRO_Auditoria_Requerimientos.md, docs/COAGRO_Guia_Defensa.pdf, prototipo/README.md, prototipo/UIUX_AUDIT.md
 
 ## Bloqueos de archivos y ramas
 
-_Sin bloqueos activos._
+- **BLOQUEO** `README.md` → JET-LTYA4A (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `docs/COAGRO_Auditoria_Requerimientos.md` → JET-LTYA4A (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `docs/COAGRO_Guia_Defensa.pdf` → JET-LTYA4A (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/README.md` → JET-LTYA4A (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/UIUX_AUDIT.md` → JET-LTYA4A (responsable ekbfjefbfb, En curso)
+- **RAMA** `main` → JET-LTYA4A (responsable ekbfjefbfb)
 
 ## Completadas recientemente
 
