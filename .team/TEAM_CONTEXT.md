@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T05:35:26.053374583+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T11:56:14.570007163+00:00`
 
-**Resumen:** 5 abiertas, 1 en curso, 0 bloqueadas, 7 completadas, 1 personas
+**Resumen:** 5 abiertas, 0 en curso, 0 bloqueadas, 8 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,10 +21,6 @@
 
 ### ekbfjefbfb
 
-- **JET-5THMMC**  Administrar talonarios fiscales CAI, rangos y fechas límite — `En curso`  rama `main`
-  - Contexto: RF-05 exige control y administración de talonarios autorizados por SAR. La factura muestra CAI y fecha límite, pero no hay alta/edición de talonarios ni validación de rango correlativo. Implementar catalogación de CAI, rango inicial/final, fecha límite, consumo correlativo y bloqueo por vencimiento/agotamiento. Verificar emisión dentro y fuera de rango.
-  - Prioridad: Alta
-  - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
 - **JET-N8HGZE**  Implementar promociones temporales, combos y descuentos por vendedor — `Abierta`  rama `sin rama`
   - Contexto: RF-08 exige ofertas temporales, combos y descuentos máximos por vendedor. Hoy la promoción es texto libre y el descuento solo se limita al subtotal. Implementar vigencia, tipo de promoción, combo y máximo por vendedor con validación en POS. Verificar promoción vencida, combo y descuento no autorizado.
   - Prioridad: Alta
@@ -46,14 +42,12 @@
 
 ## Bloqueos de archivos y ramas
 
-- **BLOQUEO** `prototipo/app.js` → JET-5THMMC (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/index.html` → JET-5THMMC (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/server.py` → JET-5THMMC (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/styles.css` → JET-5THMMC (responsable ekbfjefbfb, En curso)
-- **RAMA** `main` → JET-5THMMC (responsable ekbfjefbfb)
+_Sin bloqueos activos._
 
 ## Completadas recientemente
 
+- **JET-5THMMC**  Administrar talonarios fiscales CAI, rangos y fechas límite  completada por ekbfjefbfb  rama `main`  commit `fc93211`
+  - Resultado: Completado. Alta/edición de talonarios con CAI, rango inicial/final, próximo correlativo, fecha límite y estado. La venta consume correlativo y bloquea por talonario inactivo, vencido o agotado. UI de administración en factura para admin/gerente. Corregido límite inclusivo y res…
 - **JET-P9VNP9**  Implementar autenticación, roles y trazabilidad real  completada por ekbfjefbfb  rama `main`  commit `26e4c72`
   - Resultado: Completado. Login real con PBKDF2 120000 iteraciones, migración de hash legacy, sesiones de 8 h en SQLite, token en sessionStorage, roles cajero/vendedor/creditos/gerente/admin, navegación y endpoints autorizados por rol, bitácora de login/logout/estado/turno/venta y visor de au…
 - **JET-RJWY8F**  Persistir turnos, ventas, detalles y facturas en SQLite  completada por ekbfjefbfb  rama `main`  commit `47ca361`
