@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-25T23:48:14.373637785+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:34:27.335159327+00:00`
 
-**Resumen:** 0 abiertas, 0 en curso, 0 bloqueadas, 4 completadas, 1 personas
+**Resumen:** 1 abiertas, 0 en curso, 0 bloqueadas, 4 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -19,7 +19,12 @@
 
 ## Tareas activas
 
-_No hay tareas activas._
+### ekbfjefbfb
+
+- **JET-LTYA4A**  Auditar consigna y generar PDF de defensa — `Abierta`  rama `sin rama`
+  - Contexto: Auditar el DOCX y PDF de la consigna contra el prototipo y backend. Crear matriz de cobertura RF/RNF, módulos, tablas, DFD, diccionario, navegación, wireframes y entregables. Generar PDF en español para defensa con guion por integrante, demostración, preguntas probables y límites honestos. Crear tareas JET para cada vacío real. Verificar PDF, requisitos y git diff; actualizar README y subir a main.
+  - Prioridad: Alta
+  - Archivos sensibles: README.md, docs/COAGRO_Auditoria_Requerimientos.md, docs/COAGRO_Guia_Defensa.pdf, prototipo/README.md, prototipo/UIUX_AUDIT.md
 
 ## Bloqueos de archivos y ramas
 
@@ -66,6 +71,7 @@ _Sin mensajes del equipo._
 - `2026-11-25T23:20:31.529984123+00:00`  **TAREA TOMADA**  ekbfjefbfb  JET-8D88LZ  tomó «Auditoría HCI por pantalla y aplicación de los 18 agentes» y comenzó a trabajar
 - `2026-11-25T23:47:47.873120314+00:00`  **AVANCE**  ekbfjefbfb  JET-8D88LZ  avanzó «Auditoría HCI por pantalla y aplicación de los 18 agentes»: Auditoría HCI aplicada. Corregidos overflow de factura y barra superior en 360/390, objetivos pequeños, credencial demo, foco de error, confirmación de desactivación, ayud…
 - `2026-11-25T23:48:14.373625555+00:00`  **COMPLETADA**  ekbfjefbfb  JET-8D88LZ  completó «Auditoría HCI por pantalla y aplicación de los 18 agentes», rama main, commit e0012ac
+- `2026-11-26T03:34:27.334919365+00:00`  **TAREA CREADA**  ekbfjefbfb  JET-LTYA4A  creó «Auditar consigna y generar PDF de defensa» para ekbfjefbfb
 
 ## Equipo
 
