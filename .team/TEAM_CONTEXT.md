@@ -1,7 +1,7 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:36:47.295763447+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:57:16.147388971+00:00`
 
 **Resumen:** 0 abiertas, 1 en curso, 0 bloqueadas, 12 completadas, 1 personas
 
@@ -25,6 +25,7 @@
   - Contexto: La consigna pide documento fase 1 de 8–12 páginas; el DOCX actual tiene 16. Pide prototipo Figma/Balsamiq con enlace público; existe prototipo web pero no enlace Figma/Balsamiq ni URL pública verificada. Pide wireframes de baja fidelidad de las pantallas clave; hay 4 bocetos. Ajustar documento, completar bocetos o documentar sustitución aceptada, publicar URL y adjuntar evidencia. Bloqueo: confirmar con el docente s…
   - Prioridad: Alta
   - Archivos sensibles: README.md, UNIVERSIDAD CRISTIANA EVANGÉLICA NUEVO MILENIO(1).docx, docs
+  - Último avance: ekbfjefbfb — Completado lo posible: documento fase 1 compacto de 12 páginas, ocho wireframes, guía PDF actualizada, auditoría al 14/14 RF y 8/8 RNF, URL pública GitHub Pages verificada en Chromium y rama gh-pages actualizada. Falta únicamente crear/publicar el archivo Figma o Balsamiq, lo qu…
 
 ## Bloqueos de archivos y ramas
 
