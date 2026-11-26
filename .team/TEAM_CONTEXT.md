@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:57:16.147388971+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:57:36.345320959+00:00`
 
-**Resumen:** 0 abiertas, 1 en curso, 0 bloqueadas, 12 completadas, 1 personas
+**Resumen:** 0 abiertas, 0 en curso, 1 bloqueadas, 12 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,17 +21,17 @@
 
 ### ekbfjefbfb
 
-- **JET-TVD6WK**  Cerrar cumplimiento de entregables Moodle y Figma/Balsamiq — `En curso`  rama `main`
+- **JET-TVD6WK**  Cerrar cumplimiento de entregables Moodle y Figma/Balsamiq — `Bloqueada`  rama `main`
   - Contexto: La consigna pide documento fase 1 de 8–12 páginas; el DOCX actual tiene 16. Pide prototipo Figma/Balsamiq con enlace público; existe prototipo web pero no enlace Figma/Balsamiq ni URL pública verificada. Pide wireframes de baja fidelidad de las pantallas clave; hay 4 bocetos. Ajustar documento, completar bocetos o documentar sustitución aceptada, publicar URL y adjuntar evidencia. Bloqueo: confirmar con el docente s…
   - Prioridad: Alta
   - Archivos sensibles: README.md, UNIVERSIDAD CRISTIANA EVANGÉLICA NUEVO MILENIO(1).docx, docs
-  - Último avance: ekbfjefbfb — Completado lo posible: documento fase 1 compacto de 12 páginas, ocho wireframes, guía PDF actualizada, auditoría al 14/14 RF y 8/8 RNF, URL pública GitHub Pages verificada en Chromium y rama gh-pages actualizada. Falta únicamente crear/publicar el archivo Figma o Balsamiq, lo qu…
+  - Último avance: ekbfjefbfb — Bloqueo: Falta crear y publicar el archivo en Figma o Balsamiq. No hay credenciales de esas plataformas en el entorno. El documento de 12 páginas, ocho wireframes, guía PDF y URL pública web ya están listos. Acción externa: seguir docs/COAGRO_Figma_Checklist.md y confirmar con e…
 
 ## Bloqueos de archivos y ramas
 
-- **BLOQUEO** `README.md` → JET-TVD6WK (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `UNIVERSIDAD CRISTIANA EVANGÉLICA NUEVO MILENIO(1).docx` → JET-TVD6WK (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `docs` → JET-TVD6WK (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `README.md` → JET-TVD6WK (responsable ekbfjefbfb, Bloqueada)
+- **BLOQUEO** `UNIVERSIDAD CRISTIANA EVANGÉLICA NUEVO MILENIO(1).docx` → JET-TVD6WK (responsable ekbfjefbfb, Bloqueada)
+- **BLOQUEO** `docs` → JET-TVD6WK (responsable ekbfjefbfb, Bloqueada)
 - **RAMA** `main` → JET-TVD6WK (responsable ekbfjefbfb)
 
 ## Completadas recientemente

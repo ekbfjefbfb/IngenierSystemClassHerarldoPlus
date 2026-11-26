@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-26T12:57:16.147388971Z",
+  "updated_at": "2026-11-26T12:57:36.345320959Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -442,7 +442,7 @@
       "id": "JET-TVD6WK",
       "title": "Cerrar cumplimiento de entregables Moodle y Figma/Balsamiq",
       "context": "La consigna pide documento fase 1 de 8–12 páginas; el DOCX actual tiene 16. Pide prototipo Figma/Balsamiq con enlace público; existe prototipo web pero no enlace Figma/Balsamiq ni URL pública verificada. Pide wireframes de baja fidelidad de las pantallas clave; hay 4 bocetos. Ajustar documento, completar bocetos o documentar sustitución aceptada, publicar URL y adjuntar evidencia. Bloqueo: confirmar con el docente si acepta el prototipo web como sustituto de Figma/Balsamiq.",
-      "status": "in_progress",
+      "status": "blocked",
       "priority": "high",
       "assignee_id": "ekbfjefbfb",
       "assignee_name": "ekbfjefbfb",
@@ -455,7 +455,7 @@
         "docs"
       ],
       "created_at": "2026-11-26T03:35:18.801908509Z",
-      "updated_at": "2026-11-26T12:57:16.147350101Z",
+      "updated_at": "2026-11-26T12:57:36.345298427Z",
       "started_at": "2026-11-26T12:36:47.295753123Z",
       "agent": "opencode",
       "archived": false,
@@ -466,6 +466,13 @@
           "author_name": "ekbfjefbfb",
           "body": "Completado lo posible: documento fase 1 compacto de 12 páginas, ocho wireframes, guía PDF actualizada, auditoría al 14/14 RF y 8/8 RNF, URL pública GitHub Pages verificada en Chromium y rama gh-pages actualizada. Falta únicamente crear/publicar el archivo Figma o Balsamiq, lo que requiere una cuenta externa del equipo. Preparé docs/COAGRO_Figma_Checklist.md con los pasos exactos.",
           "created_at": "2026-11-26T12:57:16.147350101Z"
+        },
+        {
+          "id": "72dafbbf-f1ff-4bbc-9616-1cfc90e97d35",
+          "author_id": "ekbfjefbfb",
+          "author_name": "ekbfjefbfb",
+          "body": "Bloqueo: Falta crear y publicar el archivo en Figma o Balsamiq. No hay credenciales de esas plataformas en el entorno. El documento de 12 páginas, ocho wireframes, guía PDF y URL pública web ya están listos. Acción externa: seguir docs/COAGRO_Figma_Checklist.md y confirmar con el docente si acepta el prototipo web como sustituto.",
+          "created_at": "2026-11-26T12:57:36.345298427Z"
         }
       ]
     },
@@ -553,6 +560,15 @@
     }
   },
   "events": [
+    {
+      "id": "5f785fec-963b-4f3d-94a1-467aeffbd4b7",
+      "at": "2026-11-26T12:57:36.345298427Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_blocked",
+      "task_id": "JET-TVD6WK",
+      "message": "bloqueó «Cerrar cumplimiento de entregables Moodle y Figma/Balsamiq»: Falta crear y publicar el archivo en Figma o Balsamiq. No hay credenciales de esas plataformas en el entorno. El documento de 12 páginas, ocho wireframes, guía PDF y URL pública web ya están listos. Acción externa: seguir docs/COAGRO_Figma_Checklist.md y confirmar con el docente si acepta el prototipo web como sustituto."
+    },
     {
       "id": "1b52d6c5-b41e-4eb6-bba4-814e9d83f88f",
       "at": "2026-11-26T12:57:16.147350101Z",
