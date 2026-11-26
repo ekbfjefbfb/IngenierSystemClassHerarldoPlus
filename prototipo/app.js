@@ -82,7 +82,7 @@ const sellers = [
 /* ------------------------------------------------------------------ ESTADO */
 const state = {
   screen:'login', shift:null, cart:[], client:null, payMethod:'efectivo',
-  user:null, token:null, talonarios:[], promotions:[], sellerLimits:{},
+  user:null, token:null, talonarios:[], promotions:[], sellerLimits:{}, creditEvaluations:[], collectionEvents:[],
   category:'Todas', productFilter:'', productLimit:8, selectedClient:'C001', cxcTab:'todas',
   cxcFilter:'', promosOnly:false, revealed:false, lastSale:null,
   range:'hoy', ticketNo:428, receiptNo:912
@@ -167,6 +167,8 @@ function applyRemote(d) {
   if (Array.isArray(d.talonarios)) state.talonarios = d.talonarios;
   if (Array.isArray(d.promotions)) state.promotions = d.promotions;
   if (d.sellerLimits) state.sellerLimits = d.sellerLimits;
+  if (Array.isArray(d.creditEvaluations)) state.creditEvaluations = d.creditEvaluations;
+  if (Array.isArray(d.collectionEvents)) state.collectionEvents = d.collectionEvents;
   state.shift = normalizeShift(d.activeShift);
 }
 function updateApiChip() {
@@ -816,6 +818,7 @@ function renderClientDetail() {
   const c = clients.find(x => x.id === state.selectedClient) || clients[0];
   const available = Math.max(0, c.limit - c.balance);
   const used = Math.min(100, c.balance / c.limit * 100);
+  const latestEval = state.creditEvaluations.find(e => e.client_id === c.id);
   const hist = history[c.id] || [
     { date:'12/11/2026', doc:'FAC-00122', text:'Compra de insumos', total:c.purchases * .12, state:'Pagada' },
     { date:'28/10/2026', doc:'FAC-00104', text:'Compra general', total:c.purchases * .08, state:'Pagada' }
@@ -836,9 +839,11 @@ function renderClientDetail() {
       <div class="progress ${used > 75 ? 'warn' : ''}"><i style="width:${used}%"></i></div>
       <div class="credit-foot"><span>Disponible ${money(available)}</span><span>Plazo 30 días · SAR al día</span></div>
     </div>
+    ${latestEval ? `<div class="credit-eval ${latestEval.decision === 'Aprobado' ? 'ok' : 'warn'}"><div><small>EVALUACIÓN CREDITICIA</small><b>${latestEval.score}/100 · ${latestEval.decision}</b></div><span>${latestEval.reason}</span></div>` : ''}
     ${c.status === 'Vencido' ? `<div class="cd-alert"><svg class="ico"><use href="#i-alert"/></svg><span>Cliente con facturas vencidas. Crédito en revisión; requiere autorización del encargado para nuevas ventas.</span></div>` : ''}
     <div class="cd-actions">
       <button class="btn btn-primary" id="saleToClient"><svg class="ico"><use href="#i-grid"/></svg> Nueva venta</button>
+      <button class="btn btn-soft" id="evaluateCreditBtn"><svg class="ico"><use href="#i-chart"/></svg> Evaluar crédito</button>
       <button class="btn btn-soft" id="collectBtn"><svg class="ico"><use href="#i-wallet"/></svg> Registrar cobranza</button>
       <button class="btn btn-ghost" id="blockBtn"><svg class="ico"><use href="#i-lock"/></svg> ${c.status === 'Vencido' ? 'Bloquear crédito' : 'Bloqueo por mora'}</button>
     </div>
@@ -848,6 +853,16 @@ function renderClientDetail() {
         <span class="mono">${money(h.total)}</span><b>${h.text}</b><small>${h.date} · ${h.doc} · ${h.state}</small>
       </div>`).join('')}</div>`;
   $('#saleToClient').addEventListener('click', () => { state.client = c; $('#ticketClient').textContent = c.name; navTo('pos'); toast('Cliente cargado en el ticket: ' + c.name); });
+  $('#evaluateCreditBtn').addEventListener('click', async () => {
+    try {
+      const res = useApi ? await api('/api/credit/evaluate','POST',{client_id:c.id}) : {evaluation:{client_id:c.id,score:c.status==='Vencido'?35:c.balance/c.limit<.5?85:65,decision:c.status==='Vencido'?'Rechazado':'Aprobado',reason:'Evaluación local de demostración'}};
+      if (useApi) state.creditEvaluations = res.creditEvaluations;
+      else state.creditEvaluations.unshift(res.evaluation);
+      renderClientDetail();
+      const ev = res.evaluation;
+      modal({ title:'Evaluación crediticia', sub:c.name, body:`<div class="credit-eval ${ev.decision==='Aprobado'?'ok':'warn'}"><div><small>SCORE EXPLICABLE</small><b>${ev.score}/100 · ${ev.decision}</b></div><span>${ev.reason}</span></div>`, foot:'<button class="btn btn-primary" data-close>Entendido</button>' });
+    } catch (err) { toast('No se pudo evaluar: ' + err.message, 'error'); }
+  });
   $('#collectBtn').addEventListener('click', () => { navTo('cxc'); openPayment(c.name); });
   $('#blockBtn').addEventListener('click', () => confirmDialog('Bloquear crédito', 'El cliente ' + c.name + ' quedará sin autorización para compras a crédito hasta regularizar su saldo.', () => { c.status = 'Vencido'; persist(); renderClientList(); renderClientDetail(); toast('Crédito bloqueado para ' + c.name, 'warn'); }, 'Bloquear', true));
   $('#statementMini').addEventListener('click', () => openStatement(c));
@@ -1037,6 +1052,8 @@ function renderCxc() {
     <td><span class="badge ${k.status==='Vencido'?'bad':'ok'}">${k.status}</span></td>
     <td><div class="row-actions"><button class="mini-btn" data-payrow="${k.client}" title="Registrar abono" aria-label="Registrar abono de ${k.client}"><svg class="ico"><use href="#i-plus"/></svg></button><button class="mini-btn" data-stmt="${k.client}" title="Estado de cuenta" aria-label="Estado de cuenta de ${k.client}"><svg class="ico"><use href="#i-receipt"/></svg></button></div></td>
   </tr>`).join('') || `<tr class="empty-state-row"><td colspan="8">${emptyState('Sin cuentas', 'No hay registros para el filtro o la búsqueda actuales.', 'cxc', 'Limpiar filtros')}</td></tr>`;
+  const events = state.collectionEvents.slice(0,6);
+  $('#collectionPanel').innerHTML = `<div class="cp-head"><h3>Cobranza automatizada</h3><span class="badge ${events.some(e=>e.status==='pending')?'promo':'ok'}">${events.filter(e=>e.status==='pending').length} pendientes</span></div><div class="collection-events">${events.length?events.map(e=>`<div class="collection-event"><b>${e.client_name}</b><small>${e.detail}</small><small>${e.scheduled_at} · ${e.status}</small></div>`).join(''):'<div class="empty-state"><b>Sin recordatorios</b><span>Las facturas vencidas generan eventos automáticos.</span></div>'}</div>`;
   $('#navMoraDot').style.display = overdue > 0 ? '' : 'none';
 }
 $('#cxcTabs').addEventListener('click', e => {
@@ -1050,6 +1067,14 @@ $('#cxcTableBody').addEventListener('click', e => {
   if (s) openStatement(clients.find(c=>c.name===s.dataset.stmt) || { name:s.dataset.stmt, doc:'—', balance:0, limit:0 });
 });
 $('#newPaymentBtn').addEventListener('click', () => openPayment(cxc[0].client));
+$('#runCollectionsBtn').addEventListener('click', async () => {
+  try {
+    const res = useApi ? await api('/api/collections/run','POST',{}) : {sent:state.collectionEvents.filter(e=>e.status==='pending').length};
+    if (useApi) state.collectionEvents = res.collectionEvents;
+    else state.collectionEvents.forEach(e=>{if(e.status==='pending')e.status='sent';});
+    renderCxc(); toast(res.sent + ' recordatorios de cobranza procesados');
+  } catch (err) { toast('No se pudo ejecutar cobranza: ' + err.message, 'error'); }
+});
 $('#statementBtn').addEventListener('click', () => openStatement(clients.find(c=>c.id===state.selectedClient) || clients[0]));
 function openPayment(clientName) {
   const k = cxc.find(x=>x.client===clientName) || cxc[0];

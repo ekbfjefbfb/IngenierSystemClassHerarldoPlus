@@ -74,6 +74,8 @@ por cobrar y correlativos fijos) y expone:
 | POST | `/api/promotions` | Alta de oferta temporal o combo |
 | PUT | `/api/promotions/:id` | Edición de promoción |
 | POST | `/api/seller-limits` | Límite de descuento por vendedor |
+| POST | `/api/credit/evaluate` | Score crediticio explicable |
+| POST | `/api/collections/run` | Generación y registro de recordatorios |
 | GET | `/api/health` o `/health` | Estado del servidor (compatible con Render) |
 
 Validación del servidor: ids únicos, importes no negativos, ISV en {0, 15, 18}, cuerpo JSON máximo 2 MB.

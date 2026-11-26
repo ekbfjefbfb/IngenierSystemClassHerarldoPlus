@@ -318,9 +318,10 @@
       <section class="screen" data-screen="cxc">
         <div class="page-head">
           <div><span class="eyebrow">MÓDULO 04 · CRM / CxC</span><h1>Cuentas por cobrar</h1><p>Saldos, vencimientos y registro de abonos con recálculo automático.</p></div>
-          <div class="head-actions"><button class="btn btn-soft" id="statementBtn"><svg class="ico"><use href="#i-receipt"/></svg> Estado de cuenta</button><button class="btn btn-primary" id="newPaymentBtn"><svg class="ico"><use href="#i-plus"/></svg> Registrar abono</button></div>
+          <div class="head-actions"><button class="btn btn-soft" id="runCollectionsBtn"><svg class="ico"><use href="#i-bell"/></svg> Ejecutar cobranza</button><button class="btn btn-soft" id="statementBtn"><svg class="ico"><use href="#i-receipt"/></svg> Estado de cuenta</button><button class="btn btn-primary" id="newPaymentBtn"><svg class="ico"><use href="#i-plus"/></svg> Registrar abono</button></div>
         </div>
         <div class="cxc-summary" id="cxcSummary"></div>
+        <div class="panel collection-panel" id="collectionPanel"></div>
         <div class="panel table-panel">
           <div class="table-toolbar">
             <div class="tabs" id="cxcTabs"><button class="tab active" data-tab="todas">Todas</button><button class="tab" data-tab="vigente">Vigentes</button><button class="tab" data-tab="vencido">Vencidas</button></div>

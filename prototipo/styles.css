@@ -357,6 +357,13 @@ kbd{font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--s
 .progress i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#9C4F22,#C27739);width:0;transition:width .9s var(--ease)}
 .progress.warn i{background:linear-gradient(90deg,#A83C35,#98531F)}
 .credit-foot{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:7px}
+.credit-eval{border:1px solid var(--line);border-radius:11px;padding:10px 12px;margin-bottom:14px;background:var(--surface-2)}
+.credit-eval.ok{border-color:#A8CADA;background:var(--accent-soft)}
+.credit-eval.warn{border-color:#E2C39A;background:var(--amber-soft)}
+.credit-eval>div{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.credit-eval small{font-size:8.5px;letter-spacing:.1em;color:var(--muted);font-weight:800}
+.credit-eval b{font-size:12px}
+.credit-eval>span{display:block;font-size:10px;color:var(--muted);margin-top:5px;line-height:1.45}
 .cd-alert{display:flex;align-items:flex-start;gap:9px;background:var(--amber-soft);border:1px solid #E2C39A;border-radius:11px;padding:10px 12px;margin-bottom:16px;font-size:11px;color:#98531F}
 .cd-alert .ico{width:16px;height:16px;flex:none;margin-top:1px}
 .cd-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
@@ -485,6 +492,13 @@ kbd{font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--s
 .cxc-card b{display:block;font-family:var(--mono);font-size:22px;letter-spacing:-.03em;margin:4px 0 8px}
 .cxc-card.warn b{color:var(--red)}
 .cxc-card .progress{height:5px}
+.collection-panel{padding:14px 16px;margin-bottom:16px}
+.collection-panel .cp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.collection-panel .cp-head h3{font-size:13px;margin:0}
+.collection-events{display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin}
+.collection-event{min-width:220px;border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:var(--surface-2)}
+.collection-event b{font-size:10.5px;display:block}
+.collection-event small{font-size:9px;color:var(--muted);display:block;margin-top:2px}
 .tabs{display:flex;gap:3px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:3px}
 .tab{height:29px;padding:0 12px;border:0;border-radius:7px;background:transparent;font-size:11px;font-weight:700;color:var(--muted)}
 .tab.active{background:var(--surface);color:var(--ink-deep);box-shadow:var(--sh-1)}
