@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:35:11.414776815+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:35:14.495748810+00:00`
 
-**Resumen:** 4 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
+**Resumen:** 5 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -35,6 +35,10 @@
   - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
 - **JET-N8HGZE**  Implementar promociones temporales, combos y descuentos por vendedor — `Abierta`  rama `sin rama`
   - Contexto: RF-08 exige ofertas temporales, combos y descuentos máximos por vendedor. Hoy la promoción es texto libre y el descuento solo se limita al subtotal. Implementar vigencia, tipo de promoción, combo y máximo por vendedor con validación en POS. Verificar promoción vencida, combo y descuento no autorizado.
+  - Prioridad: Alta
+  - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
+- **JET-WGW2DY**  Agregar ventas netas y margen por línea al dashboard — `Abierta`  rama `sin rama`
+  - Contexto: El módulo 6 exige ventas brutas vs. netas y margen por línea comercial. El dashboard muestra brutas, ticket, morosidad, top 10 y metas, pero no netas ni margen por línea. Calcular desde ventas persistentes, mostrar comparación y margen por categoría con tooltip y filtro de periodo. Verificar cuadre bruto = neto + descuentos/devoluciones según definición documentada.
   - Prioridad: Alta
   - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
 - **JET-N2T8HD**  Completar evaluación crediticia y cobranza automatizada — `Abierta`  rama `sin rama`

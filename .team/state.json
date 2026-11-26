@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-26T03:35:11.414776815Z",
+  "updated_at": "2026-11-26T03:35:14.495748810Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -282,6 +282,28 @@
       "archived": false,
       "notes": []
     },
+    "JET-WGW2DY": {
+      "id": "JET-WGW2DY",
+      "title": "Agregar ventas netas y margen por línea al dashboard",
+      "context": "El módulo 6 exige ventas brutas vs. netas y margen por línea comercial. El dashboard muestra brutas, ticket, morosidad, top 10 y metas, pero no netas ni margen por línea. Calcular desde ventas persistentes, mostrar comparación y margen por categoría con tooltip y filtro de periodo. Verificar cuadre bruto = neto + descuentos/devoluciones según definición documentada.",
+      "status": "open",
+      "priority": "high",
+      "assignee_id": "ekbfjefbfb",
+      "assignee_name": "ekbfjefbfb",
+      "created_by_id": "ekbfjefbfb",
+      "created_by_name": "ekbfjefbfb",
+      "files": [
+        "prototipo/app.js",
+        "prototipo/index.html",
+        "prototipo/server.py",
+        "prototipo/styles.css"
+      ],
+      "created_at": "2026-11-26T03:35:14.495731255Z",
+      "updated_at": "2026-11-26T03:35:14.495731255Z",
+      "agent": "opencode",
+      "archived": false,
+      "notes": []
+    },
     "JET-WP7RDV": {
       "id": "JET-WP7RDV",
       "title": "Pulido final de producción y accesibilidad",
@@ -329,6 +351,15 @@
     }
   },
   "events": [
+    {
+      "id": "404cea05-f813-4f5f-b746-7188c23a4dca",
+      "at": "2026-11-26T03:35:14.495731255Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_created",
+      "task_id": "JET-WGW2DY",
+      "message": "creó «Agregar ventas netas y margen por línea al dashboard» para ekbfjefbfb"
+    },
     {
       "id": "52db950f-adcd-43e0-88c7-2d84b15ded9d",
       "at": "2026-11-26T03:35:11.414764292Z",
