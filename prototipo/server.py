@@ -746,6 +746,43 @@ def process_collections(con, user_id="U003"):
     return len(rows)
 
 
+def dashboard_data(con, range_key="hoy"):
+    days = {"hoy":0, "semana":6, "mes":29}.get(range_key, 0)
+    cutoff = (datetime.utcnow() - timedelta(days=days)).date().isoformat()
+    sales = [dict(r) for r in con.execute("SELECT * FROM sales WHERE substr(created_at,1,10)>=? ORDER BY created_at", (cutoff,))]
+    gross = round(sum(float(s["base15"]) + float(s["base18"]) + float(s["exempt"]) + float(s["tax"]) for s in sales), 2)
+    discounts = round(sum(float(s["discount"]) for s in sales), 2)
+    net = round(sum(float(s["total"]) for s in sales), 2)
+    count = len(sales)
+    margin = con.execute(
+        "SELECT COALESCE(SUM(si.margin),0),COALESCE(SUM(si.subtotal),0) FROM sale_items si JOIN sales s ON s.id=si.sale_id WHERE substr(s.created_at,1,10)>=?",
+        (cutoff,),
+    ).fetchone()
+    margin_pct = round(float(margin[0]) / float(margin[1]) * 100, 1) if margin[1] else 0
+    by_category = [dict(r) for r in con.execute(
+        "SELECT p.cat,SUM(si.subtotal) AS sales,SUM(si.margin) AS margin,SUM(si.qty) AS units FROM sale_items si JOIN sales s ON s.id=si.sale_id JOIN products p ON p.id=si.product_id WHERE substr(s.created_at,1,10)>=? GROUP BY p.cat ORDER BY sales DESC",
+        (cutoff,),
+    )]
+    top = [dict(r) for r in con.execute(
+        "SELECT p.name,SUM(si.qty) AS units,SUM(si.subtotal) AS sales FROM sale_items si JOIN sales s ON s.id=si.sale_id JOIN products p ON p.id=si.product_id WHERE substr(s.created_at,1,10)>=? GROUP BY p.id ORDER BY sales DESC LIMIT 10",
+        (cutoff,),
+    )]
+    if range_key == "hoy":
+        buckets = {f"{h:02d}":0 for h in range(8,19)}
+        for s in sales: buckets[s["created_at"][11:13]] = round(buckets.get(s["created_at"][11:13],0) + float(s["total"]),2)
+        series = [{"label":k+"h","value":v} for k,v in buckets.items()]
+    else:
+        buckets = {}
+        for s in sales:
+            key=s["created_at"][:10]; buckets[key]=round(buckets.get(key,0)+float(s["total"]),2)
+        series=[{"label":k[5:],"value":v} for k,v in sorted(buckets.items())]
+    overdue = con.execute("SELECT COALESCE(SUM(balance),0) FROM cxc WHERE status='Vencido'").fetchone()[0]
+    total_cxc = con.execute("SELECT COALESCE(SUM(balance),0) FROM cxc").fetchone()[0]
+    return {"range":range_key,"gross":gross,"discounts":discounts,"net":net,"salesCount":count,
+            "ticketAvg":round(net/count,2) if count else 0,"marginPct":margin_pct,"byCategory":by_category,
+            "topProducts":top,"series":series,"morosidad":round(float(overdue)/float(total_cxc)*100,1) if total_cxc else 0}
+
+
 MIME = {
     ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8",
     ".js": "text/javascript; charset=utf-8", ".json": "application/json; charset=utf-8",
@@ -810,6 +847,24 @@ class Handler(BaseHTTPRequestHandler):
                         return
                     rows = [dict(r) for r in con.execute("SELECT * FROM audit_log ORDER BY id DESC LIMIT 100")]
                     self.send_json({"events": rows})
+                finally:
+                    con.close()
+            return
+        if path == "/api/dashboard":
+            with LOCK:
+                con = connect()
+                try:
+                    ensure_seed(con)
+                    user = self.auth(con)
+                    if user and user["role"] not in ("gerente", "admin", "creditos"):
+                        self.send_json({"error": "Acceso denegado"}, 403)
+                        return
+                    query = self.path.split("?",1)[1] if "?" in self.path else ""
+                    range_key = "hoy"
+                    for part in query.split("&"):
+                        if part.startswith("range="): range_key = part.split("=",1)[1]
+                    if range_key not in ("hoy","semana","mes"): range_key="hoy"
+                    self.send_json(dashboard_data(con, range_key))
                 finally:
                     con.close()
             return
