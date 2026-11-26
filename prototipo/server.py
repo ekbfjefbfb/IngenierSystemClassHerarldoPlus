@@ -30,7 +30,7 @@ DB_PATH = ROOT / "data" / "coagro.db"
 # Render inyecta PORT; en local se usa COAGRO_PORT o 8000.
 PORT = int(os.environ.get("PORT") or os.environ.get("COAGRO_PORT") or "8000")
 HOST = os.environ.get("HOST", "0.0.0.0")
-LOCK = threading.Lock()
+LOCK = threading.RLock()
 
 SEED = {
     "products": [
@@ -163,18 +163,51 @@ def connect():
     return con
 
 
+def hash_password(password, salt=None, iterations=120000):
+    salt = salt or secrets.token_hex(16)
+    digest = hashlib.pbkdf2_hmac("sha256", str(password).encode(), salt.encode(), iterations).hex()
+    return f"pbkdf2${iterations}${salt}${digest}"
+
+
+def verify_password(password, stored):
+    if stored.startswith("pbkdf2$"):
+        _, iterations, salt, digest = stored.split("$", 3)
+        candidate = hashlib.pbkdf2_hmac("sha256", str(password).encode(), salt.encode(), int(iterations)).hex()
+        return secrets.compare_digest(candidate, digest)
+    return secrets.compare_digest(hashlib.sha256(str(password).encode()).hexdigest(), stored)
+
+
+def create_session(con, user_id):
+    token = secrets.token_urlsafe(32)
+    expires = (datetime.utcnow() + timedelta(hours=8)).isoformat(timespec="seconds")
+    con.execute("INSERT INTO sessions VALUES (?,?,?,?)", (token, user_id, now_iso(), expires))
+    return token
+
+
+def user_from_token(con, token):
+    if not token:
+        return None
+    row = con.execute(
+        "SELECT u.* FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.token=? AND s.expires_at>? AND u.active=1",
+        (token, now_iso()),
+    ).fetchone()
+    return dict(row) if row else None
+
+
 def insert_reference(con):
     with con:
-        con.executemany(
-            "INSERT OR IGNORE INTO users VALUES (?,?,?,?,?,?)",
-            [
-                ("U001", "cajero01", hashlib.sha256(b"demo").hexdigest(), "Alberto C.", "cajero", 1),
-                ("U002", "vendedor01", hashlib.sha256(b"demo").hexdigest(), "Carlos R.", "vendedor", 1),
-                ("U003", "creditos01", hashlib.sha256(b"demo").hexdigest(), "Irving M.", "creditos", 1),
-                ("U004", "gerente01", hashlib.sha256(b"demo").hexdigest(), "Roberto P.", "gerente", 1),
-                ("U005", "admin", hashlib.sha256(b"demo").hexdigest(), "Administrador", "admin", 1),
-            ],
-        )
+        if not con.execute("SELECT 1 FROM users LIMIT 1").fetchone():
+            demo_hash = hash_password(os.environ.get("COAGRO_DEMO_PASSWORD", "demo"))
+            con.executemany(
+                "INSERT OR IGNORE INTO users VALUES (?,?,?,?,?,?)",
+                [
+                    ("U001", "cajero01", demo_hash, "Alberto C.", "cajero", 1),
+                    ("U002", "vendedor01", demo_hash, "Carlos R.", "vendedor", 1),
+                    ("U003", "creditos01", demo_hash, "Irving M.", "creditos", 1),
+                    ("U004", "gerente01", demo_hash, "Roberto P.", "gerente", 1),
+                    ("U005", "admin", demo_hash, "Administrador", "admin", 1),
+                ],
+            )
         con.execute(
             "INSERT OR IGNORE INTO fiscal_talonarios VALUES (?,?,?,?,?,?,?)",
             ("T001", "A1B2-C3D4-E5F6-G7H8-I9J0-K1L2", 1, 99999, "2026-12-31", 45231, 1),
@@ -542,10 +575,41 @@ class Handler(BaseHTTPRequestHandler):
             raise ValueError("Cuerpo JSON demasiado grande (máximo 2 MB)")
         return json.loads(self.rfile.read(size).decode("utf-8") or "{}")
 
+    def auth(self, con, required=False):
+        token = self.headers.get("Authorization", "").replace("Bearer ", "")
+        user = user_from_token(con, token)
+        if required and not user:
+            raise PermissionError("Sesión no válida o expirada")
+        return user
+
     def do_GET(self):
         path = self.path.split("?", 1)[0]
         if path in ("/api/health", "/health"):
             self.send_json({"ok": True, "db": str(DB_PATH.relative_to(ROOT)), "seed": "determinista v1"})
+            return
+        if path == "/api/me":
+            with LOCK:
+                con = connect()
+                try:
+                    ensure_seed(con)
+                    user = self.auth(con)
+                    self.send_json({"user": user})
+                finally:
+                    con.close()
+            return
+        if path == "/api/audit":
+            with LOCK:
+                con = connect()
+                try:
+                    ensure_seed(con)
+                    user = self.auth(con, True)
+                    if user["role"] not in ("admin", "gerente"):
+                        self.send_json({"error": "Acceso denegado"}, 403)
+                        return
+                    rows = [dict(r) for r in con.execute("SELECT * FROM audit_log ORDER BY id DESC LIMIT 100")]
+                    self.send_json({"events": rows})
+                finally:
+                    con.close()
             return
         if path == "/api/state":
             with LOCK:
@@ -585,7 +649,30 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json({"error": "Endpoint no encontrado"}, 404)
             return
         try:
-            self.send_json(write_state(self.body()))
+            payload = self.body()
+            with LOCK:
+                con = connect()
+                try:
+                    ensure_seed(con)
+                    user = self.auth(con, True)
+                    before = read_state(con)
+                    if payload["products"] != before["products"] and user["role"] not in ("admin", "gerente"):
+                        self.send_json({"error": "Rol no autorizado para modificar productos"}, 403)
+                        return
+                    if payload["cxc"] != before["cxc"] and user["role"] not in ("creditos", "gerente", "admin"):
+                        self.send_json({"error": "Rol no autorizado para modificar cartera"}, 403)
+                        return
+                    if payload["clients"] != before["clients"] and user["role"] not in ("vendedor", "creditos", "gerente", "admin"):
+                        self.send_json({"error": "Rol no autorizado para modificar clientes"}, 403)
+                        return
+                    result = write_state(payload)
+                    audit(con, user["id"], "update_state", "master_data", None, {"products":len(payload["products"]),"clients":len(payload["clients"]),"cxc":len(payload["cxc"])})
+                    con.commit()
+                    self.send_json(result)
+                finally:
+                    con.close()
+        except PermissionError as exc:
+            self.send_json({"error": str(exc)}, 403)
         except (ValueError, TypeError, sqlite3.Error) as exc:
             self.send_json({"error": str(exc)}, 400)
 
@@ -593,6 +680,41 @@ class Handler(BaseHTTPRequestHandler):
         path = self.path.split("?", 1)[0]
         try:
             payload = self.body()
+            if path == "/api/login":
+                with LOCK:
+                    con = connect()
+                    try:
+                        ensure_seed(con)
+                        username = str(payload.get("username", "")).strip()
+                        password = str(payload.get("password", ""))
+                        user = con.execute("SELECT * FROM users WHERE username=? AND active=1", (username,)).fetchone()
+                        if not user or not verify_password(password, user["password_hash"]):
+                            self.send_json({"error": "Usuario o contraseña incorrectos"}, 401)
+                            return
+                        if not user["password_hash"].startswith("pbkdf2$"):
+                            con.execute("UPDATE users SET password_hash=? WHERE id=?", (hash_password(password), user["id"]))
+                        token = create_session(con, user["id"])
+                        audit(con, user["id"], "login", "session", token[:8], {"username":username})
+                        con.commit()
+                        safe = dict(user); safe.pop("password_hash", None)
+                        self.send_json({"token":token,"user":safe})
+                    finally:
+                        con.close()
+                return
+            if path == "/api/logout":
+                with LOCK:
+                    con = connect()
+                    try:
+                        ensure_seed(con)
+                        token = payload.get("token") or self.headers.get("Authorization", "").replace("Bearer ", "")
+                        user = self.auth(con)
+                        con.execute("DELETE FROM sessions WHERE token=?", (token,))
+                        if user: audit(con, user["id"], "logout", "session", token[:8], None)
+                        con.commit()
+                        self.send_json({"ok":True})
+                    finally:
+                        con.close()
+                return
             if path == "/api/reset":
                 with LOCK:
                     con = connect()
@@ -607,8 +729,12 @@ class Handler(BaseHTTPRequestHandler):
                     con = connect()
                     try:
                         ensure_seed(con)
+                        user = self.auth(con, True)
+                        if user["role"] not in ("cajero", "vendedor", "admin"):
+                            self.send_json({"error": "Rol no autorizado para abrir turno"}, 403)
+                            return
                         with con:
-                            shift = open_shift(con, payload.get("initial_cash", 0), payload.get("user_id", "U001"))
+                            shift = open_shift(con, payload.get("initial_cash", 0), user["id"])
                         self.send_json({"shift": shift, "state": read_state(con)})
                     finally:
                         con.close()
@@ -619,8 +745,12 @@ class Handler(BaseHTTPRequestHandler):
                     con = connect()
                     try:
                         ensure_seed(con)
+                        user = self.auth(con, True)
+                        if user["role"] not in ("cajero", "admin"):
+                            self.send_json({"error": "Rol no autorizado para cerrar turno"}, 403)
+                            return
                         with con:
-                            shift = shift_action(con, shift_id, "close", payload.get("counted_cash", 0), payload.get("note"), payload.get("user_id", "U001"))
+                            shift = shift_action(con, shift_id, "close", payload.get("counted_cash", 0), payload.get("note"), user["id"])
                         self.send_json({"shift": shift, "state": read_state(con)})
                     finally:
                         con.close()
@@ -631,8 +761,12 @@ class Handler(BaseHTTPRequestHandler):
                     con = connect()
                     try:
                         ensure_seed(con)
+                        user = self.auth(con, True)
+                        if user["role"] not in ("cajero", "admin"):
+                            self.send_json({"error": "Rol no autorizado para retiros"}, 403)
+                            return
                         with con:
-                            shift = shift_action(con, shift_id, "withdraw", payload.get("amount", 0), payload.get("reason"), payload.get("user_id", "U001"))
+                            shift = shift_action(con, shift_id, "withdraw", payload.get("amount", 0), payload.get("reason"), user["id"])
                         self.send_json({"shift": shift, "state": read_state(con)})
                     finally:
                         con.close()
@@ -642,12 +776,19 @@ class Handler(BaseHTTPRequestHandler):
                     con = connect()
                     try:
                         ensure_seed(con)
+                        user = self.auth(con, True)
+                        if user["role"] not in ("cajero", "vendedor", "admin"):
+                            self.send_json({"error": "Rol no autorizado para vender"}, 403)
+                            return
+                        payload["seller_id"] = user["id"]
                         sale = create_sale(con, payload)
                         self.send_json({"sale": sale, "state": read_state(con)})
                     finally:
                         con.close()
                 return
             self.send_json({"error": "Endpoint no encontrado"}, 404)
+        except PermissionError as exc:
+            self.send_json({"error": str(exc)}, 403)
         except (ValueError, TypeError, sqlite3.Error, json.JSONDecodeError) as exc:
             self.send_json({"error": str(exc)}, 400)
 
