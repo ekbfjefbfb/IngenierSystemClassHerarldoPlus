@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:24:26.990169843+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:24:42.001391579+00:00`
 
-**Resumen:** 2 abiertas, 0 en curso, 0 bloqueadas, 11 completadas, 1 personas
+**Resumen:** 1 abiertas, 1 en curso, 0 bloqueadas, 11 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,17 +21,22 @@
 
 ### ekbfjefbfb
 
+- **JET-RZNGXE**  Mejorar disponibilidad y respaldo operativo — `En curso`  rama `main`
+  - Contexto: RNF-05 exige reducir interrupciones. Hoy hay fallback a localStorage, pero no hay service worker, cola de sincronización ni recuperación completa de turno. Implementar PWA/offline para lectura, cola de escrituras y reconciliación al volver la API. Verificar venta offline, reconexión y ausencia de duplicados.
+  - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css, prototipo/sw.js
 - **JET-TVD6WK**  Cerrar cumplimiento de entregables Moodle y Figma/Balsamiq — `Abierta`  rama `sin rama`
   - Contexto: La consigna pide documento fase 1 de 8–12 páginas; el DOCX actual tiene 16. Pide prototipo Figma/Balsamiq con enlace público; existe prototipo web pero no enlace Figma/Balsamiq ni URL pública verificada. Pide wireframes de baja fidelidad de las pantallas clave; hay 4 bocetos. Ajustar documento, completar bocetos o documentar sustitución aceptada, publicar URL y adjuntar evidencia. Bloqueo: confirmar con el docente s…
   - Prioridad: Alta
   - Archivos sensibles: README.md, UNIVERSIDAD CRISTIANA EVANGÉLICA NUEVO MILENIO(1).docx, docs
-- **JET-RZNGXE**  Mejorar disponibilidad y respaldo operativo — `Abierta`  rama `sin rama`
-  - Contexto: RNF-05 exige reducir interrupciones. Hoy hay fallback a localStorage, pero no hay service worker, cola de sincronización ni recuperación completa de turno. Implementar PWA/offline para lectura, cola de escrituras y reconciliación al volver la API. Verificar venta offline, reconexión y ausencia de duplicados.
-  - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css, prototipo/sw.js
 
 ## Bloqueos de archivos y ramas
 
-_Sin bloqueos activos._
+- **BLOQUEO** `prototipo/app.js` → JET-RZNGXE (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/index.html` → JET-RZNGXE (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/server.py` → JET-RZNGXE (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/styles.css` → JET-RZNGXE (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/sw.js` → JET-RZNGXE (responsable ekbfjefbfb, En curso)
+- **RAMA** `main` → JET-RZNGXE (responsable ekbfjefbfb)
 
 ## Completadas recientemente
 
