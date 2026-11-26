@@ -48,6 +48,7 @@ Tras ingresar, registre el **fondo inicial** con los steppers y presione **Abrir
 - **Paleta:** marfil, carbón cálido y cobre; sin azul ni verde. Superficies claras, contraste alto y un solo acento para reducir la fatiga visual.
 - **Entrada independiente:** el login no muestra el shell. Al abrir turno entra al POS; el botón «Cerrar turno» de la barra superior lleva al arqueo y, al confirmar, regresa al login.
 - **Rendimiento:** catálogo inicial de 8 productos con carga progresiva, búsquedas con *debounce* e ignoración de acentos, dashboard con caché de gráficos y tablas estáticas, sin renders ocultos y sin `backdrop-filter` en móvil.
+- **Disponibilidad:** service worker, manifiesto PWA, lectura offline y cola de ventas con reconciliación e idempotencia al reconectar.
 - **Ayuda integrada:** guía rápida y atajos desde la barra superior. Auditoría detallada en `UIUX_AUDIT.md`.
 - **Defensa:** auditoría de consigna en `../docs/COAGRO_Auditoria_Requerimientos.md`, modelo relacional en `../docs/COAGRO_Modelo_Datos.md` y guía PDF en `../docs/COAGRO_Guia_Defensa.pdf`.
 
