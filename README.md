@@ -21,7 +21,7 @@ Probado en Chromium 120 (escritorio 1440×900 y móvil 390×844). Sin errores de
 
 ## Credenciales de la demo
 
-Usuario: cualquier valor de 3+ caracteres. Contraseña: cualquier valor de 4+ caracteres. La autenticación es simulada; no hay credenciales secretas en el código.
+Con API activa se usan cuentas reales de demostración: `cajero01`, `vendedor01`, `creditos01`, `gerente01` y `admin`. La contraseña de demo es `demo` y puede cambiarse con `COAGRO_DEMO_PASSWORD`. Las contraseñas se almacenan con PBKDF2 y las sesiones expiran en 8 horas. Al abrir `index.html` sin backend se mantiene el acceso simulado local.
 Tras ingresar, registre el **fondo inicial** con los steppers y presione **Abrir turno**.
 
 ## 8 pantallas y qué simula cada control
@@ -59,6 +59,10 @@ por cobrar y correlativos fijos) y expone:
 | Método | Ruta | Uso |
 |---|---|---|
 | GET | `/api/state` | Estado canónico desde SQLite |
+| POST | `/api/login` | Autenticación PBKDF2 y creación de sesión |
+| POST | `/api/logout` | Cierre de sesión |
+| GET | `/api/me` | Usuario de la sesión activa |
+| GET | `/api/audit` | Bitácora para admin o gerente |
 | PUT | `/api/state` | Reemplaza datos maestros en una transacción atómica y validada |
 | POST | `/api/reset` | Restaura la semilla original |
 | POST | `/api/shifts/open` | Abre turno con fondo inicial |

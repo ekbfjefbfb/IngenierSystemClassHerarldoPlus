@@ -82,7 +82,7 @@ const sellers = [
 /* ------------------------------------------------------------------ ESTADO */
 const state = {
   screen:'login', shift:null, cart:[], client:null, payMethod:'efectivo',
-  user:{ id:'U001', name:'Alberto C.', role:'cajero' },
+  user:null, token:null,
   category:'Todas', productFilter:'', productLimit:8, selectedClient:'C001', cxcTab:'todas',
   cxcFilter:'', promosOnly:false, revealed:false, lastSale:null,
   range:'hoy', ticketNo:428, receiptNo:912
@@ -94,6 +94,22 @@ const titles = {
   productos:['Módulo 03 · Catálogo','Productos y precios'], cxc:['Módulo 04 · CxC','Cuentas por cobrar'],
   cierre:['Módulo 01 · Caja','Cierre de turno'], dashboard:['Módulo 06 · DSS','Panel comercial']
 };
+const roleAccess = {
+  cajero:['pos','factura','cierre'],
+  vendedor:['pos','clientes','factura'],
+  creditos:['clientes','cxc','factura'],
+  gerente:['dashboard','clientes','productos','cxc','factura'],
+  admin:['pos','clientes','factura','productos','cxc','cierre','dashboard']
+};
+const defaultScreen = { cajero:'pos', vendedor:'pos', creditos:'cxc', gerente:'dashboard', admin:'dashboard' };
+function canAccess(name) { return !API_ON || name === 'login' || !state.user || (roleAccess[state.user.role] || []).includes(name); }
+function applyRole() {
+  const user = state.user || { name:'Invitado', role:'—' };
+  $('#userMiniName').textContent = user.name;
+  $('#userMiniRole').textContent = user.role + ' · Terminal 01';
+  $$('.avatar-top,.user-mini .avatar').forEach(el => el.textContent = user.name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase());
+  $$('[data-go]').forEach(b => { if (b.dataset.go !== 'login') b.hidden = !canAccess(b.dataset.go); });
+}
 
 /* Persistencia de datos maestros (catálogo, CRM, cartera y correlativos).
    La sesión de caja (turno, ticket, carrito) sigue siendo volátil a propósito. */
@@ -124,6 +140,7 @@ async function api(path, method='GET', body=null) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 5000);
   const opts = { method, headers:{ 'Content-Type':'application/json' }, signal:controller.signal };
+  if (state.token) opts.headers.Authorization = 'Bearer ' + state.token;
   if (body !== null) opts.body = JSON.stringify(body);
   try {
     const res = await fetch(path, opts);
@@ -223,7 +240,7 @@ function confirmDialog(title, text, onYes, yesLabel='Confirmar', danger=false) {
 }
 function processing(text, done) {
   modal({ title:'Procesando…', body:`<div class="processing"><div class="dots"><i></i><i></i><i></i></div><span>${text}</span></div>`, dismissible:false });
-  setTimeout(() => { closeModal(); done(); }, 360);
+  setTimeout(() => { closeModal(); done(); }, 300);
 }
 function emptyState(title, hint, action='', label='') {
   return `<div class="empty-state"><svg class="ico"><use href="#i-search"/></svg><b>${title}</b><span>${hint}</span>${action ? `<button type="button" class="btn btn-soft" data-empty="${action}">${label}</button>` : ''}</div>`;
@@ -242,8 +259,10 @@ document.addEventListener('click', e => {
 /* ------------------------------------------------------------------ NAVEGACIÓN */
 function navTo(name) {
   if (!titles[name]) return;
+  if (!canAccess(name)) name = defaultScreen[state.user.role] || 'login';
   state.screen = name;
   document.body.classList.toggle('auth-mode', name === 'login');
+  applyRole();
   if (name === 'login') {
     $('#loginCard').hidden = false;
     $('#openingCard').hidden = true;
@@ -263,7 +282,7 @@ function navTo(name) {
   renderAll();
   if (name !== 'pos') $('#mobileCheckout').classList.remove('show');
   const closeBtn = $('#topCloseShift');
-  if (closeBtn) closeBtn.hidden = !state.shift || name === 'login' || name === 'cierre';
+  if (closeBtn) closeBtn.hidden = !state.shift || name === 'login' || name === 'cierre' || !canAccess('cierre');
 }
 $('#topCloseShift').addEventListener('click', () => {
   if (!state.shift) return;
@@ -314,17 +333,28 @@ $('#togglePass').addEventListener('click', () => {
   p.type = p.type === 'password' ? 'text' : 'password';
   $('#togglePass').style.color = p.type === 'text' ? 'var(--accent)' : '';
 });
-$('#loginForm').addEventListener('submit', e => {
+$('#loginForm').addEventListener('submit', async e => {
   e.preventDefault();
   const u = $('#loginUser').value.trim(), p = $('#loginPass').value;
   $('#userError').textContent = u.length < 3 ? 'Ingrese un usuario válido (3+ caracteres).' : '';
   $('#passError').textContent = p.length < 4 ? 'La contraseña debe tener al menos 4 caracteres.' : '';
   if (u.length < 3 || p.length < 4) { $(u.length < 3 ? '#loginUser' : '#loginPass').focus(); return; }
-  $('#loginCard').hidden = true;
-  $('#openingCard').hidden = false;
-  $('#openingDate').textContent = today();
-  updateOpening();
-  toast('Credenciales verificadas · terminal Caja 01');
+  $('#loginSubmit').disabled = true;
+  try {
+    if (useApi) {
+      const res = await api('/api/login','POST',{ username:u, password:p });
+      state.token = res.token; state.user = res.user;
+      try { sessionStorage.setItem('coagro_token', res.token); } catch (_) {}
+    } else state.user = { id:'U001', name:'Alberto C.', role:'cajero' };
+    applyRole();
+    if (['creditos','gerente'].includes(state.user.role)) { navTo(defaultScreen[state.user.role]); toast('Sesión iniciada · ' + state.user.name); return; }
+    $('#loginCard').hidden = true;
+    $('#openingCard').hidden = false;
+    $('#openingDate').textContent = today();
+    updateOpening();
+    toast('Credenciales verificadas · terminal Caja 01');
+  } catch (err) { $('#passError').textContent = err.message; $('#loginPass').focus(); }
+  finally { $('#loginSubmit').disabled = false; }
 });
 $('#backLogin').addEventListener('click', () => { $('#openingCard').hidden = true; $('#loginCard').hidden = false; });
 $('#forgotBtn').addEventListener('click', () => modal({
@@ -1143,7 +1173,7 @@ $('#menuBtn').addEventListener('click', () => { $('#sidebar').classList.add('ope
 $('#scrim').addEventListener('click', () => { $('#sidebar').classList.remove('open'); $('#scrim').classList.remove('show'); });
 $('#moreBtn').addEventListener('click', () => modal({
   title:'Más módulos', sub:'Acceso rápido',
-  body:`<div class="modal-list">${[['factura','Facturación SAR','i-receipt'],['productos','Productos y precios','i-box'],['cierre','Cierre de caja','i-cash'],['dashboard','Panel comercial','i-chart']].map(([go,label,icon])=>`<button class="client-row" data-more="${go}"><span class="avatar"><svg class="ico"><use href="#${icon}"/></svg></span><span class="cr-body"><strong>${label}</strong></span><svg class="ico"><use href="#i-chev"/></svg></button>`).join('')}</div>`,
+  body:`<div class="modal-list">${[['factura','Facturación SAR','i-receipt'],['productos','Productos y precios','i-box'],['cierre','Cierre de caja','i-cash'],['dashboard','Panel comercial','i-chart']].filter(([go])=>canAccess(go)).map(([go,label,icon])=>`<button class="client-row" data-more="${go}"><span class="avatar"><svg class="ico"><use href="#${icon}"/></svg></span><span class="cr-body"><strong>${label}</strong></span><svg class="ico"><use href="#i-chev"/></svg></button>`).join('')}</div>`,
   onMount(root) { $$('[data-more]',root).forEach(b=>b.addEventListener('click',()=>{closeModal();navTo(b.dataset.more);})); }
 }));
 $('#helpBtn').addEventListener('click', () => modal({
@@ -1170,21 +1200,39 @@ $('#notifyBtn').addEventListener('click', () => modal({
     <div class="cd-alert" style="margin:0;background:var(--amber-soft)"><svg class="ico"><use href="#i-box"/></svg><span><b>Stock bajo</b><br>4 productos requieren reposición.</span></div>
   </div>`, foot:'<button class="btn btn-primary" data-close>Entendido</button>'
 }));
-$('#userMini').addEventListener('click', () => modal({
-  title:'Sesión activa', sub:'Alberto C. · Cajero · Caja 01',
-  body:`<div class="receipt-mini"><div class="r-row"><span>Rol</span><b>Cajero / Vendedor</b></div><div class="r-row"><span>Turno</span><b>${state.shift ? state.shift.id : 'Cerrado'}</b></div><div class="r-row"><span>Permisos</span><b>POS, CRM, CxC (lectura)</b></div></div>`,
-  foot:'<button class="btn btn-ghost" id="resetDemo" style="color:var(--red)">Reiniciar datos</button><button class="btn btn-ghost" data-close>Cancelar</button><button class="btn btn-soft" id="logoutBtn">Cerrar sesión</button>',
-  onMount(root) {
-    $('#logoutBtn',root).addEventListener('click',()=>{closeModal();state.shift=null;$('#shiftState').textContent='Turno cerrado';$('#shiftMeta').textContent='Caja 01 · Catacamas';$('.shift-mini').classList.add('closed');navTo('login');toast('Sesión cerrada');});
-    $('#resetDemo',root).addEventListener('click',()=>confirmDialog('Reiniciar datos de demostración','Se restaurará la semilla original de la base de datos (o el modo local).',async ()=>{
-      try {
-        if (useApi) await api('/api/reset','POST');
-        else localStorage.removeItem(STORE_KEY);
-      } catch (err) { toast('No se pudo reiniciar: ' + err.message, 'error'); return; }
-      location.reload();
-    },'Reiniciar',true));
-  }
-}));
+$('#userMini').addEventListener('click', () => {
+  const user = state.user || { name:'Invitado', role:'—' };
+  const canAudit = ['admin','gerente'].includes(user.role);
+  const foot = `${(user.role === 'admin' || !API_ON) ? '<button class="btn btn-ghost" id="resetDemo" style="color:var(--red)">Reiniciar datos</button>' : ''}${canAudit ? '<button class="btn btn-ghost" id="auditBtn">Bitácora</button>' : ''}<button class="btn btn-ghost" data-close>Cancelar</button><button class="btn btn-soft" id="logoutBtn">Cerrar sesión</button>`;
+  modal({
+    title:'Sesión activa', sub:user.name + ' · ' + user.role + ' · Caja 01',
+    body:`<div class="receipt-mini"><div class="r-row"><span>Rol</span><b>${user.role}</b></div><div class="r-row"><span>Turno</span><b>${state.shift ? state.shift.id : 'Cerrado'}</b></div><div class="r-row"><span>Permisos</span><b>${(roleAccess[user.role] || []).join(', ')}</b></div></div>`,
+    foot,
+    onMount(root) {
+      $('#logoutBtn',root).addEventListener('click',async ()=>{
+        closeModal();
+        try { if (useApi && state.token) await api('/api/logout','POST',{}); } catch (_) {}
+        state.token = null; state.user = null; state.shift = null;
+        try { sessionStorage.removeItem('coagro_token'); } catch (_) {}
+        $('#shiftState').textContent = 'Turno cerrado'; $('#shiftMeta').textContent = 'Caja 01 · Catacamas'; $('.shift-mini').classList.add('closed');
+        navTo('login'); toast('Sesión cerrada');
+      });
+      if ($('#resetDemo',root)) $('#resetDemo',root).addEventListener('click',()=>confirmDialog('Reiniciar datos de demostración','Se restaurará la semilla original de la base de datos (o el modo local).',async ()=>{
+        try { if (useApi) await api('/api/reset','POST'); else localStorage.removeItem(STORE_KEY); }
+        catch (err) { toast('No se pudo reiniciar: ' + err.message, 'error'); return; }
+        location.reload();
+      },'Reiniciar',true));
+      if ($('#auditBtn',root)) $('#auditBtn',root).addEventListener('click',async ()=>{
+        try {
+          const res = await api('/api/audit');
+          modal({ title:'Bitácora de operaciones', sub:'Últimos 100 eventos', wide:true,
+            body:`<div class="table-scroll"><table class="data-table" style="min-width:0"><thead><tr><th>FECHA</th><th>USUARIO</th><th>ACCIÓN</th><th>ENTIDAD</th><th>REGISTRO</th></tr></thead><tbody>${res.events.map(e=>`<tr><td>${e.created_at}</td><td>${e.user_id||'—'}</td><td>${e.action}</td><td>${e.entity}</td><td class="mono">${e.entity_id||'—'}</td></tr>`).join('')}</tbody></table></div>`,
+            foot:'<button class="btn btn-primary" data-close>Cerrar</button>' });
+        } catch (err) { toast('No se pudo cargar la bitácora: ' + err.message, 'error'); }
+      });
+    }
+  });
+});
 document.addEventListener('click', e => {
   const b = e.target.closest('.btn.ripple');
   if (!b) return;
@@ -1250,6 +1298,11 @@ async function boot() {
   if (API_ON) submit.innerHTML = '<span>Conectando…</span>';
   try {
     if (API_ON) {
+      try { state.token = sessionStorage.getItem('coagro_token'); } catch (_) {}
+      if (state.token) {
+        try { const me = await api('/api/me'); state.user = me.user; }
+        catch (_) { state.token = null; state.user = null; try { sessionStorage.removeItem('coagro_token'); } catch (_) {} }
+      }
       try {
         const d = await api('/api/state');
         if (d && Array.isArray(d.products) && d.products.length) { applyRemote(d); useApi = true; }
@@ -1264,6 +1317,8 @@ async function boot() {
     updateApiChip();
     $$('.art-stat b[data-count]').forEach(el => countUp(el, parseInt(el.dataset.count, 10)));
     renderAll();
+    applyRole();
+    if (state.user) navTo(defaultScreen[state.user.role] || 'pos');
   } finally {
     app.removeAttribute('aria-busy');
     submit.innerHTML = originalSubmit;
