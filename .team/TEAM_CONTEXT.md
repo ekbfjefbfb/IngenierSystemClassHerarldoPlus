@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:17:28.842357065+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:17:46.125735889+00:00`
 
-**Resumen:** 3 abiertas, 0 en curso, 0 bloqueadas, 10 completadas, 1 personas
+**Resumen:** 2 abiertas, 1 en curso, 0 bloqueadas, 10 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,7 +21,7 @@
 
 ### ekbfjefbfb
 
-- **JET-WGW2DY**  Agregar ventas netas y margen por línea al dashboard — `Abierta`  rama `sin rama`
+- **JET-WGW2DY**  Agregar ventas netas y margen por línea al dashboard — `En curso`  rama `main`
   - Contexto: El módulo 6 exige ventas brutas vs. netas y margen por línea comercial. El dashboard muestra brutas, ticket, morosidad, top 10 y metas, pero no netas ni margen por línea. Calcular desde ventas persistentes, mostrar comparación y margen por categoría con tooltip y filtro de periodo. Verificar cuadre bruto = neto + descuentos/devoluciones según definición documentada.
   - Prioridad: Alta
   - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
@@ -35,7 +35,11 @@
 
 ## Bloqueos de archivos y ramas
 
-_Sin bloqueos activos._
+- **BLOQUEO** `prototipo/app.js` → JET-WGW2DY (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/index.html` → JET-WGW2DY (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/server.py` → JET-WGW2DY (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/styles.css` → JET-WGW2DY (responsable ekbfjefbfb, En curso)
+- **RAMA** `main` → JET-WGW2DY (responsable ekbfjefbfb)
 
 ## Completadas recientemente
 
