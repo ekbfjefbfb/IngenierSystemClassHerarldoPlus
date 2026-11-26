@@ -49,7 +49,7 @@ Alcance: 8 pantallas, navegación compartida, modales, formularios, estados vac�
 | forensic | Hallazgos basados en DOM, estilos computados, código y mediciones reales. |
 | hunter | Bugs corregidos: overflow móvil, foco, búsqueda sin acentos, estado oculto y credencial demo. |
 | architect | SQLite canónico, API con timeout, caché local y persistencia de datos maestros. |
-| sec-ops | Sin credenciales en el front-end; CSP, permisos, nosniff, anti-clickjacking y validación server-side. |
+| sec-ops | PBKDF2, sesiones, roles, bitácora, CSP, permisos, nosniff, anti-clickjacking y validación server-side. |
 
 ## Auditoría por pantalla
 
@@ -91,4 +91,4 @@ Alcance: 8 pantallas, navegación compartida, modales, formularios, estados vac�
 
 ## Límites reales
 
-La autenticación es simulada. El QR fiscal es ilustrativo. No hay conexión real con SAR. La sesión de caja es volátil. SQLite es efímero en Render sin disco persistente. Los agentes geoespaciales no aplican porque el alcance no incluye mapas.
+La autenticación y los roles son reales en el backend local. El QR fiscal es ilustrativo y no hay conexión real con SAR. GitHub Pages publica solo el front-end en modo local. SQLite es efímero en Render sin disco persistente. Los agentes geoespaciales no aplican porque el alcance no incluye mapas.
