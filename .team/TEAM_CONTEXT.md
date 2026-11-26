@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T04:49:46.781340180+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T04:50:18.454511521+00:00`
 
-**Resumen:** 7 abiertas, 0 en curso, 0 bloqueadas, 6 completadas, 1 personas
+**Resumen:** 6 abiertas, 1 en curso, 0 bloqueadas, 6 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,6 +21,10 @@
 
 ### ekbfjefbfb
 
+- **JET-P9VNP9**  Implementar autenticación, roles y trazabilidad real — `En curso`  rama `main`
+  - Contexto: RNF-01, RNF-06 y RNF-08 requieren seguridad por rol, trazabilidad y protección de datos. Hoy el login es simulado, el usuario es fijo y no hay bitácora. Implementar usuarios, hash de contraseña, sesión, roles cajero/vendedor/créditos/gerente/admin y auditoría de operaciones. Verificar acceso denegado, cambio de turno y registro de quién/cuándo.
+  - Prioridad: Alta
+  - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/requirements.txt, prototipo/server.py, prototipo/styles.css
 - **JET-5THMMC**  Administrar talonarios fiscales CAI, rangos y fechas límite — `Abierta`  rama `sin rama`
   - Contexto: RF-05 exige control y administración de talonarios autorizados por SAR. La factura muestra CAI y fecha límite, pero no hay alta/edición de talonarios ni validación de rango correlativo. Implementar catalogación de CAI, rango inicial/final, fecha límite, consumo correlativo y bloqueo por vencimiento/agotamiento. Verificar emisión dentro y fuera de rango.
   - Prioridad: Alta
@@ -33,10 +37,6 @@
   - Contexto: El módulo 6 exige ventas brutas vs. netas y margen por línea comercial. El dashboard muestra brutas, ticket, morosidad, top 10 y metas, pero no netas ni margen por línea. Calcular desde ventas persistentes, mostrar comparación y margen por categoría con tooltip y filtro de periodo. Verificar cuadre bruto = neto + descuentos/devoluciones según definición documentada.
   - Prioridad: Alta
   - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
-- **JET-P9VNP9**  Implementar autenticación, roles y trazabilidad real — `Abierta`  rama `sin rama`
-  - Contexto: RNF-01, RNF-06 y RNF-08 requieren seguridad por rol, trazabilidad y protección de datos. Hoy el login es simulado, el usuario es fijo y no hay bitácora. Implementar usuarios, hash de contraseña, sesión, roles cajero/vendedor/créditos/gerente/admin y auditoría de operaciones. Verificar acceso denegado, cambio de turno y registro de quién/cuándo.
-  - Prioridad: Alta
-  - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/requirements.txt, prototipo/server.py, prototipo/styles.css
 - **JET-TVD6WK**  Cerrar cumplimiento de entregables Moodle y Figma/Balsamiq — `Abierta`  rama `sin rama`
   - Contexto: La consigna pide documento fase 1 de 8–12 páginas; el DOCX actual tiene 16. Pide prototipo Figma/Balsamiq con enlace público; existe prototipo web pero no enlace Figma/Balsamiq ni URL pública verificada. Pide wireframes de baja fidelidad de las pantallas clave; hay 4 bocetos. Ajustar documento, completar bocetos o documentar sustitución aceptada, publicar URL y adjuntar evidencia. Bloqueo: confirmar con el docente s…
   - Prioridad: Alta
@@ -50,7 +50,12 @@
 
 ## Bloqueos de archivos y ramas
 
-_Sin bloqueos activos._
+- **BLOQUEO** `prototipo/app.js` → JET-P9VNP9 (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/index.html` → JET-P9VNP9 (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/requirements.txt` → JET-P9VNP9 (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/server.py` → JET-P9VNP9 (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/styles.css` → JET-P9VNP9 (responsable ekbfjefbfb, En curso)
+- **RAMA** `main` → JET-P9VNP9 (responsable ekbfjefbfb)
 
 ## Completadas recientemente
 
