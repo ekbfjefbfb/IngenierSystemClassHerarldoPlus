@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:35:06.823969691+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:35:09.252614575+00:00`
 
-**Resumen:** 2 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
+**Resumen:** 3 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -31,6 +31,10 @@
   - Archivos sensibles: docs/COAGRO_Modelo_Datos.md, prototipo/app.js, prototipo/server.py
 - **JET-5THMMC**  Administrar talonarios fiscales CAI, rangos y fechas límite — `Abierta`  rama `sin rama`
   - Contexto: RF-05 exige control y administración de talonarios autorizados por SAR. La factura muestra CAI y fecha límite, pero no hay alta/edición de talonarios ni validación de rango correlativo. Implementar catalogación de CAI, rango inicial/final, fecha límite, consumo correlativo y bloqueo por vencimiento/agotamiento. Verificar emisión dentro y fuera de rango.
+  - Prioridad: Alta
+  - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
+- **JET-N8HGZE**  Implementar promociones temporales, combos y descuentos por vendedor — `Abierta`  rama `sin rama`
+  - Contexto: RF-08 exige ofertas temporales, combos y descuentos máximos por vendedor. Hoy la promoción es texto libre y el descuento solo se limita al subtotal. Implementar vigencia, tipo de promoción, combo y máximo por vendedor con validación en POS. Verificar promoción vencida, combo y descuento no autorizado.
   - Prioridad: Alta
   - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
 

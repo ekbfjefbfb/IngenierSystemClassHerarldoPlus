@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-26T03:35:06.823969691Z",
+  "updated_at": "2026-11-26T03:35:09.252614575Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -217,6 +217,28 @@
       "archived": false,
       "notes": []
     },
+    "JET-N8HGZE": {
+      "id": "JET-N8HGZE",
+      "title": "Implementar promociones temporales, combos y descuentos por vendedor",
+      "context": "RF-08 exige ofertas temporales, combos y descuentos máximos por vendedor. Hoy la promoción es texto libre y el descuento solo se limita al subtotal. Implementar vigencia, tipo de promoción, combo y máximo por vendedor con validación en POS. Verificar promoción vencida, combo y descuento no autorizado.",
+      "status": "open",
+      "priority": "high",
+      "assignee_id": "ekbfjefbfb",
+      "assignee_name": "ekbfjefbfb",
+      "created_by_id": "ekbfjefbfb",
+      "created_by_name": "ekbfjefbfb",
+      "files": [
+        "prototipo/app.js",
+        "prototipo/index.html",
+        "prototipo/server.py",
+        "prototipo/styles.css"
+      ],
+      "created_at": "2026-11-26T03:35:09.252601085Z",
+      "updated_at": "2026-11-26T03:35:09.252601085Z",
+      "agent": "opencode",
+      "archived": false,
+      "notes": []
+    },
     "JET-RJWY8F": {
       "id": "JET-RJWY8F",
       "title": "Persistir turnos, ventas, detalles y facturas en SQLite",
@@ -285,6 +307,15 @@
     }
   },
   "events": [
+    {
+      "id": "19200cc1-352d-47a4-9646-c747d4d8f4ea",
+      "at": "2026-11-26T03:35:09.252601085Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_created",
+      "task_id": "JET-N8HGZE",
+      "message": "creó «Implementar promociones temporales, combos y descuentos por vendedor» para ekbfjefbfb"
+    },
     {
       "id": "e0cb6f96-8226-414d-862f-7a8e94eeabf1",
       "at": "2026-11-26T03:35:06.823954721Z",
