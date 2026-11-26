@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-26T11:56:14.570007163Z",
+  "updated_at": "2026-11-26T11:56:31.815782653Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -278,12 +278,13 @@
       "id": "JET-N8HGZE",
       "title": "Implementar promociones temporales, combos y descuentos por vendedor",
       "context": "RF-08 exige ofertas temporales, combos y descuentos máximos por vendedor. Hoy la promoción es texto libre y el descuento solo se limita al subtotal. Implementar vigencia, tipo de promoción, combo y máximo por vendedor con validación en POS. Verificar promoción vencida, combo y descuento no autorizado.",
-      "status": "open",
+      "status": "in_progress",
       "priority": "high",
       "assignee_id": "ekbfjefbfb",
       "assignee_name": "ekbfjefbfb",
       "created_by_id": "ekbfjefbfb",
       "created_by_name": "ekbfjefbfb",
+      "branch": "main",
       "files": [
         "prototipo/app.js",
         "prototipo/index.html",
@@ -291,7 +292,8 @@
         "prototipo/styles.css"
       ],
       "created_at": "2026-11-26T03:35:09.252601085Z",
-      "updated_at": "2026-11-26T03:35:09.252601085Z",
+      "updated_at": "2026-11-26T11:56:31.815772705Z",
+      "started_at": "2026-11-26T11:56:31.815772705Z",
       "agent": "opencode",
       "archived": false,
       "notes": []
@@ -483,6 +485,15 @@
     }
   },
   "events": [
+    {
+      "id": "3a90e0d6-e0a5-4bbe-bff4-45e16f5b8e2c",
+      "at": "2026-11-26T11:56:31.815772705Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_taken",
+      "task_id": "JET-N8HGZE",
+      "message": "tomó «Implementar promociones temporales, combos y descuentos por vendedor» y comenzó a trabajar"
+    },
     {
       "id": "34d73606-418b-43dd-bac9-6ab5ee2198ac",
       "at": "2026-11-26T11:56:14.569952512Z",

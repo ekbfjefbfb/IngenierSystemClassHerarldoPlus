@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T11:56:14.570007163+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T11:56:31.815782653+00:00`
 
-**Resumen:** 5 abiertas, 0 en curso, 0 bloqueadas, 8 completadas, 1 personas
+**Resumen:** 4 abiertas, 1 en curso, 0 bloqueadas, 8 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,7 +21,7 @@
 
 ### ekbfjefbfb
 
-- **JET-N8HGZE**  Implementar promociones temporales, combos y descuentos por vendedor — `Abierta`  rama `sin rama`
+- **JET-N8HGZE**  Implementar promociones temporales, combos y descuentos por vendedor — `En curso`  rama `main`
   - Contexto: RF-08 exige ofertas temporales, combos y descuentos máximos por vendedor. Hoy la promoción es texto libre y el descuento solo se limita al subtotal. Implementar vigencia, tipo de promoción, combo y máximo por vendedor con validación en POS. Verificar promoción vencida, combo y descuento no autorizado.
   - Prioridad: Alta
   - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
@@ -42,7 +42,11 @@
 
 ## Bloqueos de archivos y ramas
 
-_Sin bloqueos activos._
+- **BLOQUEO** `prototipo/app.js` → JET-N8HGZE (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/index.html` → JET-N8HGZE (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/server.py` → JET-N8HGZE (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/styles.css` → JET-N8HGZE (responsable ekbfjefbfb, En curso)
+- **RAMA** `main` → JET-N8HGZE (responsable ekbfjefbfb)
 
 ## Completadas recientemente
 
