@@ -63,6 +63,7 @@ por cobrar y correlativos fijos) y expone:
 | POST | `/api/logout` | Cierre de sesión |
 | GET | `/api/me` | Usuario de la sesión activa |
 | GET | `/api/audit` | Bitácora para admin o gerente |
+| GET | `/api/dashboard?range=hoy|semana|mes` | Ventas brutas/netas, ticket, margen, series y top 10 |
 | PUT | `/api/state` | Reemplaza datos maestros en una transacción atómica y validada |
 | POST | `/api/reset` | Restaura la semilla original |
 | POST | `/api/shifts/open` | Abre turno con fondo inicial |

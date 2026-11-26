@@ -1244,73 +1244,60 @@ function renderCommissions() {
     () => toast('Liquidación generada · ' + money(totalPay) + ' (mock funcional)'), 'Liquidar'
   ));
 }
-function renderDashboard() {
-  const r = state.range, d = chartData[r];
-  const kpiReady = $('#kpiGrid').dataset.ready === '1';
-  const overdueAmt = cxc.filter(k => k.status === 'Vencido').reduce((s,k) => s + k.balance, 0);
-  const totalCxc = cxc.reduce((s,k) => s + k.balance, 0) || 1;
-  const morosidad = +(overdueAmt / totalCxc * 100).toFixed(1);
+let dashboardSeq = 0;
+async function renderDashboard() {
+  const seq = ++dashboardSeq, r = state.range;
+  let apiData = null;
+  if (useApi) { try { apiData = await api('/api/dashboard?range=' + r); } catch (_) {} }
+  if (seq !== dashboardSeq) return;
+  const fallbackLabels = r==='hoy'?['8a','10a','12p','2p','4p','6p']:r==='semana'?['Lun','Mar','Mié','Jue','Vie','Sáb','Dom']:['Ene','Mar','May','Jul','Sep','Nov'];
+  const series = apiData ? apiData.series : chartData[r].map((value,i)=>({label:fallbackLabels[Math.min(i,fallbackLabels.length-1)],value}));
+  const values = series.length ? series.map(x=>Number(x.value)||0) : [0];
+  const overdueAmt = cxc.filter(k=>k.status==='Vencido').reduce((s,k)=>s+k.balance,0);
+  const totalCxc = cxc.reduce((s,k)=>s+k.balance,0)||1;
+  const morosidad = apiData ? apiData.morosidad : +(overdueAmt/totalCxc*100).toFixed(1);
+  const net = apiData ? apiData.net : 24850, gross = apiData ? apiData.gross : 26850;
+  const discounts = apiData ? apiData.discounts : 2000, ticket = apiData ? apiData.ticketAvg : 415;
+  const marginPct = apiData ? apiData.marginPct : 24.6;
   const cards = [
-    { label:'Ventas brutas', value:'24,850', pre:'L ', dec:0, delta:'+8.4%', down:false },
-    { label:'Ticket promedio', value:'415', pre:'L ', dec:0, delta:'+3.1%', down:false },
-    { label:'Morosidad cartera', value:morosidad, pre:'', dec:1, suf:'%', delta:'−1.2%', down:false, warn:true },
-    { label:'Clientes activos', value:'328', pre:'', dec:0, delta:'+14', down:false }
+    {label:'Ventas netas',value:net,pre:'L ',dec:2,delta:'+8.4%',sub:'Brutas ' + money(gross) + ' · Desc. ' + money(discounts)},
+    {label:'Ticket promedio',value:ticket,pre:'L ',dec:2,delta:'+3.1%',sub:apiData ? apiData.salesCount + ' ventas en el periodo' : 'Meta diaria L 450'},
+    {label:'Margen por línea',value:marginPct,pre:'',dec:1,suf:'%',delta:'+2.1%',sub:'Ventas menos costo de productos'},
+    {label:'Morosidad cartera',value:morosidad,pre:'',dec:1,suf:'%',delta:'−1.2%',warn:true,sub:'Saldo vencido / saldo total'}
   ];
-  $('#kpiGrid').innerHTML = cards.map((c,i) => `<div class="kpi-card ${c.warn?'warn':''}">
-    <small>${c.label}</small><div><b data-kpi="${i}">${c.pre}0${c.suf||''}</b><span class="delta ${c.down?'down':''}">${c.delta}</span></div>
-    <svg class="kpi-spark" viewBox="0 0 64 26"><path d="M0 22 L10 18 L20 20 L30 12 L40 15 L50 7 L64 3" fill="none" stroke="${c.warn?'#98531F':'#9C4F22'}" stroke-width="2"/></svg>
-  </div>`).join('');
-  cards.forEach((c,i) => {
-    const el = $(`[data-kpi="${i}"]`);
-    if (c.suf) el.dataset.suffix = c.suf;
-    const target = typeof c.value === 'number' ? c.value : parseFloat(c.value.replace(',',''));
-    countUp(el, target, c.pre, c.dec, kpiReady);
-  });
-  $('#kpiGrid').dataset.ready = '1';
+  const kpiReady = $('#kpiGrid').dataset.ready === '1';
+  $('#kpiGrid').innerHTML = cards.map((c,i)=>`<div class="kpi-card ${c.warn?'warn':''}"><small>${c.label}</small><div><b data-kpi="${i}">${c.pre}0${c.suf||''}</b><span class="delta ${c.down?'down':''}">${c.delta}</span></div><small class="kpi-sub">${c.sub||''}</small><svg class="kpi-spark" viewBox="0 0 64 26"><path d="M0 22 L10 18 L20 20 L30 12 L40 15 L50 7 L64 3" fill="none" stroke="${c.warn?'#98531F':'#9C4F22'}" stroke-width="2"/></svg></div>`).join('');
+  cards.forEach((c,i)=>{const el=$(`[data-kpi="${i}"]`);if(c.suf)el.dataset.suffix=c.suf;countUp(el,Number(c.value),c.pre,c.dec,kpiReady);});
+  $('#kpiGrid').dataset.ready='1';
 
-  if ($('#lineChart').dataset.range !== r) {
-    const w=620,h=170,pad=18, max=Math.max(...d)*1.12;
-    const pts=d.map((v,i)=>[pad+i*(w-2*pad)/(d.length-1), h-pad-(v/max)*(h-2*pad)]);
+  const chartKey = r + '|' + (apiData ? apiData.net : 'demo');
+  if ($('#lineChart').dataset.key !== chartKey) {
+    const w=620,h=170,pad=18,max=Math.max(...values,1)*1.12;
+    const pts=values.map((v,i)=>[pad+i*(w-2*pad)/Math.max(1,values.length-1),h-pad-(v/max)*(h-2*pad)]);
     const line='M'+pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' L ');
     const area=line+` L ${pts[pts.length-1][0].toFixed(1)} ${h-pad} L ${pts[0][0].toFixed(1)} ${h-pad} Z`;
-    const labels=r==='hoy'?['8a','10a','12p','2p','4p','6p']:r==='semana'?['Lun','Mar','Mié','Jue','Vie','Sáb','Dom']:['Ene','Mar','May','Jul','Sep','Nov'];
-    $('#lineChart').innerHTML=`<svg viewBox="0 0 ${w} ${h+16}" preserveAspectRatio="none">
-      <defs><linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9C4F22" stop-opacity=".26"/><stop offset="1" stop-color="#9C4F22" stop-opacity="0"/></linearGradient></defs>
-      ${[0,1,2,3].map(i=>`<line class="chart-grid" x1="${pad}" y1="${pad+i*(h-2*pad)/3}" x2="${w-pad}" y2="${pad+i*(h-2*pad)/3}"/>`).join('')}
-      <path class="chart-area" d="${area}"/><path class="chart-line" d="${line}"/>
-      ${pts.map(p=>`<circle class="chart-dot" cx="${p[0]}" cy="${p[1]}" r="3.2"/>`).join('')}
-      ${labels.map((l,i)=>`<text class="chart-label" x="${pad+i*(w-2*pad)/(labels.length-1)}" y="${h+9}" text-anchor="middle">${l}</text>`).join('')}
-    </svg>`;
-    $('#lineChart').dataset.range = r;
+    $('#lineChart').innerHTML=`<svg viewBox="0 0 ${w} ${h+16}" preserveAspectRatio="none"><defs><linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9C4F22" stop-opacity=".26"/><stop offset="1" stop-color="#9C4F22" stop-opacity="0"/></linearGradient></defs>${[0,1,2,3].map(i=>`<line class="chart-grid" x1="${pad}" y1="${pad+i*(h-2*pad)/3}" x2="${w-pad}" y2="${pad+i*(h-2*pad)/3}"/>`).join('')}<path class="chart-area" d="${area}"/><path class="chart-line" d="${line}"/>${pts.map(p=>`<circle class="chart-dot" cx="${p[0]}" cy="${p[1]}" r="3.2"/>`).join('')}${series.map((s,i)=>`<text class="chart-label" x="${pad+i*(w-2*pad)/Math.max(1,series.length-1)}" y="${h+9}" text-anchor="middle">${s.label}</text>`).join('')}</svg>`;
+    $('#lineChart').dataset.key=chartKey;
   }
 
-  const vencidoPct = morosidad;
-  const porVencerPct = +(porVencer() / totalCxc * 100).toFixed(1);
-  const alCorrientePct = Math.max(0, +(100 - vencidoPct - porVencerPct).toFixed(1));
-  $('#donutCenterPct').textContent = vencidoPct.toFixed(1) + '%';
-  $('#morosityDonut').style.background = `conic-gradient(#9C4F22 0 ${alCorrientePct}%, #98531F ${alCorrientePct}% ${alCorrientePct + porVencerPct}%, #A83C35 ${alCorrientePct + porVencerPct}% 100%)`;
-  $('#donutLegend').innerHTML=`<div class="dl-row"><i style="background:#9C4F22"></i> Al corriente <b>${alCorrientePct.toFixed(1)}%</b></div>
-    <div class="dl-row"><i style="background:#98531F"></i> Por vencer <b>${porVencerPct.toFixed(1)}%</b></div>
-    <div class="dl-row"><i style="background:#A83C35"></i> Vencido <b>${vencidoPct.toFixed(1)}%</b></div>`;
+  const porVencerPct=+(porVencer()/totalCxc*100).toFixed(1), alCorrientePct=Math.max(0,+(100-morosidad-porVencerPct).toFixed(1));
+  $('#donutCenterPct').textContent=morosidad.toFixed(1)+'%';
+  $('#morosityDonut').style.background=`conic-gradient(#9C4F22 0 ${alCorrientePct}%, #98531F ${alCorrientePct}% ${alCorrientePct+porVencerPct}%, #A83C35 ${alCorrientePct+porVencerPct}% 100%)`;
+  $('#donutLegend').innerHTML=`<div class="dl-row"><i style="background:#9C4F22"></i> Al corriente <b>${alCorrientePct.toFixed(1)}%</b></div><div class="dl-row"><i style="background:#98531F"></i> Por vencer <b>${porVencerPct.toFixed(1)}%</b></div><div class="dl-row"><i style="background:#A83C35"></i> Vencido <b>${morosidad.toFixed(1)}%</b></div>`;
 
-  if ($('#heatmap').dataset.ready !== '1') {
-    const heat=[[1,2,4],[2,3,4],[1,3,3],[2,4,3]];
-    $('#heatmap').innerHTML=`<table class="heat-table"><thead><tr><th>SEGMENTO</th><th>BAJA</th><th>MEDIA</th><th>ALTA</th></tr></thead><tbody>
-      ${['Frecuentes','Mayoristas','Crédito','Corporativo'].map((seg,i)=>`<tr><td>${seg}</td>${heat[i].map(v=>`<td><div class="heat-cell h-${v}">${['Bajo','Medio','Alto','Máximo'][v-1]}</div></td>`).join('')}</tr>`).join('')}
-    </tbody></table>`;
-    $('#heatmap').dataset.ready = '1';
-  }
+  if($('#heatmap').dataset.ready!=='1'){const heat=[[1,2,4],[2,3,4],[1,3,3],[2,4,3]];$('#heatmap').innerHTML=`<table class="heat-table"><thead><tr><th>SEGMENTO</th><th>BAJA</th><th>MEDIA</th><th>ALTA</th></tr></thead><tbody>${['Frecuentes','Mayoristas','Crédito','Corporativo'].map((seg,i)=>`<tr><td>${seg}</td>${heat[i].map(v=>`<td><div class="heat-cell h-${v}">${['Bajo','Medio','Alto','Máximo'][v-1]}</div></td>`).join('')}</tr>`).join('')}</tbody></table>`;$('#heatmap').dataset.ready='1';}
+  if($('#sellerGoals').dataset.ready!=='1'){$('#sellerGoals').innerHTML=sellers.map(s=>`<div class="goal-row"><div class="goal-top"><b>${s.name}</b><span>${s.pct}% de ${s.goal}</span></div><div class="goal-bar"><i style="width:${s.pct}%"></i></div></div>`).join('');$('#sellerGoals').dataset.ready='1';}
+  if($('#commissionsCard').dataset.ready!=='1'){renderCommissions();$('#commissionsCard').dataset.ready='1';}
 
-  if ($('#sellerGoals').dataset.ready !== '1') {
-    $('#sellerGoals').innerHTML=sellers.map(s=>`<div class="goal-row"><div class="goal-top"><b>${s.name}</b><span>${s.pct}% de ${s.goal}</span></div><div class="goal-bar"><i style="width:${s.pct}%"></i></div></div>`).join('');
-    $('#sellerGoals').dataset.ready = '1';
-  }
-  if ($('#commissionsCard').dataset.ready !== '1') { renderCommissions(); $('#commissionsCard').dataset.ready = '1'; }
+  const categories=apiData?apiData.byCategory:[{cat:'Abarrotes',sales:18450,margin:4520},{cat:'Agro',sales:12400,margin:3980},{cat:'Ferretería',sales:15800,margin:4210},{cat:'Limpieza',sales:3200,margin:960}];
+  const maxMargin=Math.max(...categories.map(c=>Number(c.margin)||0),1);
+  $('#marginCard').innerHTML=`<div class="card-title"><div><span class="eyebrow">RENTABILIDAD REAL</span><h3>Margen por línea comercial</h3></div><span class="legend">Ventas netas · costo descontado</span></div><div class="margin-grid">${categories.map(c=>{const pct=Number(c.sales)?Number(c.margin)/Number(c.sales)*100:0;return `<div class="margin-item" title="Margen ${pct.toFixed(1)}%"><div class="mi-top"><span>${c.cat}</span><b>${money(c.margin)}</b></div><div class="mi-bar"><i style="width:${Number(c.margin)/maxMargin*100}%"></i></div><small>Ventas ${money(c.sales)} · margen ${pct.toFixed(1)}%</small></div>`;}).join('')}</div>`;
 
-  if ($('#topProducts').dataset.ready !== '1') {
-    const maxSales=Math.max(...topProducts.map(p=>p.sales));
-    $('#topProducts').innerHTML=topProducts.map((p,i)=>`<tr><td class="mono" style="color:var(--muted)">${String(i+1).padStart(2,'0')}</td><td><b>${p.name}</b></td><td class="mono">${p.units}</td><td class="mono">${money(p.sales)}</td><td><div class="top-share"><div class="bar"><i style="width:${p.sales/maxSales*100}%"></i></div><span>${(p.sales/maxSales*100).toFixed(0)}%</span></div></td></tr>`).join('');
-    $('#topProducts').dataset.ready = '1';
+  const top=apiData?apiData.topProducts:topProducts;
+  if(apiData||$('#topProducts').dataset.ready!=='1'){
+    const maxSales=Math.max(...top.map(p=>Number(p.sales)||0),1);
+    $('#topProducts').innerHTML=top.length?top.map((p,i)=>`<tr><td class="mono" style="color:var(--muted)">${String(i+1).padStart(2,'0')}</td><td><b>${p.name}</b></td><td class="mono">${p.units}</td><td class="mono">${money(p.sales)}</td><td><div class="top-share"><div class="bar"><i style="width:${Number(p.sales)/maxSales*100}%"></i></div><span>${(Number(p.sales)/maxSales*100).toFixed(0)}%</span></div></td></tr>`).join(''):'<tr><td colspan="5"><div class="empty-state"><b>Sin ventas</b><span>No hay movimientos en el periodo seleccionado.</span></div></td></tr>';
+    $('#topProducts').dataset.ready='1';
   }
 }
 $('#rangeChips').addEventListener('click', e => {
