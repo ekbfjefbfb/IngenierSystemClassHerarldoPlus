@@ -49,7 +49,7 @@ Tras ingresar, registre el **fondo inicial** con los steppers y presione **Abrir
 - **Entrada independiente:** el login no muestra el shell. Al abrir turno entra al POS; el botón «Cerrar turno» de la barra superior lleva al arqueo y, al confirmar, regresa al login.
 - **Rendimiento:** catálogo inicial de 8 productos con carga progresiva, búsquedas con *debounce* e ignoración de acentos, dashboard con caché de gráficos y tablas estáticas, sin renders ocultos y sin `backdrop-filter` en móvil.
 - **Ayuda integrada:** guía rápida y atajos desde la barra superior. Auditoría detallada en `UIUX_AUDIT.md`.
-- **Defensa:** auditoría de consigna en `../docs/COAGRO_Auditoria_Requerimientos.md` y guía PDF en `../docs/COAGRO_Guia_Defensa.pdf`.
+- **Defensa:** auditoría de consigna en `../docs/COAGRO_Auditoria_Requerimientos.md`, modelo relacional en `../docs/COAGRO_Modelo_Datos.md` y guía PDF en `../docs/COAGRO_Guia_Defensa.pdf`.
 
 ## Backend y datos
 
@@ -61,6 +61,10 @@ por cobrar y correlativos fijos) y expone:
 | GET | `/api/state` | Estado canónico desde SQLite |
 | PUT | `/api/state` | Reemplaza datos maestros en una transacción atómica y validada |
 | POST | `/api/reset` | Restaura la semilla original |
+| POST | `/api/shifts/open` | Abre turno con fondo inicial |
+| POST | `/api/shifts/:id/withdraw` | Registra retiro parcial |
+| POST | `/api/shifts/:id/close` | Cierra turno con conteo y diferencia |
+| POST | `/api/sales` | Venta transaccional con detalles, tenders y factura |
 | GET | `/api/health` o `/health` | Estado del servidor (compatible con Render) |
 
 Validación del servidor: ids únicos, importes no negativos, ISV en {0, 15, 18}, cuerpo JSON máximo 2 MB.
