@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-26T12:24:42.001391579Z",
+  "updated_at": "2026-11-26T12:36:24.712084920Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -404,7 +404,7 @@
       "id": "JET-RZNGXE",
       "title": "Mejorar disponibilidad y respaldo operativo",
       "context": "RNF-05 exige reducir interrupciones. Hoy hay fallback a localStorage, pero no hay service worker, cola de sincronización ni recuperación completa de turno. Implementar PWA/offline para lectura, cola de escrituras y reconciliación al volver la API. Verificar venta offline, reconexión y ausencia de duplicados.",
-      "status": "in_progress",
+      "status": "done",
       "priority": "normal",
       "assignee_id": "ekbfjefbfb",
       "assignee_name": "ekbfjefbfb",
@@ -419,11 +419,24 @@
         "prototipo/sw.js"
       ],
       "created_at": "2026-11-26T03:35:20.837712737Z",
-      "updated_at": "2026-11-26T12:24:42.001372936Z",
+      "updated_at": "2026-11-26T12:36:24.712061435Z",
       "started_at": "2026-11-26T12:24:42.001372936Z",
+      "completed_at": "2026-11-26T12:36:24.712061435Z",
+      "completed_by_id": "ekbfjefbfb",
+      "completed_by_name": "ekbfjefbfb",
+      "completed_branch": "main",
+      "commit": "7275471",
       "agent": "opencode",
       "archived": false,
-      "notes": []
+      "notes": [
+        {
+          "id": "f6b46a15-d3d6-47e2-92d3-e78e9e3dd648",
+          "author_id": "ekbfjefbfb",
+          "author_name": "ekbfjefbfb",
+          "body": "Completado. Service worker y manifiesto PWA, caché de shell y API GET, cola local de ventas offline, reconexión automática y sincronización con clave idempotente. Verificado: venta offline genera cola 1, chip Offline·1, al reconectar cola 0 y SQLite tiene 1 venta; reintento de misma clave devuelve misma venta/factura y no duplica ni consume correlativo. 5 suites con 0 errores; manifest y sw 200. Push 7275471.",
+          "created_at": "2026-11-26T12:36:24.712061435Z"
+        }
+      ]
     },
     "JET-TVD6WK": {
       "id": "JET-TVD6WK",
@@ -530,6 +543,15 @@
     }
   },
   "events": [
+    {
+      "id": "1a0dfd39-03fe-46e2-919c-135359209740",
+      "at": "2026-11-26T12:36:24.712061435Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_completed",
+      "task_id": "JET-RZNGXE",
+      "message": "completó «Mejorar disponibilidad y respaldo operativo», rama main, commit 7275471"
+    },
     {
       "id": "cfab47c5-c589-44c8-b058-7fd9850adc28",
       "at": "2026-11-26T12:24:42.001372936Z",

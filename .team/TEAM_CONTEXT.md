@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:24:42.001391579+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T12:36:24.712084920+00:00`
 
-**Resumen:** 1 abiertas, 1 en curso, 0 bloqueadas, 11 completadas, 1 personas
+**Resumen:** 1 abiertas, 0 en curso, 0 bloqueadas, 12 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,9 +21,6 @@
 
 ### ekbfjefbfb
 
-- **JET-RZNGXE**  Mejorar disponibilidad y respaldo operativo — `En curso`  rama `main`
-  - Contexto: RNF-05 exige reducir interrupciones. Hoy hay fallback a localStorage, pero no hay service worker, cola de sincronización ni recuperación completa de turno. Implementar PWA/offline para lectura, cola de escrituras y reconciliación al volver la API. Verificar venta offline, reconexión y ausencia de duplicados.
-  - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css, prototipo/sw.js
 - **JET-TVD6WK**  Cerrar cumplimiento de entregables Moodle y Figma/Balsamiq — `Abierta`  rama `sin rama`
   - Contexto: La consigna pide documento fase 1 de 8–12 páginas; el DOCX actual tiene 16. Pide prototipo Figma/Balsamiq con enlace público; existe prototipo web pero no enlace Figma/Balsamiq ni URL pública verificada. Pide wireframes de baja fidelidad de las pantallas clave; hay 4 bocetos. Ajustar documento, completar bocetos o documentar sustitución aceptada, publicar URL y adjuntar evidencia. Bloqueo: confirmar con el docente s…
   - Prioridad: Alta
@@ -31,15 +28,12 @@
 
 ## Bloqueos de archivos y ramas
 
-- **BLOQUEO** `prototipo/app.js` → JET-RZNGXE (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/index.html` → JET-RZNGXE (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/server.py` → JET-RZNGXE (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/styles.css` → JET-RZNGXE (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/sw.js` → JET-RZNGXE (responsable ekbfjefbfb, En curso)
-- **RAMA** `main` → JET-RZNGXE (responsable ekbfjefbfb)
+_Sin bloqueos activos._
 
 ## Completadas recientemente
 
+- **JET-RZNGXE**  Mejorar disponibilidad y respaldo operativo  completada por ekbfjefbfb  rama `main`  commit `7275471`
+  - Resultado: Completado. Service worker y manifiesto PWA, caché de shell y API GET, cola local de ventas offline, reconexión automática y sincronización con clave idempotente. Verificado: venta offline genera cola 1, chip Offline·1, al reconectar cola 0 y SQLite tiene 1 venta; reintento de m…
 - **JET-WGW2DY**  Agregar ventas netas y margen por línea al dashboard  completada por ekbfjefbfb  rama `main`  commit `404b46d`
   - Resultado: Completado. Endpoint /api/dashboard calcula brutas, descuentos, netas, ticket, margen por línea/categoría, series y top 10 desde ventas persistentes. UI muestra netas con desglose de brutas/descuentos, ticket, margen y card de rentabilidad por categoría; filtro hoy/7d/mes. Verif…
 - **JET-N2T8HD**  Completar evaluación crediticia y cobranza automatizada  completada por ekbfjefbfb  rama `main`  commit `50bc838`
