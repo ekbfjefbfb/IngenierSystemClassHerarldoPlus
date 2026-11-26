@@ -82,6 +82,7 @@ const sellers = [
 /* ------------------------------------------------------------------ ESTADO */
 const state = {
   screen:'login', shift:null, cart:[], client:null, payMethod:'efectivo',
+  user:{ id:'U001', name:'Alberto C.', role:'cajero' },
   category:'Todas', productFilter:'', productLimit:8, selectedClient:'C001', cxcTab:'todas',
   cxcFilter:'', promosOnly:false, revealed:false, lastSale:null,
   range:'hoy', ticketNo:428, receiptNo:912
@@ -137,11 +138,16 @@ async function api(path, method='GET', body=null) {
   } finally { clearTimeout(timer); }
 }
 function snapshot() { return { products, clients, cxc, ticketNo:state.ticketNo, receiptNo:state.receiptNo }; }
+function normalizeShift(s) {
+  return s ? { ...s, fund:s.initial_cash, opened:(s.opened_at || '').slice(11,16) || new Date().toLocaleTimeString('es-HN',{hour:'2-digit',minute:'2-digit'}),
+    cashSales:s.cash_sales || 0, cardSales:s.card_sales || 0, achSales:s.ach_sales || 0 } : null;
+}
 function applyRemote(d) {
   products.splice(0, products.length, ...d.products);
   clients.splice(0, clients.length, ...d.clients);
   cxc.splice(0, cxc.length, ...d.cxc);
   state.ticketNo = d.ticketNo; state.receiptNo = d.receiptNo;
+  state.shift = normalizeShift(d.activeShift);
 }
 function updateApiChip() {
   const el = $('#apiChip'); if (!el) return;
@@ -326,16 +332,26 @@ $('#forgotBtn').addEventListener('click', () => modal({
   body:'<p style="font-size:12px;color:var(--muted);line-height:1.6;margin:0">El administrador del sistema recibe la solicitud y envía un enlace temporal al correo institucional del usuario. (Mock funcional)</p>',
   foot:'<button class="btn btn-primary" data-close>Enviar solicitud</button>'
 }));
-$('#openShiftBtn').addEventListener('click', () => {
+$('#openShiftBtn').addEventListener('click', async () => {
   const total = updateOpening();
   if (total <= 0) { $('#openingError').textContent = 'Registre un fondo inicial mayor a cero para abrir el turno.'; return; }
   $('#openingError').textContent = '';
-  state.shift = { id:'T-00428', opened:new Date().toLocaleTimeString('es-HN',{hour:'2-digit',minute:'2-digit'}), fund:total, cashSales:1650, cardSales:4200, achSales:1850, withdrawals:0 };
-  $('#shiftState').textContent = 'Turno T-00428 activo';
-  $('#shiftMeta').textContent = 'Fondo: ' + money(total);
-  $('.shift-mini').classList.remove('closed');
-  toast('Turno abierto · fondo ' + money(total));
-  navTo('pos');
+  $('#openShiftBtn').disabled = true;
+  try {
+    if (useApi) {
+      const res = await api('/api/shifts/open','POST',{ initial_cash:total, user_id:state.user.id });
+      state.shift = normalizeShift(res.shift);
+      applyRemote(res.state);
+    } else {
+      state.shift = { id:'T-00428', opened:new Date().toLocaleTimeString('es-HN',{hour:'2-digit',minute:'2-digit'}), fund:total, cashSales:0, cardSales:0, achSales:0, withdrawals:0 };
+    }
+    $('#shiftState').textContent = 'Turno ' + state.shift.id + ' activo';
+    $('#shiftMeta').textContent = 'Fondo: ' + money(total);
+    $('.shift-mini').classList.remove('closed');
+    toast('Turno abierto · fondo ' + money(total));
+    navTo('pos');
+  } catch (err) { $('#openingError').textContent = 'No se pudo abrir el turno: ' + err.message; }
+  finally { $('#openShiftBtn').disabled = false; }
 });
 
 /* ------------------------------------------------------------------ 02 POS */
@@ -547,33 +563,58 @@ $('#chargeBtn').addEventListener('click', () => {
     }
   });
 });
-function finalizeSale(t, tenders) {
-  const method = tenders.map(x => x.method).join(' + ');
-  const ref = tenders.map(x => x.ref).filter(Boolean).join(' / ') || 'EFECTIVO';
-  const cashPart = tenders.filter(x => x.method === 'Efectivo').reduce((s,x) => s + x.amount, 0);
-  const creditPart = tenders.filter(x => x.method === 'Crédito autorizado').reduce((s,x) => s + x.amount, 0);
-  const sale = {
-    no:state.ticketNo++, date:today(), time:new Date().toLocaleTimeString('es-HN',{hour:'2-digit',minute:'2-digit'}),
-    client:state.client, method, ref, tenders, lines:state.cart.map(l => {
-      const p = products.find(x => x.id === l.id);
-      return { name:p.name, qty:l.qty, price:p.price, isv:p.isv, subtotal:p.price * l.qty };
-    }), totals:t, invoice:'001-001-01-00045231'
-  };
-  state.lastSale = sale;
-  if (state.client && creditPart > 0) {
-    state.client.balance = round(state.client.balance + creditPart);
-    cxc.unshift({ id:'K' + (cxc.length + 100), client:state.client.name, doc:'FAC-' + sale.no, issue:sale.date,
-      due:'07/12/2026', balance:creditPart, days:0, status:'Vigente' });
+async function finalizeSale(t, tenders) {
+  const overpaid = round(tenders.reduce((s,x) => s + x.amount, 0)) > t.total + .005;
+  const ordered = overpaid ? [...tenders].sort((a,b) => (a.method === 'Efectivo' ? 1 : 0) - (b.method === 'Efectivo' ? 1 : 0)) : [...tenders];
+  let remaining = t.total, change = 0;
+  const apiTenders = [];
+  for (const x of ordered) {
+    const amount = round(Math.min(x.amount, remaining));
+    if (amount > 0) { apiTenders.push({ ...x, amount }); remaining = round(remaining - amount); }
+    if (x.method === 'Efectivo') change = round(change + Math.max(0, x.amount - amount));
   }
-  if (state.shift && cashPart > 0) state.shift.cashSales = round(state.shift.cashSales + cashPart);
-  persist();
+  const method = tenders.map(x => x.method).join(' + ');
+  const ref = apiTenders.map(x => x.ref).filter(Boolean).join(' / ') || 'EFECTIVO';
+  let sale;
+  if (useApi && state.shift) {
+    try {
+      const res = await api('/api/sales','POST',{
+        shift_id:state.shift.id, client_id:state.client ? state.client.id : null,
+        seller_id:state.user.id, discount:t.disc,
+        items:state.cart.map(l => ({ product_id:l.id, qty:l.qty })),
+        tenders:apiTenders.map(x => ({ method:x.method, amount:x.amount, reference:x.ref }))
+      });
+      sale = res.sale;
+      applyRemote(res.state);
+    } catch (err) { toast('No se pudo registrar la venta: ' + err.message, 'error'); return; }
+  } else {
+    const creditPart = apiTenders.filter(x => x.method === 'Crédito autorizado').reduce((s,x) => s + x.amount, 0);
+    sale = {
+      no:state.ticketNo++, date:today(), time:new Date().toLocaleTimeString('es-HN',{hour:'2-digit',minute:'2-digit'}),
+      client:state.client, method, ref, tenders:apiTenders, lines:state.cart.map(l => {
+        const p = products.find(x => x.id === l.id);
+        return { name:p.name, qty:l.qty, price:p.price, isv:p.isv, subtotal:p.price * l.qty };
+      }), totals:t, invoice:'001-001-01-00045231'
+    };
+    if (state.client && creditPart > 0) {
+      state.client.balance = round(state.client.balance + creditPart);
+      cxc.unshift({ id:'K' + (cxc.length + 100), client:state.client.name, doc:'FAC-' + sale.no, issue:sale.date,
+        due:'07/12/2026', balance:creditPart, days:0, status:'Vigente' });
+    }
+    if (state.shift) {
+      const cashPart = apiTenders.filter(x => x.method === 'Efectivo').reduce((s,x) => s + x.amount, 0);
+      state.shift.cashSales = round((state.shift.cashSales || 0) + cashPart);
+    }
+    persist();
+  }
+  state.lastSale = sale;
   state.cart = []; $('#discountInput').value = 0; renderCart();
   renderInvoice(sale);
   modal({
     title:'¡Cobro registrado!', sub:'Comprobante listo para emisión fiscal',
     body:`<div class="success-ico"><svg class="ico"><use href="#i-check"/></svg></div>
       <div class="modal-center"><p>Venta por <strong>${money(t.total)}</strong> registrada correctamente.<br>Factura <b class="mono">${sale.invoice}</b></p></div>
-      <div class="receipt-mini"><div class="r-row"><span>Método de pago</span><b>${method}</b></div><div class="r-row"><span>ISV liquidado</span><b>${money(t.isv)}</b></div><div class="r-row"><span>Referencia</span><b class="mono">${ref}</b></div><div class="r-row total"><span>TOTAL</span><span>${money(t.total)}</span></div></div>`,
+      <div class="receipt-mini"><div class="r-row"><span>Método de pago</span><b>${method}</b></div><div class="r-row"><span>ISV liquidado</span><b>${money(t.isv)}</b></div><div class="r-row"><span>Referencia</span><b class="mono">${ref}</b></div>${change > 0 ? `<div class="r-row"><span>Cambio</span><b>${money(change)}</b></div>` : ''}<div class="r-row total"><span>TOTAL</span><span>${money(t.total)}</span></div></div>`,
     foot:'<button class="btn btn-ghost" id="onlyClose">Cerrar</button><button class="btn btn-primary" id="seeInvoice">Ver factura fiscal</button>',
     onMount(root) {
       $('#onlyClose', root).addEventListener('click', closeModal);
@@ -930,13 +971,18 @@ $('#withdrawBtn').addEventListener('click', () => {
       <label class="field"><span>Motivo / autorizado por</span><div class="input-wrap"><input id="withdrawReason" placeholder="Ej. Pago a proveedor · Autoriza gerencia"></div></label>`,
     foot:'<button class="btn btn-ghost" data-close>Cancelar</button><button class="btn btn-primary" id="doWithdraw">Registrar retiro</button>',
     onMount(root) {
-      $('#doWithdraw', root).addEventListener('click', () => {
+      $('#doWithdraw', root).addEventListener('click', async () => {
         const amt = parseFloat($('#withdrawAmount', root).value || 0);
         if (!(amt > 0) || amt > available) { $('#withdrawError', root).textContent = 'El monto debe ser mayor a cero y no superar el efectivo disponible.'; return; }
         const reason = $('#withdrawReason', root).value.trim() || 'Sin motivo registrado';
-        sh.withdrawals = round(sh.withdrawals + amt);
-        closeModal();
-        toast('Retiro de ' + money(amt) + ' registrado · ' + reason);
+        try {
+          if (useApi) {
+            const res = await api('/api/shifts/' + sh.id + '/withdraw','POST',{ amount:amt, reason, user_id:state.user.id });
+            state.shift = normalizeShift(res.shift); applyRemote(res.state);
+          } else sh.withdrawals = round(sh.withdrawals + amt);
+          closeModal();
+          toast('Retiro de ' + money(amt) + ' registrado · ' + reason);
+        } catch (err) { $('#withdrawError', root).textContent = err.message; }
       });
     }
   });
@@ -960,14 +1006,20 @@ $('#revealBtn').addEventListener('click', () => {
   $('#confirmClose').addEventListener('click', () => {
     const note = $('#closeNote').value.trim();
     if (Math.abs(diff) > 50 && !note) { toast('Explique la diferencia antes de confirmar', 'warn'); $('#closeNote').focus(); return; }
-    processing('Cerrando turno y generando reporte…', () => {
-      state.shift = null; state.revealed = false;
-      $('#shiftState').textContent = 'Turno cerrado'; $('#shiftMeta').textContent = 'Caja 01 · Catacamas';
-      $('.shift-mini').classList.add('closed');
-      renderClosingDenoms();
-      $('#reconcilePanel').innerHTML = '<div class="empty-reconcile"><svg class="ico"><use href="#i-lock"/></svg><h3>Cuadre protegido</h3><p>Complete el conteo ciego y presione <b>Revelar cuadre</b> para comparar contra el saldo del sistema.</p></div>';
-      toast('Turno cerrado · reporte de cuadre generado');
-      navTo('login');
+    processing('Cerrando turno y generando reporte…', async () => {
+      try {
+        if (useApi && state.shift) {
+          const res = await api('/api/shifts/' + state.shift.id + '/close','POST',{ counted_cash:counted, note, user_id:state.user.id });
+          applyRemote(res.state);
+        }
+        state.shift = null; state.revealed = false;
+        $('#shiftState').textContent = 'Turno cerrado'; $('#shiftMeta').textContent = 'Caja 01 · Catacamas';
+        $('.shift-mini').classList.add('closed');
+        renderClosingDenoms();
+        $('#reconcilePanel').innerHTML = '<div class="empty-reconcile"><svg class="ico"><use href="#i-lock"/></svg><h3>Cuadre protegido</h3><p>Complete el conteo ciego y presione <b>Revelar cuadre</b> para comparar contra el saldo del sistema.</p></div>';
+        toast('Turno cerrado · reporte de cuadre generado');
+        navTo('login');
+      } catch (err) { toast('No se pudo cerrar el turno: ' + err.message, 'error'); }
     });
   });
 });
@@ -1204,6 +1256,11 @@ async function boot() {
       } catch (err) { toast('API no disponible (' + err.message + ') · modo local', 'warn'); }
     }
     if (!useApi) loadData();
+    if (state.shift) {
+      $('#shiftState').textContent = 'Turno ' + state.shift.id + ' activo';
+      $('#shiftMeta').textContent = 'Fondo: ' + money(state.shift.fund);
+      $('.shift-mini').classList.remove('closed');
+    }
     updateApiChip();
     $$('.art-stat b[data-count]').forEach(el => countUp(el, parseInt(el.dataset.count, 10)));
     renderAll();
