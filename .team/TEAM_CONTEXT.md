@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:35:14.495748810+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:35:16.710842798+00:00`
 
-**Resumen:** 5 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
+**Resumen:** 6 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -41,6 +41,10 @@
   - Contexto: El módulo 6 exige ventas brutas vs. netas y margen por línea comercial. El dashboard muestra brutas, ticket, morosidad, top 10 y metas, pero no netas ni margen por línea. Calcular desde ventas persistentes, mostrar comparación y margen por categoría con tooltip y filtro de periodo. Verificar cuadre bruto = neto + descuentos/devoluciones según definición documentada.
   - Prioridad: Alta
   - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
+- **JET-P9VNP9**  Implementar autenticación, roles y trazabilidad real — `Abierta`  rama `sin rama`
+  - Contexto: RNF-01, RNF-06 y RNF-08 requieren seguridad por rol, trazabilidad y protección de datos. Hoy el login es simulado, el usuario es fijo y no hay bitácora. Implementar usuarios, hash de contraseña, sesión, roles cajero/vendedor/créditos/gerente/admin y auditoría de operaciones. Verificar acceso denegado, cambio de turno y registro de quién/cuándo.
+  - Prioridad: Alta
+  - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/requirements.txt, prototipo/server.py, prototipo/styles.css
 - **JET-N2T8HD**  Completar evaluación crediticia y cobranza automatizada — `Abierta`  rama `sin rama`
   - Contexto: El CRM tiene límite, saldo, historial y alertas, pero no evaluación de crédito ni cobranza automatizada. Implementar score/reglas explicables, autorización de venta a crédito, programación de recordatorios y registro automático de intentos. Verificar cliente apto, moroso y recordatorio generado.
   - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
