@@ -1,7 +1,7 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:35:20.837721610+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:42:51.841590541+00:00`
 
 **Resumen:** 8 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
 
@@ -25,6 +25,7 @@
   - Contexto: Auditar el DOCX y PDF de la consigna contra el prototipo y backend. Crear matriz de cobertura RF/RNF, módulos, tablas, DFD, diccionario, navegación, wireframes y entregables. Generar PDF en español para defensa con guion por integrante, demostración, preguntas probables y límites honestos. Crear tareas JET para cada vacío real. Verificar PDF, requisitos y git diff; actualizar README y subir a main.
   - Prioridad: Alta
   - Archivos sensibles: README.md, docs/COAGRO_Auditoria_Requerimientos.md, docs/COAGRO_Guia_Defensa.pdf, prototipo/README.md, prototipo/UIUX_AUDIT.md
+  - Último avance: ekbfjefbfb — Auditoría completada contra el PDF oficial de 6 páginas, DOCX y código. Resultado: 10/14 RF completos, 3/8 RNF completos, 3/7 tablas persistentes; vacíos críticos en ventas/facturas/turnos, auth/roles, talonarios, promociones, netas/margen y formato Figma/Balsamiq. Creadas 8 tar…
 - **JET-RJWY8F**  Persistir turnos, ventas, detalles y facturas en SQLite — `Abierta`  rama `sin rama`
   - Contexto: La consigna exige TurnosCaja, VentasPOS, DetalleVentas y FacturasFiscalesSAR. Hoy solo productos, clientes y CxC son persistentes; turno, carrito y factura viven en memoria. Crear tablas y API transaccional ACID, modelo relacional consolidado y pruebas de recarga/rollback. Verificar que una venta con pago combinado genere turno, venta, detalle, factura y CxC si aplica, sin duplicados.
   - Prioridad: Alta

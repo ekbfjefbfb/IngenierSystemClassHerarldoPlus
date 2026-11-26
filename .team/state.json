@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-26T03:35:20.837721610Z",
+  "updated_at": "2026-11-26T03:42:51.841590541Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -211,11 +211,19 @@
         "prototipo/UIUX_AUDIT.md"
       ],
       "created_at": "2026-11-26T03:34:27.334919365Z",
-      "updated_at": "2026-11-26T03:34:42.661101942Z",
+      "updated_at": "2026-11-26T03:42:51.841348814Z",
       "started_at": "2026-11-26T03:34:42.661101942Z",
       "agent": "opencode",
       "archived": false,
-      "notes": []
+      "notes": [
+        {
+          "id": "79fe5bba-6706-4e0d-a060-bff724db416a",
+          "author_id": "ekbfjefbfb",
+          "author_name": "ekbfjefbfb",
+          "body": "Auditoría completada contra el PDF oficial de 6 páginas, DOCX y código. Resultado: 10/14 RF completos, 3/8 RNF completos, 3/7 tablas persistentes; vacíos críticos en ventas/facturas/turnos, auth/roles, talonarios, promociones, netas/margen y formato Figma/Balsamiq. Creadas 8 tareas JET pendientes. Generado PDF de 23 páginas con capturas, DFD, guion por integrante, demo, rúbrica, preguntas y límites. Falta commit y push.",
+          "created_at": "2026-11-26T03:42:51.841348814Z"
+        }
+      ]
     },
     "JET-N2T8HD": {
       "id": "JET-N2T8HD",
@@ -418,6 +426,15 @@
     }
   },
   "events": [
+    {
+      "id": "0b52cf33-b863-4a8e-ac57-e0ded36daafa",
+      "at": "2026-11-26T03:42:51.841348814Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "note_added",
+      "task_id": "JET-LTYA4A",
+      "message": "avanzó «Auditar consigna y generar PDF de defensa»: Auditoría completada contra el PDF oficial de 6 páginas, DOCX y código. Resultado: 10/14 RF completos, 3/8 RNF completos, 3/7 tablas persistentes; vacíos críticos en ventas/facturas/turnos, auth/roles, talonarios, promociones, netas/margen y formato Figma/Balsamiq. Creadas 8 tareas JET pendientes. Generado PDF de 23 páginas con capturas, DFD, guion por integrante, demo, rúbrica, preguntas y límites. Falta commit y push."
+    },
     {
       "id": "b53a27ea-9eea-43f2-a7f9-5afaa811b355",
       "at": "2026-11-26T03:35:20.837712737Z",
