@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-26T03:34:42.661132633Z",
+  "updated_at": "2026-11-26T03:35:04.085388697Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -195,6 +195,27 @@
       "archived": false,
       "notes": []
     },
+    "JET-RJWY8F": {
+      "id": "JET-RJWY8F",
+      "title": "Persistir turnos, ventas, detalles y facturas en SQLite",
+      "context": "La consigna exige TurnosCaja, VentasPOS, DetalleVentas y FacturasFiscalesSAR. Hoy solo productos, clientes y CxC son persistentes; turno, carrito y factura viven en memoria. Crear tablas y API transaccional ACID, modelo relacional consolidado y pruebas de recarga/rollback. Verificar que una venta con pago combinado genere turno, venta, detalle, factura y CxC si aplica, sin duplicados.",
+      "status": "open",
+      "priority": "high",
+      "assignee_id": "ekbfjefbfb",
+      "assignee_name": "ekbfjefbfb",
+      "created_by_id": "ekbfjefbfb",
+      "created_by_name": "ekbfjefbfb",
+      "files": [
+        "docs/COAGRO_Modelo_Datos.md",
+        "prototipo/app.js",
+        "prototipo/server.py"
+      ],
+      "created_at": "2026-11-26T03:35:04.085370860Z",
+      "updated_at": "2026-11-26T03:35:04.085370860Z",
+      "agent": "opencode",
+      "archived": false,
+      "notes": []
+    },
     "JET-WP7RDV": {
       "id": "JET-WP7RDV",
       "title": "Pulido final de producción y accesibilidad",
@@ -242,6 +263,15 @@
     }
   },
   "events": [
+    {
+      "id": "fdff7136-52f2-4dd1-b6c9-21cd0dcaae71",
+      "at": "2026-11-26T03:35:04.085370860Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_created",
+      "task_id": "JET-RJWY8F",
+      "message": "creó «Persistir turnos, ventas, detalles y facturas en SQLite» para ekbfjefbfb"
+    },
     {
       "id": "5bc2abf8-9b31-40c2-8e04-b408d7f0df74",
       "at": "2026-11-26T03:34:42.661101942Z",

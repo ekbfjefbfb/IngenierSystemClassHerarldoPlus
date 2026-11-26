@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:34:42.661132633+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:35:04.085388697+00:00`
 
-**Resumen:** 0 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
+**Resumen:** 1 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -25,6 +25,10 @@
   - Contexto: Auditar el DOCX y PDF de la consigna contra el prototipo y backend. Crear matriz de cobertura RF/RNF, módulos, tablas, DFD, diccionario, navegación, wireframes y entregables. Generar PDF en español para defensa con guion por integrante, demostración, preguntas probables y límites honestos. Crear tareas JET para cada vacío real. Verificar PDF, requisitos y git diff; actualizar README y subir a main.
   - Prioridad: Alta
   - Archivos sensibles: README.md, docs/COAGRO_Auditoria_Requerimientos.md, docs/COAGRO_Guia_Defensa.pdf, prototipo/README.md, prototipo/UIUX_AUDIT.md
+- **JET-RJWY8F**  Persistir turnos, ventas, detalles y facturas en SQLite — `Abierta`  rama `sin rama`
+  - Contexto: La consigna exige TurnosCaja, VentasPOS, DetalleVentas y FacturasFiscalesSAR. Hoy solo productos, clientes y CxC son persistentes; turno, carrito y factura viven en memoria. Crear tablas y API transaccional ACID, modelo relacional consolidado y pruebas de recarga/rollback. Verificar que una venta con pago combinado genere turno, venta, detalle, factura y CxC si aplica, sin duplicados.
+  - Prioridad: Alta
+  - Archivos sensibles: docs/COAGRO_Modelo_Datos.md, prototipo/app.js, prototipo/server.py
 
 ## Bloqueos de archivos y ramas
 
