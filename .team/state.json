@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-26T03:35:16.710842798Z",
+  "updated_at": "2026-11-26T03:35:18.801917851Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -305,6 +305,27 @@
       "archived": false,
       "notes": []
     },
+    "JET-TVD6WK": {
+      "id": "JET-TVD6WK",
+      "title": "Cerrar cumplimiento de entregables Moodle y Figma/Balsamiq",
+      "context": "La consigna pide documento fase 1 de 8–12 páginas; el DOCX actual tiene 16. Pide prototipo Figma/Balsamiq con enlace público; existe prototipo web pero no enlace Figma/Balsamiq ni URL pública verificada. Pide wireframes de baja fidelidad de las pantallas clave; hay 4 bocetos. Ajustar documento, completar bocetos o documentar sustitución aceptada, publicar URL y adjuntar evidencia. Bloqueo: confirmar con el docente si acepta el prototipo web como sustituto de Figma/Balsamiq.",
+      "status": "open",
+      "priority": "high",
+      "assignee_id": "ekbfjefbfb",
+      "assignee_name": "ekbfjefbfb",
+      "created_by_id": "ekbfjefbfb",
+      "created_by_name": "ekbfjefbfb",
+      "files": [
+        "README.md",
+        "UNIVERSIDAD CRISTIANA EVANGÉLICA NUEVO MILENIO(1).docx",
+        "docs"
+      ],
+      "created_at": "2026-11-26T03:35:18.801908509Z",
+      "updated_at": "2026-11-26T03:35:18.801908509Z",
+      "agent": "opencode",
+      "archived": false,
+      "notes": []
+    },
     "JET-WGW2DY": {
       "id": "JET-WGW2DY",
       "title": "Agregar ventas netas y margen por línea al dashboard",
@@ -374,6 +395,15 @@
     }
   },
   "events": [
+    {
+      "id": "d9f4be5d-a06c-4710-aac4-a66a73205d00",
+      "at": "2026-11-26T03:35:18.801908509Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_created",
+      "task_id": "JET-TVD6WK",
+      "message": "creó «Cerrar cumplimiento de entregables Moodle y Figma/Balsamiq» para ekbfjefbfb"
+    },
     {
       "id": "400dbfb2-0b77-430f-b798-5dfc6d626ca0",
       "at": "2026-11-26T03:35:16.710822550Z",
