@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:52:14.332664019+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T04:49:46.781340180+00:00`
 
-**Resumen:** 7 abiertas, 1 en curso, 0 bloqueadas, 5 completadas, 1 personas
+**Resumen:** 7 abiertas, 0 en curso, 0 bloqueadas, 6 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,10 +21,6 @@
 
 ### ekbfjefbfb
 
-- **JET-RJWY8F**  Persistir turnos, ventas, detalles y facturas en SQLite — `En curso`  rama `main`
-  - Contexto: La consigna exige TurnosCaja, VentasPOS, DetalleVentas y FacturasFiscalesSAR. Hoy solo productos, clientes y CxC son persistentes; turno, carrito y factura viven en memoria. Crear tablas y API transaccional ACID, modelo relacional consolidado y pruebas de recarga/rollback. Verificar que una venta con pago combinado genere turno, venta, detalle, factura y CxC si aplica, sin duplicados.
-  - Prioridad: Alta
-  - Archivos sensibles: docs/COAGRO_Modelo_Datos.md, prototipo/app.js, prototipo/server.py
 - **JET-5THMMC**  Administrar talonarios fiscales CAI, rangos y fechas límite — `Abierta`  rama `sin rama`
   - Contexto: RF-05 exige control y administración de talonarios autorizados por SAR. La factura muestra CAI y fecha límite, pero no hay alta/edición de talonarios ni validación de rango correlativo. Implementar catalogación de CAI, rango inicial/final, fecha límite, consumo correlativo y bloqueo por vencimiento/agotamiento. Verificar emisión dentro y fuera de rango.
   - Prioridad: Alta
@@ -54,13 +50,12 @@
 
 ## Bloqueos de archivos y ramas
 
-- **BLOQUEO** `docs/COAGRO_Modelo_Datos.md` → JET-RJWY8F (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/app.js` → JET-RJWY8F (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/server.py` → JET-RJWY8F (responsable ekbfjefbfb, En curso)
-- **RAMA** `main` → JET-RJWY8F (responsable ekbfjefbfb)
+_Sin bloqueos activos._
 
 ## Completadas recientemente
 
+- **JET-RJWY8F**  Persistir turnos, ventas, detalles y facturas en SQLite  completada por ekbfjefbfb  rama `main`  commit `47ca361`
+  - Resultado: Completado. SQLite ahora persiste users, sessions, audit_log, shifts, sales, sale_items, sale_tenders, invoices, talonarios, promotions, evaluaciones y cobranza. API transaccional de turno y venta con validación, stock, ISV, pagos, factura, CxC y rollback. Front-end abre/restaur…
 - **JET-LTYA4A**  Auditar consigna y generar PDF de defensa  completada por ekbfjefbfb  rama `main`  commit `82bef43`
   - Resultado: Completado. Auditoría contra PDF oficial, DOCX y código: 10/14 RF, 3/8 RNF, 3/7 tablas persistentes; entregables y rúbrica evaluados. Creadas 8 tareas pendientes JET-RJWY8F, JET-P9VNP9, JET-5THMMC, JET-N8HGZE, JET-WGW2DY, JET-N2T8HD, JET-RZNGXE y JET-TVD6WK. PDF de 23 páginas co…
 - **JET-8D88LZ**  Auditoría HCI por pantalla y aplicación de los 18 agentes  completada por ekbfjefbfb  rama `main`  commit `e0012ac`

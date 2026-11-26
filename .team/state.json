@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-26T03:52:14.332664019Z",
+  "updated_at": "2026-11-26T04:49:46.781340180Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -308,7 +308,7 @@
       "id": "JET-RJWY8F",
       "title": "Persistir turnos, ventas, detalles y facturas en SQLite",
       "context": "La consigna exige TurnosCaja, VentasPOS, DetalleVentas y FacturasFiscalesSAR. Hoy solo productos, clientes y CxC son persistentes; turno, carrito y factura viven en memoria. Crear tablas y API transaccional ACID, modelo relacional consolidado y pruebas de recarga/rollback. Verificar que una venta con pago combinado genere turno, venta, detalle, factura y CxC si aplica, sin duplicados.",
-      "status": "in_progress",
+      "status": "done",
       "priority": "high",
       "assignee_id": "ekbfjefbfb",
       "assignee_name": "ekbfjefbfb",
@@ -321,11 +321,24 @@
         "prototipo/server.py"
       ],
       "created_at": "2026-11-26T03:35:04.085370860Z",
-      "updated_at": "2026-11-26T03:52:14.332636416Z",
+      "updated_at": "2026-11-26T04:49:46.781128363Z",
       "started_at": "2026-11-26T03:52:14.332636416Z",
+      "completed_at": "2026-11-26T04:49:46.781128363Z",
+      "completed_by_id": "ekbfjefbfb",
+      "completed_by_name": "ekbfjefbfb",
+      "completed_branch": "main",
+      "commit": "47ca361",
       "agent": "opencode",
       "archived": false,
-      "notes": []
+      "notes": [
+        {
+          "id": "c2d3440c-11b6-47a8-9bea-f4e297637c0b",
+          "author_id": "ekbfjefbfb",
+          "author_name": "ekbfjefbfb",
+          "body": "Completado. SQLite ahora persiste users, sessions, audit_log, shifts, sales, sale_items, sale_tenders, invoices, talonarios, promotions, evaluaciones y cobranza. API transaccional de turno y venta con validación, stock, ISV, pagos, factura, CxC y rollback. Front-end abre/restaura/cierra turno y registra ventas reales. Modelo en docs/COAGRO_Modelo_Datos.md. Verificado: venta UI crea 1 turno, 1 venta, 1 detalle, 1 tender, 1 factura; pago insuficiente deja 0 ventas y stock intacto; turno se restaura al recargar. 5 suites con 0 errores. Push 47ca361.",
+          "created_at": "2026-11-26T04:49:46.781128363Z"
+        }
+      ]
     },
     "JET-RZNGXE": {
       "id": "JET-RZNGXE",
@@ -440,6 +453,15 @@
     }
   },
   "events": [
+    {
+      "id": "3f03f763-68b0-482a-beb0-0f8336ae974a",
+      "at": "2026-11-26T04:49:46.781128363Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_completed",
+      "task_id": "JET-RJWY8F",
+      "message": "completó «Persistir turnos, ventas, detalles y facturas en SQLite», rama main, commit 47ca361"
+    },
     {
       "id": "202ff57f-0f5f-4778-acf4-a9b0a217cffa",
       "at": "2026-11-26T03:52:14.332636416Z",
