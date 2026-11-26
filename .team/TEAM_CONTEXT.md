@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:42:51.841590541+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:43:28.918980141+00:00`
 
-**Resumen:** 8 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
+**Resumen:** 8 abiertas, 0 en curso, 0 bloqueadas, 5 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,11 +21,6 @@
 
 ### ekbfjefbfb
 
-- **JET-LTYA4A**  Auditar consigna y generar PDF de defensa — `En curso`  rama `main`
-  - Contexto: Auditar el DOCX y PDF de la consigna contra el prototipo y backend. Crear matriz de cobertura RF/RNF, módulos, tablas, DFD, diccionario, navegación, wireframes y entregables. Generar PDF en español para defensa con guion por integrante, demostración, preguntas probables y límites honestos. Crear tareas JET para cada vacío real. Verificar PDF, requisitos y git diff; actualizar README y subir a main.
-  - Prioridad: Alta
-  - Archivos sensibles: README.md, docs/COAGRO_Auditoria_Requerimientos.md, docs/COAGRO_Guia_Defensa.pdf, prototipo/README.md, prototipo/UIUX_AUDIT.md
-  - Último avance: ekbfjefbfb — Auditoría completada contra el PDF oficial de 6 páginas, DOCX y código. Resultado: 10/14 RF completos, 3/8 RNF completos, 3/7 tablas persistentes; vacíos críticos en ventas/facturas/turnos, auth/roles, talonarios, promociones, netas/margen y formato Figma/Balsamiq. Creadas 8 tar…
 - **JET-RJWY8F**  Persistir turnos, ventas, detalles y facturas en SQLite — `Abierta`  rama `sin rama`
   - Contexto: La consigna exige TurnosCaja, VentasPOS, DetalleVentas y FacturasFiscalesSAR. Hoy solo productos, clientes y CxC son persistentes; turno, carrito y factura viven en memoria. Crear tablas y API transaccional ACID, modelo relacional consolidado y pruebas de recarga/rollback. Verificar que una venta con pago combinado genere turno, venta, detalle, factura y CxC si aplica, sin duplicados.
   - Prioridad: Alta
@@ -59,15 +54,12 @@
 
 ## Bloqueos de archivos y ramas
 
-- **BLOQUEO** `README.md` → JET-LTYA4A (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `docs/COAGRO_Auditoria_Requerimientos.md` → JET-LTYA4A (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `docs/COAGRO_Guia_Defensa.pdf` → JET-LTYA4A (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/README.md` → JET-LTYA4A (responsable ekbfjefbfb, En curso)
-- **BLOQUEO** `prototipo/UIUX_AUDIT.md` → JET-LTYA4A (responsable ekbfjefbfb, En curso)
-- **RAMA** `main` → JET-LTYA4A (responsable ekbfjefbfb)
+_Sin bloqueos activos._
 
 ## Completadas recientemente
 
+- **JET-LTYA4A**  Auditar consigna y generar PDF de defensa  completada por ekbfjefbfb  rama `main`  commit `82bef43`
+  - Resultado: Completado. Auditoría contra PDF oficial, DOCX y código: 10/14 RF, 3/8 RNF, 3/7 tablas persistentes; entregables y rúbrica evaluados. Creadas 8 tareas pendientes JET-RJWY8F, JET-P9VNP9, JET-5THMMC, JET-N8HGZE, JET-WGW2DY, JET-N2T8HD, JET-RZNGXE y JET-TVD6WK. PDF de 23 páginas co…
 - **JET-8D88LZ**  Auditoría HCI por pantalla y aplicación de los 18 agentes  completada por ekbfjefbfb  rama `main`  commit `e0012ac`
   - Resultado: Completado y validado. Leídos los 18 agentes y aplicado lo procedente a web; agentes geoespaciales marcados no aplicables. Auditoría por 8 pantallas y secciones en UIUX_AUDIT.md. Corregidos overflow móvil, targets WCAG 2.2, contraste AA, credencial demo, foco, ayuda, confirmacio…
 - **JET-LPSNR9**  Aligerar rendimiento y densidad visual de la interfaz  completada por ekbfjefbfb  rama `main`  commit `ea33582`

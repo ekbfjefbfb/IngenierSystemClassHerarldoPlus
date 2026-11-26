@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-26T03:42:51.841590541Z",
+  "updated_at": "2026-11-26T03:43:28.918980141Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -196,7 +196,7 @@
       "id": "JET-LTYA4A",
       "title": "Auditar consigna y generar PDF de defensa",
       "context": "Auditar el DOCX y PDF de la consigna contra el prototipo y backend. Crear matriz de cobertura RF/RNF, módulos, tablas, DFD, diccionario, navegación, wireframes y entregables. Generar PDF en español para defensa con guion por integrante, demostración, preguntas probables y límites honestos. Crear tareas JET para cada vacío real. Verificar PDF, requisitos y git diff; actualizar README y subir a main.",
-      "status": "in_progress",
+      "status": "done",
       "priority": "high",
       "assignee_id": "ekbfjefbfb",
       "assignee_name": "ekbfjefbfb",
@@ -211,8 +211,13 @@
         "prototipo/UIUX_AUDIT.md"
       ],
       "created_at": "2026-11-26T03:34:27.334919365Z",
-      "updated_at": "2026-11-26T03:42:51.841348814Z",
+      "updated_at": "2026-11-26T03:43:28.918945699Z",
       "started_at": "2026-11-26T03:34:42.661101942Z",
+      "completed_at": "2026-11-26T03:43:28.918945699Z",
+      "completed_by_id": "ekbfjefbfb",
+      "completed_by_name": "ekbfjefbfb",
+      "completed_branch": "main",
+      "commit": "82bef43",
       "agent": "opencode",
       "archived": false,
       "notes": [
@@ -222,6 +227,13 @@
           "author_name": "ekbfjefbfb",
           "body": "Auditoría completada contra el PDF oficial de 6 páginas, DOCX y código. Resultado: 10/14 RF completos, 3/8 RNF completos, 3/7 tablas persistentes; vacíos críticos en ventas/facturas/turnos, auth/roles, talonarios, promociones, netas/margen y formato Figma/Balsamiq. Creadas 8 tareas JET pendientes. Generado PDF de 23 páginas con capturas, DFD, guion por integrante, demo, rúbrica, preguntas y límites. Falta commit y push.",
           "created_at": "2026-11-26T03:42:51.841348814Z"
+        },
+        {
+          "id": "88172ef2-133a-41b7-9089-b8612135b733",
+          "author_id": "ekbfjefbfb",
+          "author_name": "ekbfjefbfb",
+          "body": "Completado. Auditoría contra PDF oficial, DOCX y código: 10/14 RF, 3/8 RNF, 3/7 tablas persistentes; entregables y rúbrica evaluados. Creadas 8 tareas pendientes JET-RJWY8F, JET-P9VNP9, JET-5THMMC, JET-N8HGZE, JET-WGW2DY, JET-N2T8HD, JET-RZNGXE y JET-TVD6WK. PDF de 23 páginas con capturas, DFD, arquitectura, guion por integrante, demo, preguntas, evidencia y límites. PDF validado por extracción de texto y renderizado. Push 82bef43.",
+          "created_at": "2026-11-26T03:43:28.918945699Z"
         }
       ]
     },
@@ -426,6 +438,15 @@
     }
   },
   "events": [
+    {
+      "id": "28938e42-f876-43ac-9b6f-3d1add84f5a2",
+      "at": "2026-11-26T03:43:28.918945699Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_completed",
+      "task_id": "JET-LTYA4A",
+      "message": "completó «Auditar consigna y generar PDF de defensa», rama main, commit 82bef43"
+    },
     {
       "id": "0b52cf33-b863-4a8e-ac57-e0ded36daafa",
       "at": "2026-11-26T03:42:51.841348814Z",
