@@ -71,6 +71,9 @@ por cobrar y correlativos fijos) y expone:
 | POST | `/api/sales` | Venta transaccional con detalles, tenders y factura |
 | POST | `/api/talonarios` | Alta de CAI, rango y fecha límite |
 | PUT | `/api/talonarios/:id` | Edición de talonario y correlativo |
+| POST | `/api/promotions` | Alta de oferta temporal o combo |
+| PUT | `/api/promotions/:id` | Edición de promoción |
+| POST | `/api/seller-limits` | Límite de descuento por vendedor |
 | GET | `/api/health` o `/health` | Estado del servidor (compatible con Render) |
 
 Validación del servidor: ids únicos, importes no negativos, ISV en {0, 15, 18}, cuerpo JSON máximo 2 MB.

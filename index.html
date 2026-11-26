@@ -210,6 +210,7 @@
               <div class="sum-row"><span>Exento</span><b id="sumExento">L 0.00</b></div>
               <div class="sum-row"><span>ISV (15% + 18%)</span><b id="sumIsv">L 0.00</b></div>
               <div class="sum-row discount-row"><span>Descuento</span><div class="discount-input"><span>L</span><input id="discountInput" type="number" min="0" step="0.01" value="0"></div></div>
+              <small class="field-error" id="discountError"></small>
               <div class="sum-total"><span>TOTAL</span><strong id="sumTotal" aria-live="polite">L 0.00</strong></div>
             </div>
 
@@ -302,6 +303,7 @@
           <button class="btn btn-primary" id="newProductBtn"><svg class="ico"><use href="#i-plus"/></svg> Nuevo producto</button>
         </div>
         <div class="stat-strip" id="productStats"></div>
+        <div class="panel promotion-panel" id="promotionPanel"><div class="card-title"><div><span class="eyebrow">PROMOCIONES Y COMBOS</span><h3>Ofertas por vigencia</h3></div><button class="btn btn-soft" id="newPromotionBtn"><svg class="ico"><use href="#i-plus"/></svg> Nueva promoción</button></div><div id="promotionList" class="promotion-list"></div><div class="seller-limit-box"><span>Límite de descuento de <b id="sellerLimitName">este vendedor</b></span><div class="discount-input"><span>%</span><input id="sellerLimitInput" type="number" min="0" max="100" step="0.5" value="5"></div><button class="btn btn-soft" id="saveSellerLimit">Guardar</button></div></div>
         <div class="panel table-panel">
           <div class="table-toolbar">
             <div class="search-field compact"><svg class="ico"><use href="#i-search"/></svg><input id="productTableSearch" placeholder="Buscar producto o código…"></div>
