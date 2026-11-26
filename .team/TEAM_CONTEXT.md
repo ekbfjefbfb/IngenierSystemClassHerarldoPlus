@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:35:09.252614575+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:35:11.414776815+00:00`
 
-**Resumen:** 3 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
+**Resumen:** 4 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -36,6 +36,9 @@
 - **JET-N8HGZE**  Implementar promociones temporales, combos y descuentos por vendedor — `Abierta`  rama `sin rama`
   - Contexto: RF-08 exige ofertas temporales, combos y descuentos máximos por vendedor. Hoy la promoción es texto libre y el descuento solo se limita al subtotal. Implementar vigencia, tipo de promoción, combo y máximo por vendedor con validación en POS. Verificar promoción vencida, combo y descuento no autorizado.
   - Prioridad: Alta
+  - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
+- **JET-N2T8HD**  Completar evaluación crediticia y cobranza automatizada — `Abierta`  rama `sin rama`
+  - Contexto: El CRM tiene límite, saldo, historial y alertas, pero no evaluación de crédito ni cobranza automatizada. Implementar score/reglas explicables, autorización de venta a crédito, programación de recordatorios y registro automático de intentos. Verificar cliente apto, moroso y recordatorio generado.
   - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
 
 ## Bloqueos de archivos y ramas
