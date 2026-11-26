@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:35:04.085388697+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T03:35:06.823969691+00:00`
 
-**Resumen:** 1 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
+**Resumen:** 2 abiertas, 1 en curso, 0 bloqueadas, 4 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -29,6 +29,10 @@
   - Contexto: La consigna exige TurnosCaja, VentasPOS, DetalleVentas y FacturasFiscalesSAR. Hoy solo productos, clientes y CxC son persistentes; turno, carrito y factura viven en memoria. Crear tablas y API transaccional ACID, modelo relacional consolidado y pruebas de recarga/rollback. Verificar que una venta con pago combinado genere turno, venta, detalle, factura y CxC si aplica, sin duplicados.
   - Prioridad: Alta
   - Archivos sensibles: docs/COAGRO_Modelo_Datos.md, prototipo/app.js, prototipo/server.py
+- **JET-5THMMC**  Administrar talonarios fiscales CAI, rangos y fechas límite — `Abierta`  rama `sin rama`
+  - Contexto: RF-05 exige control y administración de talonarios autorizados por SAR. La factura muestra CAI y fecha límite, pero no hay alta/edición de talonarios ni validación de rango correlativo. Implementar catalogación de CAI, rango inicial/final, fecha límite, consumo correlativo y bloqueo por vencimiento/agotamiento. Verificar emisión dentro y fuera de rango.
+  - Prioridad: Alta
+  - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
 
 ## Bloqueos de archivos y ramas
 
