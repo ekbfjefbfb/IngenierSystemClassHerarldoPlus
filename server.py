@@ -282,6 +282,8 @@ def read_state(con):
         "talonarios": [dict(r) for r in con.execute("SELECT * FROM fiscal_talonarios ORDER BY rowid")],
         "promotions": [dict(r) for r in con.execute("SELECT * FROM promotions ORDER BY rowid")],
         "sellerLimits": {r["user_id"]:r["max_discount_pct"] for r in con.execute("SELECT * FROM seller_limits")},
+        "creditEvaluations": [dict(r) for r in con.execute("SELECT * FROM credit_evaluations ORDER BY id DESC LIMIT 50")],
+        "collectionEvents": [dict(r) for r in con.execute("SELECT ce.*,c.name AS client_name FROM collection_events ce JOIN clients c ON c.id=ce.client_id ORDER BY ce.id DESC LIMIT 50")],
     }
 
 
@@ -518,6 +520,9 @@ def create_sale(con, payload):
         client = con.execute("SELECT * FROM clients WHERE id=?", (client_id,)).fetchone()
         if credit_part > float(client["credit_limit"] - client["balance"]):
             raise ValueError("Crédito insuficiente")
+        evaluation = evaluate_credit(con, client_id, seller_id)
+        if evaluation["decision"] == "Rechazado":
+            raise ValueError("Crédito rechazado por evaluación: " + evaluation["reason"])
     talonario = con.execute(
         "SELECT * FROM fiscal_talonarios WHERE active=1 AND current_number<=range_end AND due_date>=date('now') ORDER BY rowid LIMIT 1"
     ).fetchone()
@@ -669,6 +674,78 @@ def save_talonario(con, payload, talonario_id=None, user_id="U005"):
     return dict(con.execute("SELECT * FROM fiscal_talonarios WHERE id=?", (talonario_id,)).fetchone())
 
 
+def evaluate_credit(con, client_id, user_id="U003"):
+    client = con.execute("SELECT * FROM clients WHERE id=?", (client_id,)).fetchone()
+    if not client:
+        raise ValueError("Cliente no válido")
+    limit = float(client["credit_limit"]) or 1
+    usage = float(client["balance"]) / limit
+    overdue = con.execute("SELECT COUNT(*) FROM cxc WHERE client=? AND status='Vencido'", (client["name"],)).fetchone()[0]
+    score = 50
+    reasons = []
+    if client["status"] == "Vencido":
+        score -= 30; reasons.append("estado moroso")
+    else:
+        score += 20; reasons.append("cliente al día")
+    if usage <= .5:
+        score += 15; reasons.append("bajo uso de crédito")
+    elif usage <= .8:
+        score += 5; reasons.append("uso moderado de crédito")
+    else:
+        score -= 10; reasons.append("uso elevado de crédito")
+    if float(client["purchases"]) >= 50000:
+        score += 10; reasons.append("alto volumen histórico")
+    elif float(client["purchases"]) >= 20000:
+        score += 5; reasons.append("volumen histórico medio")
+    if overdue:
+        score -= 20; reasons.append(f"{overdue} facturas vencidas")
+    else:
+        score += 10; reasons.append("sin facturas vencidas")
+    score = max(0, min(100, score))
+    decision = "Aprobado" if score >= 70 and client["status"] != "Vencido" else "Revisión" if score >= 50 else "Rechazado"
+    reason = "; ".join(reasons)
+    with con:
+        con.execute(
+            "INSERT INTO credit_evaluations(client_id,score,decision,reason,created_at) VALUES (?,?,?,?,?)",
+            (client_id, score, decision, reason, now_iso()),
+        )
+        audit(con, user_id, "evaluate_credit", "client", client_id, {"score":score,"decision":decision})
+    return {"client_id":client_id,"score":score,"decision":decision,"reason":reason,"created_at":now_iso()}
+
+
+def ensure_collections(con, user_id="U003"):
+    overdue = con.execute("SELECT * FROM cxc WHERE status='Vencido' ORDER BY due").fetchall()
+    created = 0
+    with con:
+        for row in overdue:
+            client_id = con.execute("SELECT id FROM clients WHERE name=?", (row["client"],)).fetchone()["id"]
+            exists = con.execute(
+                "SELECT 1 FROM collection_events WHERE client_id=? AND status='pending' AND detail LIKE ?",
+                (client_id, f"%{row['doc']}%"),
+            ).fetchone()
+            if exists:
+                continue
+            con.execute(
+                "INSERT INTO collection_events(client_id,invoice_id,kind,scheduled_at,status,detail) VALUES (?,?,?,?,?,?)",
+                (client_id, None, "recordatorio", now_iso(), "pending", f"{row['doc']} · Recordatorio por saldo vencido {row['balance']:.2f}"),
+            )
+            created += 1
+        if created:
+            audit(con, user_id, "schedule_collections", "collection", None, {"created":created})
+    return created
+
+
+def process_collections(con, user_id="U003"):
+    ensure_collections(con, user_id)
+    rows = con.execute("SELECT * FROM collection_events WHERE status='pending'").fetchall()
+    with con:
+        for row in rows:
+            con.execute("UPDATE collection_events SET status='sent',sent_at=?,detail=? WHERE id=?", (now_iso(), row["detail"] + " · generado automáticamente", row["id"]))
+        if rows:
+            audit(con, user_id, "send_collections", "collection", None, {"sent":len(rows)})
+    return len(rows)
+
+
 MIME = {
     ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8",
     ".js": "text/javascript; charset=utf-8", ".json": "application/json; charset=utf-8",
@@ -741,6 +818,7 @@ class Handler(BaseHTTPRequestHandler):
                 con = connect()
                 try:
                     ensure_seed(con)
+                    ensure_collections(con)
                     self.send_json(read_state(con))
                 finally:
                     con.close()
@@ -926,6 +1004,34 @@ class Handler(BaseHTTPRequestHandler):
                         with con:
                             shift = shift_action(con, shift_id, "withdraw", payload.get("amount", 0), payload.get("reason"), user["id"])
                         self.send_json({"shift": shift, "state": read_state(con)})
+                    finally:
+                        con.close()
+                return
+            if path == "/api/credit/evaluate":
+                with LOCK:
+                    con = connect()
+                    try:
+                        ensure_seed(con)
+                        user = self.auth(con, True)
+                        if user["role"] not in ("creditos", "gerente", "admin"):
+                            self.send_json({"error": "Rol no autorizado para evaluación crediticia"}, 403)
+                            return
+                        evaluation = evaluate_credit(con, str(payload.get("client_id", "")), user["id"])
+                        self.send_json({"evaluation":evaluation,"creditEvaluations":[dict(r) for r in con.execute("SELECT * FROM credit_evaluations ORDER BY id DESC LIMIT 50")]})
+                    finally:
+                        con.close()
+                return
+            if path == "/api/collections/run":
+                with LOCK:
+                    con = connect()
+                    try:
+                        ensure_seed(con)
+                        user = self.auth(con, True)
+                        if user["role"] not in ("creditos", "gerente", "admin"):
+                            self.send_json({"error": "Rol no autorizado para cobranza"}, 403)
+                            return
+                        sent = process_collections(con, user["id"])
+                        self.send_json({"sent":sent,"collectionEvents":[dict(r) for r in con.execute("SELECT ce.*,c.name AS client_name FROM collection_events ce JOIN clients c ON c.id=ce.client_id ORDER BY ce.id DESC LIMIT 50")]})
                     finally:
                         con.close()
                 return
