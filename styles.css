@@ -426,6 +426,13 @@ kbd{font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--s
 .check-list{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
 .check-list li{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--ink-soft)}
 .check-list .ico{width:14px;height:14px;color:var(--accent)}
+.talonario-row{border-top:1px solid var(--line);padding:9px 0;font-size:10px}
+.talonario-row:first-child{border-top:0}
+.talonario-row .tr-top{display:flex;justify-content:space-between;gap:6px;align-items:center}
+.talonario-row .tr-cai{font-family:var(--mono);font-size:9px;color:var(--ink-soft);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.talonario-row .tr-meta{display:flex;justify-content:space-between;gap:6px;color:var(--muted);margin-top:4px}
+.talonario-row .tr-bar{height:4px;background:var(--line);border-radius:99px;margin-top:6px;overflow:hidden}
+.talonario-row .tr-bar i{display:block;height:100%;background:var(--accent);border-radius:99px}
 
 /* ---------- 05 PRODUCTOS ---------- */
 .stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
