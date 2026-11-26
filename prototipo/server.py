@@ -142,6 +142,10 @@ CREATE TABLE IF NOT EXISTS promotions (
   starts_at TEXT NOT NULL, ends_at TEXT NOT NULL, active INTEGER NOT NULL DEFAULT 1,
   product_id TEXT, combo_json TEXT, FOREIGN KEY(product_id) REFERENCES products(id)
 );
+CREATE TABLE IF NOT EXISTS seller_limits (
+  user_id TEXT PRIMARY KEY, max_discount_pct REAL NOT NULL DEFAULT 5,
+  FOREIGN KEY(user_id) REFERENCES users(id)
+);
 CREATE TABLE IF NOT EXISTS credit_evaluations (
   id INTEGER PRIMARY KEY AUTOINCREMENT, client_id TEXT NOT NULL, score INTEGER NOT NULL,
   decision TEXT NOT NULL, reason TEXT NOT NULL, created_at TEXT NOT NULL,
@@ -212,19 +216,28 @@ def insert_reference(con):
             "INSERT OR IGNORE INTO fiscal_talonarios VALUES (?,?,?,?,?,?,?)",
             ("T001", "A1B2-C3D4-E5F6-G7H8-I9J0-K1L2", 1, 99999, "2026-12-31", 45231, 1),
         )
-        con.execute(
+        con.executemany(
             "INSERT OR IGNORE INTO promotions VALUES (?,?,?,?,?,?,?,?,?)",
-            ("PR001", "Aceite 5%", "percent", 5.0, "2026-11-01", "2026-12-31", 1, "P014", None),
+            [
+                ("PR001", "Aceite 5%", "percent", 5.0, "2026-11-01", "2026-12-31", 1, "P014", None),
+                ("PR002", "Frijol 2 x 125", "combo", 0.0, "2026-11-01", "2026-12-31", 1, "P022", '{"qty":2,"price":125}'),
+                ("PR003", "Café 2 x 170", "combo", 0.0, "2026-11-01", "2026-12-31", 1, "P060", '{"qty":2,"price":170}'),
+            ],
+        )
+        con.executemany(
+            "INSERT OR IGNORE INTO seller_limits VALUES (?,?)",
+            [("U001",5.0),("U002",5.0),("U003",0.0),("U004",10.0),("U005",10.0)],
         )
         con.execute("INSERT OR IGNORE INTO meta VALUES ('invoiceNo','45231')")
         con.execute("INSERT OR IGNORE INTO meta VALUES ('shiftNo','428')")
         con.execute("INSERT OR IGNORE INTO meta VALUES ('talonarioNo','2')")
+        con.execute("INSERT OR IGNORE INTO meta VALUES ('promotionNo','4')")
 
 
 def insert_seed(con):
     with con:
         for table in ("sale_tenders", "sale_items", "invoices", "sales", "shifts",
-                      "collection_events", "credit_evaluations", "promotions",
+                      "collection_events", "credit_evaluations", "promotions", "seller_limits",
                       "fiscal_talonarios", "audit_log", "sessions", "products", "clients", "cxc"):
             con.execute(f"DELETE FROM {table}")
         con.executemany(
@@ -243,7 +256,7 @@ def insert_seed(con):
         con.executemany(
             "INSERT OR REPLACE INTO meta VALUES (?,?)",
             [("ticketNo", str(SEED["ticketNo"])), ("receiptNo", str(SEED["receiptNo"])),
-             ("shiftNo", "428"), ("invoiceNo", "45231"), ("talonarioNo", "2"), ("seeded", "1")],
+             ("shiftNo", "428"), ("invoiceNo", "45231"), ("talonarioNo", "2"), ("promotionNo", "4"), ("seeded", "1")],
         )
 
 
@@ -268,6 +281,7 @@ def read_state(con):
         "activeShift": dict(con.execute("SELECT * FROM shifts WHERE status='open' ORDER BY opened_at DESC LIMIT 1").fetchone()) if con.execute("SELECT 1 FROM shifts WHERE status='open' LIMIT 1").fetchone() else None,
         "talonarios": [dict(r) for r in con.execute("SELECT * FROM fiscal_talonarios ORDER BY rowid")],
         "promotions": [dict(r) for r in con.execute("SELECT * FROM promotions ORDER BY rowid")],
+        "sellerLimits": {r["user_id"]:r["max_discount_pct"] for r in con.execute("SELECT * FROM seller_limits")},
     }
 
 
@@ -409,6 +423,39 @@ def shift_action(con, shift_id, action, amount=0, note=None, user_id="U001"):
     return dict(con.execute("SELECT * FROM shifts WHERE id=?", (shift_id,)).fetchone())
 
 
+def active_promotion(con, product_id):
+    row = con.execute(
+        "SELECT * FROM promotions WHERE product_id=? AND active=1 AND starts_at<=date('now') AND ends_at>=date('now') ORDER BY rowid LIMIT 1",
+        (product_id,),
+    ).fetchone()
+    return dict(row) if row else None
+
+
+def promotional_subtotal(price, qty, promo):
+    base = round(price * qty, 2)
+    if not promo:
+        return base, 0.0, None
+    kind = promo["kind"]
+    if kind == "percent":
+        subtotal = round(base * (1 - float(promo["value"]) / 100), 2)
+    elif kind == "fixed":
+        subtotal = round(max(0, base - float(promo["value"])), 2)
+    elif kind == "combo":
+        try:
+            combo = json.loads(promo.get("combo_json") or "{}")
+            combo_qty = float(combo["qty"]); combo_price = float(combo["price"])
+            if combo_qty <= 0 or combo_price < 0: raise ValueError()
+        except (ValueError, TypeError, KeyError, json.JSONDecodeError):
+            return base, 0.0, None
+        groups = int(qty // combo_qty)
+        remainder = qty - groups * combo_qty
+        subtotal = round(groups * combo_price + remainder * price, 2)
+    else:
+        return base, 0.0, None
+    pct = round((base - subtotal) / base * 100, 2) if base else 0
+    return subtotal, pct, promo["name"]
+
+
 def create_sale(con, payload):
     items = payload.get("items")
     tenders = payload.get("tenders")
@@ -434,18 +481,24 @@ def create_sale(con, payload):
         if qty <= 0 or qty > float(product["stock"]):
             raise ValueError(f"Stock insuficiente para {product['name']}")
         price = float(product["price"])
-        subtotal = round(qty * price, 2)
+        promo = active_promotion(con, product["id"])
+        subtotal, promo_pct, promo_name = promotional_subtotal(price, qty, promo)
         if int(product["isv"]) == 15:
             base15 += subtotal
         elif int(product["isv"]) == 18:
             base18 += subtotal
         else:
             exempt += subtotal
-        lines.append((product, qty, price, subtotal))
+        lines.append((product, qty, price, subtotal, promo_pct, promo_name))
     tax = round(base15 * .15 + base18 * .18, 2)
     discount = round(float(payload.get("discount", 0)), 2)
     if discount < 0 or discount > base15 + base18 + exempt:
         raise ValueError("Descuento inválido")
+    limit_row = con.execute("SELECT max_discount_pct FROM seller_limits WHERE user_id=?", (seller_id,)).fetchone()
+    max_discount_pct = float(limit_row["max_discount_pct"]) if limit_row else 5.0
+    discount_pct = discount / (base15 + base18 + exempt) * 100 if (base15 + base18 + exempt) else 0
+    if discount_pct > max_discount_pct + .001:
+        raise ValueError(f"Descuento no autorizado. Máximo {max_discount_pct:.1f}%")
     total = round(base15 + base18 + exempt + tax - discount, 2)
     allowed = {"Efectivo", "Transferencia ACH", "Tarjeta", "Crédito autorizado"}
     clean_tenders = []
@@ -484,11 +537,11 @@ def create_sale(con, payload):
             (sale_id, shift_id, client_id, seller_id, ticket_no, created_at,
              round(base15,2), round(base18,2), round(exempt,2), tax, discount, total),
         )
-        for product, qty, price, subtotal in lines:
-            margin = round((price - float(product["cost"])) * qty, 2)
+        for product, qty, price, subtotal, promo_pct, promo_name in lines:
+            margin = round(subtotal - float(product["cost"]) * qty, 2)
             con.execute(
                 "INSERT INTO sale_items(sale_id,product_id,qty,unit_price,discount_pct,subtotal,margin) VALUES (?,?,?,?,?,?,?)",
-                (sale_id, product["id"], qty, price, 0, subtotal, margin),
+                (sale_id, product["id"], qty, price, promo_pct, subtotal, margin),
             )
             con.execute("UPDATE products SET stock=stock-? WHERE id=?", (qty, product["id"]))
         for method, amount, reference in clean_tenders:
@@ -543,6 +596,48 @@ def create_sale(con, payload):
     sale["method"] = " + ".join(t[0] for t in clean_tenders)
     sale["ref"] = " / ".join(t[2] for t in clean_tenders if t[2]) or "EFECTIVO"
     return sale
+
+
+def save_promotion(con, payload, promotion_id=None, user_id="U005"):
+    name = str(payload.get("name", "")).strip()
+    kind = str(payload.get("kind", ""))
+    value = float(payload.get("value", 0))
+    starts = str(payload.get("starts_at", "")); ends = str(payload.get("ends_at", ""))
+    product_id = payload.get("product_id")
+    if not name or kind not in ("percent", "fixed", "combo") or value < 0 or not product_id:
+        raise ValueError("Promoción inválida")
+    if not con.execute("SELECT id FROM products WHERE id=?", (product_id,)).fetchone():
+        raise ValueError("Producto no válido")
+    try:
+        if datetime.strptime(ends, "%Y-%m-%d") < datetime.strptime(starts, "%Y-%m-%d"):
+            raise ValueError("La vigencia es inválida")
+    except ValueError:
+        raise ValueError("Fechas de promoción inválidas")
+    combo_json = None
+    if kind == "combo":
+        try:
+            combo = json.loads(payload.get("combo_json") or "{}")
+            if float(combo["qty"]) <= 0 or float(combo["price"]) < 0: raise ValueError()
+            combo_json = json.dumps(combo)
+        except (ValueError, TypeError, KeyError, json.JSONDecodeError):
+            raise ValueError("Combo inválido")
+    if promotion_id:
+        if not con.execute("SELECT id FROM promotions WHERE id=?", (promotion_id,)).fetchone():
+            raise ValueError("Promoción no encontrada")
+        con.execute(
+            "UPDATE promotions SET name=?,kind=?,value=?,starts_at=?,ends_at=?,active=?,product_id=?,combo_json=? WHERE id=?",
+            (name,kind,value,starts,ends,1 if payload.get("active",True) else 0,product_id,combo_json,promotion_id),
+        )
+    else:
+        number = meta_int(con, "promotionNo", 4)
+        promotion_id = f"PR{number:03d}"
+        set_meta(con, "promotionNo", number + 1)
+        con.execute(
+            "INSERT INTO promotions VALUES (?,?,?,?,?,?,?,?,?)",
+            (promotion_id,name,kind,value,starts,ends,1 if payload.get("active",True) else 0,product_id,combo_json),
+        )
+    audit(con, user_id, "save_promotion", "promotion", promotion_id, {"name":name,"kind":kind,"value":value})
+    return dict(con.execute("SELECT * FROM promotions WHERE id=?", (promotion_id,)).fetchone())
 
 
 def save_talonario(con, payload, talonario_id=None, user_id="U005"):
@@ -676,11 +771,27 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_PUT(self):
         path = self.path.split("?", 1)[0]
-        if path != "/api/state" and not path.startswith("/api/talonarios/"):
+        if path != "/api/state" and not path.startswith("/api/talonarios/") and not path.startswith("/api/promotions/"):
             self.send_json({"error": "Endpoint no encontrado"}, 404)
             return
         try:
             payload = self.body()
+            if path.startswith("/api/promotions/"):
+                promotion_id = path.split("/")[-1]
+                with LOCK:
+                    con = connect()
+                    try:
+                        ensure_seed(con)
+                        user = self.auth(con, True)
+                        if user["role"] not in ("admin", "gerente"):
+                            self.send_json({"error": "Rol no autorizado para promociones"}, 403)
+                            return
+                        with con:
+                            promotion = save_promotion(con, payload, promotion_id, user["id"])
+                        self.send_json({"promotion":promotion,"promotions":[dict(r) for r in con.execute("SELECT * FROM promotions ORDER BY rowid")]})
+                    finally:
+                        con.close()
+                return
             if path.startswith("/api/talonarios/"):
                 talonario_id = path.split("/")[-1]
                 with LOCK:
@@ -815,6 +926,40 @@ class Handler(BaseHTTPRequestHandler):
                         with con:
                             shift = shift_action(con, shift_id, "withdraw", payload.get("amount", 0), payload.get("reason"), user["id"])
                         self.send_json({"shift": shift, "state": read_state(con)})
+                    finally:
+                        con.close()
+                return
+            if path == "/api/promotions":
+                with LOCK:
+                    con = connect()
+                    try:
+                        ensure_seed(con)
+                        user = self.auth(con, True)
+                        if user["role"] not in ("admin", "gerente"):
+                            self.send_json({"error": "Rol no autorizado para promociones"}, 403)
+                            return
+                        with con:
+                            promotion = save_promotion(con, payload, None, user["id"])
+                        self.send_json({"promotion":promotion,"promotions":[dict(r) for r in con.execute("SELECT * FROM promotions ORDER BY rowid")]})
+                    finally:
+                        con.close()
+                return
+            if path == "/api/seller-limits":
+                with LOCK:
+                    con = connect()
+                    try:
+                        ensure_seed(con)
+                        user = self.auth(con, True)
+                        if user["role"] not in ("admin", "gerente"):
+                            self.send_json({"error": "Rol no autorizado para límites"}, 403)
+                            return
+                        user_id = str(payload.get("user_id", "")); pct = float(payload.get("max_discount_pct", -1))
+                        if not con.execute("SELECT id FROM users WHERE id=?", (user_id,)).fetchone() or pct < 0 or pct > 100:
+                            raise ValueError("Usuario o porcentaje inválido")
+                        with con:
+                            con.execute("INSERT OR REPLACE INTO seller_limits VALUES (?,?)", (user_id,pct))
+                            audit(con, user["id"], "set_seller_limit", "user", user_id, {"max_discount_pct":pct})
+                        self.send_json({"sellerLimits":{r["user_id"]:r["max_discount_pct"] for r in con.execute("SELECT * FROM seller_limits")}})
                     finally:
                         con.close()
                 return

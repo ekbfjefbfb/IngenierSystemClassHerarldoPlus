@@ -82,7 +82,7 @@ const sellers = [
 /* ------------------------------------------------------------------ ESTADO */
 const state = {
   screen:'login', shift:null, cart:[], client:null, payMethod:'efectivo',
-  user:null, token:null, talonarios:[], promotions:[],
+  user:null, token:null, talonarios:[], promotions:[], sellerLimits:{},
   category:'Todas', productFilter:'', productLimit:8, selectedClient:'C001', cxcTab:'todas',
   cxcFilter:'', promosOnly:false, revealed:false, lastSale:null,
   range:'hoy', ticketNo:428, receiptNo:912
@@ -166,6 +166,7 @@ function applyRemote(d) {
   state.ticketNo = d.ticketNo; state.receiptNo = d.receiptNo;
   if (Array.isArray(d.talonarios)) state.talonarios = d.talonarios;
   if (Array.isArray(d.promotions)) state.promotions = d.promotions;
+  if (d.sellerLimits) state.sellerLimits = d.sellerLimits;
   state.shift = normalizeShift(d.activeShift);
 }
 function updateApiChip() {
@@ -433,11 +434,34 @@ function addToCart(id) {
   renderCart();
   toast(p.name + ' agregado al ticket');
 }
+function activePromotion(productId) {
+  const todayISO = new Date().toISOString().slice(0,10);
+  return state.promotions.find(pr => pr.product_id === productId && pr.active && pr.starts_at <= todayISO && pr.ends_at >= todayISO);
+}
+function lineSubtotal(product, qty) {
+  const base = round(product.price * qty), promo = activePromotion(product.id);
+  if (!promo) return base;
+  if (promo.kind === 'percent') return round(base * (1 - promo.value / 100));
+  if (promo.kind === 'fixed') return round(Math.max(0, base - promo.value));
+  if (promo.kind === 'combo') {
+    try {
+      const combo = JSON.parse(promo.combo_json || '{}');
+      const groups = Math.floor(qty / combo.qty), remainder = qty - groups * combo.qty;
+      return round(groups * combo.price + remainder * product.price);
+    } catch (_) { return base; }
+  }
+  return base;
+}
+function maxDiscountAmount() {
+  const base = state.cart.reduce((sum,l) => { const p = products.find(x=>x.id===l.id); return sum + lineSubtotal(p,l.qty); }, 0);
+  const pct = state.sellerLimits[state.user?.id] ?? (['admin','gerente'].includes(state.user?.role) ? 10 : 5);
+  return round(base * pct / 100);
+}
 function totals() {
   let b15 = 0, b18 = 0, ex = 0;
   state.cart.forEach(l => {
     const p = products.find(x => x.id === l.id);
-    const base = p.price * l.qty;
+    const base = lineSubtotal(p, l.qty);
     if (p.isv === 15) b15 += base; else if (p.isv === 18) b18 += base; else ex += base;
   });
   const isv = round(b15 * .15 + b18 * .18);
@@ -449,9 +473,9 @@ function renderCart() {
   $('#cartLines').innerHTML = state.cart.length ? state.cart.map((l, i) => {
     const p = products.find(x => x.id === l.id);
     return `<div class="cart-row">
-      <div><div class="c-name">${p.name}</div><div class="c-sub">${p.id} · ${money(p.price)} · ISV ${p.isv || 'exento'}%</div></div>
+      <div><div class="c-name">${p.name}</div><div class="c-sub">${p.id} · ${money(p.price)} · ISV ${p.isv || 'exento'}%${activePromotion(p.id) ? ' · ' + activePromotion(p.id).name : ''}</div></div>
       <div class="qty-ctrl"><button data-q="dec" data-i="${i}" aria-label="Restar"><svg class="ico"><use href="#i-minus"/></svg></button><b>${l.qty}</b><button data-q="inc" data-i="${i}" aria-label="Sumar"><svg class="ico"><use href="#i-plus"/></svg></button></div>
-      <div class="c-amount">${money(p.price * l.qty)}</div>
+      <div class="c-amount">${money(lineSubtotal(p, l.qty))}</div>
     </div>`;
   }).join('') : `<div class="cart-empty"><svg class="ico"><use href="#i-scan"/></svg><span>Escanee un producto o escriba en el buscador</span></div>`;
   $('#sumBase15').textContent = money(t.b15);
@@ -460,7 +484,11 @@ function renderCart() {
   $('#sumIsv').textContent = money(t.isv);
   $('#sumTotal').textContent = money(t.total);
   $('#chargeTotal').textContent = money(t.total);
-  $('#chargeBtn').disabled = state.cart.length === 0;
+  const maxDiscount = maxDiscountAmount();
+  $('#discountInput').max = maxDiscount;
+  $('#discountInput').title = 'Máximo autorizado: ' + money(maxDiscount);
+  $('#discountError').textContent = t.disc > maxDiscount + .001 ? 'Descuento no autorizado. Máximo ' + money(maxDiscount) + '.' : '';
+  $('#chargeBtn').disabled = state.cart.length === 0 || t.disc > maxDiscount + .001;
   $('#mobileTotal').textContent = money(t.total);
   $('#mobileCheckout').classList.toggle('show', state.cart.length > 0 && state.screen === 'pos');
 }
@@ -941,6 +969,55 @@ $('#newProductBtn').addEventListener('click', () => modal({
   }
 }));
 
+function renderPromotions() {
+  const canManage = !API_ON || ['admin','gerente'].includes(state.user?.role);
+  $('#newPromotionBtn').hidden = !canManage;
+  $('#sellerLimitInput').hidden = !canManage;
+  $('#saveSellerLimit').hidden = !canManage;
+  $('#sellerLimitName').textContent = state.user?.name || 'este vendedor';
+  $('#sellerLimitInput').value = state.sellerLimits[state.user?.id] ?? 5;
+  const todayISO = new Date().toISOString().slice(0,10);
+  $('#promotionList').innerHTML = state.promotions.map(pr => {
+    const product = products.find(p=>p.id===pr.product_id);
+    const expired = pr.ends_at < todayISO, future = pr.starts_at > todayISO;
+    const detail = pr.kind === 'combo' ? `Combo ${JSON.parse(pr.combo_json||'{}').qty||'?'} por L ${JSON.parse(pr.combo_json||'{}').price||'?'}` : pr.kind === 'percent' ? `${pr.value}% de descuento` : `L ${pr.value} de descuento`;
+    return `<div class="promo-item"><div class="pi-top"><b>${pr.name}</b><span class="badge ${!pr.active||expired?'bad':future?'promo':'ok'}">${!pr.active?'Inactiva':expired?'Vencida':future?'Programada':'Activa'}</span></div><small>${product?.name || pr.product_id} · ${detail}</small><small>${pr.starts_at} a ${pr.ends_at}</small><div class="pi-actions"><span class="mono" style="font-size:9px;color:var(--muted)">${pr.id}</span>${canManage?`<button class="link-btn" data-promo="${pr.id}">Editar</button>`:''}</div></div>`;
+  }).join('') || '<div class="empty-state"><b>Sin promociones</b><span>Cree una oferta temporal o un combo.</span></div>';
+}
+function openPromotion(pr=null) {
+  const data = pr || { name:'', kind:'percent', value:5, product_id:products[0]?.id, starts_at:new Date().toISOString().slice(0,10), ends_at:'2026-12-31', active:1, combo_json:'{"qty":2,"price":100}' };
+  let combo = { qty:2, price:100 }; try { combo = JSON.parse(data.combo_json || '{}'); } catch (_) {}
+  modal({
+    title:pr ? 'Editar promoción' : 'Nueva promoción', sub:'Vigencia, combo y descuento', wide:true,
+    body:`<label class="field"><span>Nombre</span><div class="input-wrap"><input id="prName" value="${data.name}" placeholder="Ej. Aceite 5%"></div><small class="field-error" id="prErr"></small></label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><label class="field"><span>Tipo</span><select id="prKind" class="select" style="width:100%;height:45px"><option value="percent" ${data.kind==='percent'?'selected':''}>Porcentaje</option><option value="fixed" ${data.kind==='fixed'?'selected':''}>Monto fijo</option><option value="combo" ${data.kind==='combo'?'selected':''}>Combo</option></select></label><label class="field"><span>Valor</span><div class="input-wrap"><input id="prValue" type="number" min="0" step="0.01" value="${data.value}"></div></label><label class="field"><span>Producto</span><select id="prProduct" class="select" style="width:100%;height:45px">${products.map(p=>`<option value="${p.id}" ${p.id===data.product_id?'selected':''}>${p.name}</option>`).join('')}</select></label><label class="field"><span>Inicio</span><div class="input-wrap"><input id="prStart" type="date" value="${data.starts_at}"></div></label><label class="field"><span>Fin</span><div class="input-wrap"><input id="prEnd" type="date" value="${data.ends_at}"></div></label><label class="field"><span>Cantidad del combo</span><div class="input-wrap"><input id="prComboQty" type="number" min="1" value="${combo.qty||2}"></div></label><label class="field"><span>Precio del combo</span><div class="input-wrap"><input id="prComboPrice" type="number" min="0" step="0.01" value="${combo.price||100}"></div></label></div>
+      <label class="check"><input type="checkbox" id="prActive" ${data.active?'checked':''}><span></span> Promoción activa</label>`,
+    foot:'<button class="btn btn-ghost" data-close>Cancelar</button><button class="btn btn-primary" id="savePromotion">Guardar promoción</button>',
+    onMount(root) {
+      $('#savePromotion',root).addEventListener('click',async ()=>{
+        const kind=$('#prKind',root).value;
+        const payload={name:$('#prName',root).value.trim(),kind,value:+$('#prValue',root).value,product_id:$('#prProduct',root).value,starts_at:$('#prStart',root).value,ends_at:$('#prEnd',root).value,active:$('#prActive',root).checked,combo_json:kind==='combo'?JSON.stringify({qty:+$('#prComboQty',root).value,price:+$('#prComboPrice',root).value}):null};
+        if(!payload.name||payload.value<0||!payload.starts_at||!payload.ends_at||payload.ends_at<payload.starts_at||(kind==='combo'&&(+$('#prComboQty',root).value<=0||+$('#prComboPrice',root).value<0))){$('#prErr',root).textContent='Complete nombre, valor, producto y vigencia válidos.';return;}
+        try{
+          if(useApi){const res=pr?await api('/api/promotions/'+pr.id,'PUT',payload):await api('/api/promotions','POST',payload);state.promotions=res.promotions;}
+          else if(pr)Object.assign(pr,payload);else state.promotions.push({id:'PR'+(state.promotions.length+1),...payload});
+          closeModal();renderPromotions();renderProducts();toast('Promoción guardada');
+        }catch(err){$('#prErr',root).textContent=err.message;}
+      });
+    }
+  });
+}
+$('#newPromotionBtn').addEventListener('click',()=>openPromotion());
+$('#promotionList').addEventListener('click',e=>{const b=e.target.closest('[data-promo]');if(b)openPromotion(state.promotions.find(p=>p.id===b.dataset.promo));});
+$('#saveSellerLimit').addEventListener('click',async()=>{
+  const pct=parseFloat($('#sellerLimitInput').value||0);
+  try{
+    if(useApi){const res=await api('/api/seller-limits','POST',{user_id:state.user.id,max_discount_pct:pct});state.sellerLimits=res.sellerLimits;}
+    else state.sellerLimits[state.user.id]=pct;
+    toast('Límite de descuento actualizado');
+  }catch(err){toast(err.message,'error');}
+});
+
 /* ------------------------------------------------------------------ 06 CxC */
 function renderCxc() {
   const total = cxc.reduce((s,k)=>s+k.balance,0) || 1;
@@ -1328,7 +1405,7 @@ function renderAll() {
     renderInvoice(state.lastSale);
   }
   if (state.screen === 'factura') renderTalonarios();
-  if (state.screen === 'productos') { $('#categoryFilter').innerHTML = '<option value="todas">Todas las categorías</option>' + [...new Set(products.map(p=>p.cat))].map(c=>`<option value="${c}">${c}</option>`).join(''); renderProductStats(); renderProductTable(); }
+  if (state.screen === 'productos') { $('#categoryFilter').innerHTML = '<option value="todas">Todas las categorías</option>' + [...new Set(products.map(p=>p.cat))].map(c=>`<option value="${c}">${c}</option>`).join(''); renderProductStats(); renderProductTable(); renderPromotions(); }
   if (state.screen === 'cxc') renderCxc();
   if (state.screen === 'dashboard') renderDashboard();
 }
