@@ -1,9 +1,9 @@
 # JET, Contexto compartido del equipo
 
 > Archivo generado automáticamente por JET. No lo edites a mano.
-> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T05:35:10.346926024+00:00`
+> Proyecto: **IngenierSystemClassHerarldoPlus**  Actualizado: `2026-11-26T05:35:26.053374583+00:00`
 
-**Resumen:** 6 abiertas, 0 en curso, 0 bloqueadas, 7 completadas, 1 personas
+**Resumen:** 5 abiertas, 1 en curso, 0 bloqueadas, 7 completadas, 1 personas
 
 ## Reglas obligatorias para agentes de IA
 
@@ -21,7 +21,7 @@
 
 ### ekbfjefbfb
 
-- **JET-5THMMC**  Administrar talonarios fiscales CAI, rangos y fechas límite — `Abierta`  rama `sin rama`
+- **JET-5THMMC**  Administrar talonarios fiscales CAI, rangos y fechas límite — `En curso`  rama `main`
   - Contexto: RF-05 exige control y administración de talonarios autorizados por SAR. La factura muestra CAI y fecha límite, pero no hay alta/edición de talonarios ni validación de rango correlativo. Implementar catalogación de CAI, rango inicial/final, fecha límite, consumo correlativo y bloqueo por vencimiento/agotamiento. Verificar emisión dentro y fuera de rango.
   - Prioridad: Alta
   - Archivos sensibles: prototipo/app.js, prototipo/index.html, prototipo/server.py, prototipo/styles.css
@@ -46,7 +46,11 @@
 
 ## Bloqueos de archivos y ramas
 
-_Sin bloqueos activos._
+- **BLOQUEO** `prototipo/app.js` → JET-5THMMC (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/index.html` → JET-5THMMC (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/server.py` → JET-5THMMC (responsable ekbfjefbfb, En curso)
+- **BLOQUEO** `prototipo/styles.css` → JET-5THMMC (responsable ekbfjefbfb, En curso)
+- **RAMA** `main` → JET-5THMMC (responsable ekbfjefbfb)
 
 ## Completadas recientemente
 

@@ -3,7 +3,7 @@
   "project": "IngenierSystemClassHerarldoPlus",
   "project_id": "github:ekbfjefbfb/ingeniersystemclassherarldoplus",
   "created_at": "2026-11-25T22:10:33.400822812Z",
-  "updated_at": "2026-11-26T05:35:10.346926024Z",
+  "updated_at": "2026-11-26T05:35:26.053374583Z",
   "developers": {
     "ekbfjefbfb": {
       "id": "ekbfjefbfb",
@@ -84,12 +84,13 @@
       "id": "JET-5THMMC",
       "title": "Administrar talonarios fiscales CAI, rangos y fechas límite",
       "context": "RF-05 exige control y administración de talonarios autorizados por SAR. La factura muestra CAI y fecha límite, pero no hay alta/edición de talonarios ni validación de rango correlativo. Implementar catalogación de CAI, rango inicial/final, fecha límite, consumo correlativo y bloqueo por vencimiento/agotamiento. Verificar emisión dentro y fuera de rango.",
-      "status": "open",
+      "status": "in_progress",
       "priority": "high",
       "assignee_id": "ekbfjefbfb",
       "assignee_name": "ekbfjefbfb",
       "created_by_id": "ekbfjefbfb",
       "created_by_name": "ekbfjefbfb",
+      "branch": "main",
       "files": [
         "prototipo/app.js",
         "prototipo/index.html",
@@ -97,7 +98,8 @@
         "prototipo/styles.css"
       ],
       "created_at": "2026-11-26T03:35:06.823954721Z",
-      "updated_at": "2026-11-26T03:35:06.823954721Z",
+      "updated_at": "2026-11-26T05:35:26.053359441Z",
+      "started_at": "2026-11-26T05:35:26.053359441Z",
       "agent": "opencode",
       "archived": false,
       "notes": []
@@ -468,6 +470,15 @@
     }
   },
   "events": [
+    {
+      "id": "7f63d024-b44e-4061-ad77-82ce8b42f3b4",
+      "at": "2026-11-26T05:35:26.053359441Z",
+      "actor_id": "ekbfjefbfb",
+      "actor_name": "ekbfjefbfb",
+      "kind": "task_taken",
+      "task_id": "JET-5THMMC",
+      "message": "tomó «Administrar talonarios fiscales CAI, rangos y fechas límite» y comenzó a trabajar"
+    },
     {
       "id": "0ce549a4-3574-4bd6-970b-6077eb1bab58",
       "at": "2026-11-26T05:35:10.346568665Z",
